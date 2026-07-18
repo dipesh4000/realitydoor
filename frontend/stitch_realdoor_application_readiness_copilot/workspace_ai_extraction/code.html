@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>RealDoor - Document Extraction</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts: Inter and JetBrains Mono -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-primary": "#b4c5ff",
+                        "on-primary": "#ffffff",
+                        "inverse-surface": "#2e3039",
+                        "outline-variant": "#c3c6d7",
+                        "tertiary-fixed-dim": "#bec6e0",
+                        "primary-fixed": "#dbe1ff",
+                        "on-surface": "#191b23",
+                        "secondary-fixed": "#d3e4fe",
+                        "on-tertiary-container": "#eef0ff",
+                        "on-tertiary-fixed-variant": "#3f465c",
+                        "surface": "#faf8ff",
+                        "on-surface-variant": "#434655",
+                        "surface-tint": "#0053db",
+                        "on-error": "#ffffff",
+                        "on-secondary-fixed": "#0b1c30",
+                        "outline": "#737686",
+                        "surface-container-low": "#f3f3fe",
+                        "primary": "#004ac6",
+                        "on-primary-container": "#eeefff",
+                        "background": "#faf8ff",
+                        "surface-container": "#ededf9",
+                        "on-secondary-container": "#54647a",
+                        "on-background": "#191b23",
+                        "primary-container": "#2563eb",
+                        "on-tertiary-fixed": "#131b2e",
+                        "tertiary-fixed": "#dae2fd",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "secondary": "#505f76",
+                        "error": "#ba1a1a",
+                        "surface-variant": "#e1e2ed",
+                        "surface-dim": "#d9d9e5",
+                        "tertiary": "#4d556b",
+                        "tertiary-container": "#656d84",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-container": "#d0e1fb",
+                        "on-secondary": "#ffffff",
+                        "surface-container-high": "#e7e7f3",
+                        "on-error-container": "#93000a",
+                        "surface-container-highest": "#e1e2ed",
+                        "on-primary-fixed": "#00174b",
+                        "surface-bright": "#faf8ff",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "inverse-on-surface": "#f0f0fb"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "4px",
+                        "split-sidebar": "40%",
+                        "lg": "24px",
+                        "md": "16px",
+                        "xl": "32px",
+                        "2xl": "48px",
+                        "sm": "8px",
+                        "split-main": "60%",
+                        "container-max": "1440px",
+                        "gutter": "24px",
+                        "xs": "4px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "mono-sm": ["JetBrains Mono"],
+                        "label-sm": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "label-md": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "mono-sm": ["13px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .custom-shadow-level-2 {
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.05), 0 2px 4px -2px rgba(37, 99, 235, 0.03);
+        }
+        .highlight-evidence:hover {
+            background-color: #dbeafe;
+            border-left-width: 2px;
+            border-left-color: #004ac6; /* primary */
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background h-full font-body-md overflow-hidden flex">
+<!-- SideNavBar (Suppressed as this is a linear transactional step 'Step 2: AI Extraction') -->
+<!-- TopAppBar (Suppressed as this is a transactional workflow screen) -->
+<!-- Main Container - 60/40 Split Layout -->
+<div class="flex w-full h-full">
+<!-- Left Side: Main Workspace (60%) -->
+<main class="w-full lg:w-[60%] h-full bg-surface flex flex-col relative z-0">
+<!-- Header for Workspace -->
+<header class="flex justify-between items-center px-lg py-md border-b border-outline-variant/30 bg-surface">
+<div>
+<div class="flex items-center gap-sm mb-xs">
+<span class="font-label-sm text-label-sm text-primary uppercase tracking-wider">Step 2 of 4</span>
+<span class="material-symbols-outlined text-outline text-[16px]">chevron_right</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Data Extraction</span>
+</div>
+<h1 class="font-headline-md text-headline-md text-on-background">Review Extracted Fields</h1>
+</div>
+<div class="flex items-center gap-sm">
+<button class="px-md py-sm rounded-lg font-label-md text-label-md text-primary border border-outline-variant hover:bg-surface-container transition-colors">
+                        Re-scan Document
+                    </button>
+</div>
+</header>
+<!-- Scrollable Content Area -->
+<div class="flex-1 overflow-y-auto p-lg">
+<!-- Document Context Banner -->
+<div class="bg-surface-container-low border border-outline-variant/50 rounded-xl p-md mb-lg flex items-start gap-md">
+<div class="p-sm bg-primary-container/10 rounded-lg text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">description</span>
+</div>
+<div>
+<h2 class="font-label-md text-label-md text-on-background mb-xs">W2_Form_2023_JohnDoe.pdf</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">AI has extracted key data points from the uploaded documents. Review the values and confidence scores before proceeding.</p>
+</div>
+</div>
+<!-- Extraction Table / List -->
+<div class="space-y-sm">
+<!-- Field Row 1 -->
+<div class="bg-surface-container-lowest border border-outline-variant/50 rounded-xl p-md hover:bg-surface-container-low transition-colors group flex items-start justify-between">
+<div class="flex-1">
+<div class="flex items-center gap-sm mb-xs">
+<span class="font-label-md text-label-md text-on-surface-variant w-1/3">Full Name</span>
+<div class="flex items-center gap-sm">
+<span class="font-body-md text-body-md text-on-background font-medium">John R. Doe</span>
+<span class="inline-flex items-center gap-xs px-2 py-0.5 rounded-full bg-[#ecfdf5] text-[#047857] font-label-sm text-label-sm border border-[#a7f3d0]">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+                                        99% High
+                                    </span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-sm opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-sm rounded-lg text-primary hover:bg-primary/10 transition-colors flex items-center gap-xs" title="View Source Evidence">
+<span class="material-symbols-outlined text-[20px]">find_in_page</span>
+<span class="font-label-sm text-label-sm">Source</span>
+</button>
+<button class="p-sm rounded-lg text-on-surface-variant hover:bg-surface-variant transition-colors" title="Edit Field">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+</div>
+</div>
+<!-- Field Row 2 -->
+<div class="bg-surface-container-lowest border border-outline-variant/50 rounded-xl p-md hover:bg-surface-container-low transition-colors group flex items-start justify-between">
+<div class="flex-1">
+<div class="flex items-center gap-sm mb-xs">
+<span class="font-label-md text-label-md text-on-surface-variant w-1/3">Employer Name</span>
+<div class="flex items-center gap-sm">
+<span class="font-body-md text-body-md text-on-background font-medium">Acme Corp LLC</span>
+<span class="inline-flex items-center gap-xs px-2 py-0.5 rounded-full bg-[#ecfdf5] text-[#047857] font-label-sm text-label-sm border border-[#a7f3d0]">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+                                        98% High
+                                    </span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-sm opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-sm rounded-lg text-primary hover:bg-primary/10 transition-colors flex items-center gap-xs" title="View Source Evidence">
+<span class="material-symbols-outlined text-[20px]">find_in_page</span>
+<span class="font-label-sm text-label-sm">Source</span>
+</button>
+<button class="p-sm rounded-lg text-on-surface-variant hover:bg-surface-variant transition-colors" title="Edit Field">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+</div>
+</div>
+<!-- Field Row 3 - Low Confidence -->
+<div class="bg-[#fffbeb] border border-[#fde68a] rounded-xl p-md transition-colors group flex items-start justify-between relative overflow-hidden">
+<!-- Alert accent -->
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-[#f59e0b]"></div>
+<div class="flex-1 pl-sm">
+<div class="flex items-center gap-sm mb-xs">
+<span class="font-label-md text-label-md text-on-surface-variant w-1/3 flex items-center gap-xs">
+                                    Gross Monthly Income
+                                    <span class="material-symbols-outlined text-[#f59e0b] text-[16px]" title="Requires Review">warning</span>
+</span>
+<div class="flex items-center gap-sm">
+<span class="font-body-md text-body-md text-on-background font-medium">$8,450.00</span>
+<span class="inline-flex items-center gap-xs px-2 py-0.5 rounded-full bg-[#fef3c7] text-[#b45309] font-label-sm text-label-sm border border-[#fde68a]">
+<span class="material-symbols-outlined text-[14px]">help</span>
+                                        64% Low
+                                    </span>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-sm">Value is blurry in source document. Please verify against pay stub.</p>
+</div>
+<div class="flex items-center gap-sm">
+<button class="p-sm rounded-lg text-primary hover:bg-primary/10 transition-colors flex items-center gap-xs bg-primary/5" title="View Source Evidence">
+<span class="material-symbols-outlined text-[20px]">find_in_page</span>
+<span class="font-label-sm text-label-sm">Verify</span>
+</button>
+<button class="p-sm rounded-lg text-on-surface-variant hover:bg-surface-variant transition-colors" title="Edit Field">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+</div>
+</div>
+<!-- Field Row 4 -->
+<div class="bg-surface-container-lowest border border-outline-variant/50 rounded-xl p-md hover:bg-surface-container-low transition-colors group flex items-start justify-between">
+<div class="flex-1">
+<div class="flex items-center gap-sm mb-xs">
+<span class="font-label-md text-label-md text-on-surface-variant w-1/3">Social Security Number</span>
+<div class="flex items-center gap-sm">
+<span class="font-mono-sm text-mono-sm text-on-background font-medium">XXX-XX-1234</span>
+<span class="inline-flex items-center gap-xs px-2 py-0.5 rounded-full bg-[#ecfdf5] text-[#047857] font-label-sm text-label-sm border border-[#a7f3d0]">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+                                        99% High
+                                    </span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-sm opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-sm rounded-lg text-primary hover:bg-primary/10 transition-colors flex items-center gap-xs" title="View Source Evidence">
+<span class="material-symbols-outlined text-[20px]">find_in_page</span>
+<span class="font-label-sm text-label-sm">Source</span>
+</button>
+<button class="p-sm rounded-lg text-on-surface-variant hover:bg-surface-variant transition-colors" title="Edit Field">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Action Bar -->
+<div class="border-t border-outline-variant/30 bg-surface p-lg flex justify-between items-center z-10">
+<button class="px-lg py-md rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container transition-colors">
+                    Back
+                </button>
+<div class="flex items-center gap-md">
+<span class="font-body-sm text-body-sm text-on-surface-variant">4 fields extracted</span>
+<button class="px-xl py-md rounded-lg bg-primary text-on-primary font-label-md text-label-md hover:bg-primary/90 transition-colors shadow-sm flex items-center gap-sm">
+                        Continue to Validation
+                        <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</main>
+<!-- Right Side: AI Copilot Panel (40%) -->
+<aside class="hidden lg:flex w-[40%] h-full bg-surface-container-low border-l border-outline-variant/30 flex-col relative">
+<!-- Copilot Header -->
+<header class="px-lg py-md border-b border-outline-variant/20 flex items-center gap-sm bg-surface-container-low">
+<div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+</div>
+<div>
+<h2 class="font-headline-md text-[18px] font-bold text-on-background">Copilot</h2>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Extraction Assistant</p>
+</div>
+</header>
+<!-- Copilot Chat/Context Area -->
+<div class="flex-1 overflow-y-auto p-lg space-y-lg">
+<!-- AI Greeting -->
+<div class="flex gap-md">
+<div class="w-8 h-8 rounded-full bg-primary/10 shrink-0 flex items-center justify-center text-primary mt-1">
+<span class="material-symbols-outlined text-[16px]">robot_2</span>
+</div>
+<div class="bg-surface border border-outline-variant/30 rounded-xl rounded-tl-none p-md custom-shadow-level-2 max-w-[85%]">
+<p class="font-body-md text-body-md text-on-background">I've analyzed the uploaded W-2 form. Most fields look solid, but I flagged <strong>Gross Monthly Income</strong> for review due to low scan quality.</p>
+</div>
+</div>
+<!-- User Query (Simulated) -->
+<div class="flex gap-md justify-end">
+<div class="bg-primary text-on-primary rounded-xl rounded-tr-none p-md custom-shadow-level-2 max-w-[85%]">
+<p class="font-body-md text-body-md">Show where the Gross Monthly Income came from.</p>
+</div>
+<div class="w-8 h-8 rounded-full bg-surface-variant shrink-0 flex items-center justify-center text-on-surface mt-1">
+<span class="font-label-sm">JD</span>
+</div>
+</div>
+<!-- AI Response with Evidence Card -->
+<div class="flex gap-md">
+<div class="w-8 h-8 rounded-full bg-primary/10 shrink-0 flex items-center justify-center text-primary mt-1">
+<span class="material-symbols-outlined text-[16px]">auto_awesome</span>
+</div>
+<div class="bg-[#f0f4ff] border border-[#dbeafe] rounded-xl rounded-tl-none p-md custom-shadow-level-2 max-w-[95%]">
+<p class="font-body-md text-body-md text-on-background mb-md">Here is the source evidence for the <strong>Gross Monthly Income</strong> calculation. It appears the total yearly wage was divided by 12, but the source text is smudged.</p>
+<!-- Evidence Card (Glassmorphism inspired) -->
+<div class="bg-surface/80 backdrop-blur-sm border border-primary/20 rounded-lg overflow-hidden">
+<div class="bg-primary/5 px-sm py-xs border-b border-primary/10 flex justify-between items-center">
+<span class="font-label-sm text-label-sm text-primary uppercase tracking-wide">Source Snippet</span>
+<span class="font-mono-sm text-[11px] text-on-surface-variant">W2_Form_2023_JohnDoe.pdf - Pg 1</span>
+</div>
+<div class="p-md relative">
+<!-- Simulated Document Snippet -->
+<div class="font-mono-sm text-mono-sm text-on-surface-variant leading-relaxed opacity-60">
+                                    1. Wages, tips, other comp.<br/>
+<span class="text-transparent">.....</span><br/>
+</div>
+<div class="font-mono-sm text-mono-sm text-on-background highlight-evidence p-xs rounded -ml-xs transition-colors cursor-pointer bg-primary/5 border-l-2 border-primary">
+<span class="opacity-50">Box 1:</span> $ 101,400.00
+                                </div>
+<div class="font-mono-sm text-mono-sm text-on-surface-variant leading-relaxed opacity-60 mt-xs">
+                                    2. Federal income tax withheld<br/>
+</div>
+<!-- Badge link -->
+<div class="mt-md flex gap-sm">
+<button class="inline-flex items-center gap-xs px-2 py-1 rounded bg-primary text-on-primary font-label-sm text-label-sm hover:bg-primary/90 transition-colors">
+<span class="material-symbols-outlined text-[14px]">visibility</span>
+                                        View in Document
+                                    </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Copilot Input Area (Suggested Questions) -->
+<div class="p-lg border-t border-outline-variant/20 bg-surface/50 backdrop-blur-md absolute bottom-0 left-0 right-0">
+<div class="mb-sm text-xs font-label-sm text-on-surface-variant uppercase tracking-wider">Suggested Queries</div>
+<div class="flex flex-wrap gap-sm mb-md">
+<button class="px-sm py-1.5 rounded-full border border-primary/30 bg-primary/5 text-primary font-label-sm text-label-sm hover:bg-primary/10 transition-colors whitespace-nowrap">
+                        Explain this extracted value
+                    </button>
+<button class="px-sm py-1.5 rounded-full border border-primary/30 bg-primary/5 text-primary font-label-sm text-label-sm hover:bg-primary/10 transition-colors whitespace-nowrap">
+                        Why is confidence low?
+                    </button>
+</div>
+<div class="relative">
+<input class="w-full bg-surface border border-outline-variant rounded-lg pl-md pr-xl py-sm font-body-md text-body-md text-on-background placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-shadow" placeholder="Ask AI about this extraction..." type="text"/>
+<button class="absolute right-2 top-1/2 -translate-y-1/2 p-sm text-primary hover:bg-primary/10 rounded-full transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">send</span>
+</button>
+</div>
+</div>
+<!-- Spacer for input area -->
+<div class="h-[140px] shrink-0"></div>
+</aside>
+</div>
+</body></html>

@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>RealDoor - Application Readiness</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "inverse-primary": "#b4c5ff",
+                    "on-primary": "#ffffff",
+                    "inverse-surface": "#2e3039",
+                    "outline-variant": "#c3c6d7",
+                    "tertiary-fixed-dim": "#bec6e0",
+                    "primary-fixed": "#dbe1ff",
+                    "on-surface": "#191b23",
+                    "secondary-fixed": "#d3e4fe",
+                    "on-tertiary-container": "#eef0ff",
+                    "on-tertiary-fixed-variant": "#3f465c",
+                    "surface": "#faf8ff",
+                    "on-surface-variant": "#434655",
+                    "surface-tint": "#0053db",
+                    "on-error": "#ffffff",
+                    "on-secondary-fixed": "#0b1c30",
+                    "outline": "#737686",
+                    "surface-container-low": "#f3f3fe",
+                    "primary": "#004ac6",
+                    "on-primary-container": "#eeefff",
+                    "background": "#faf8ff",
+                    "surface-container": "#ededf9",
+                    "on-secondary-container": "#54647a",
+                    "on-background": "#191b23",
+                    "primary-container": "#2563eb",
+                    "on-tertiary-fixed": "#131b2e",
+                    "tertiary-fixed": "#dae2fd",
+                    "on-primary-fixed-variant": "#003ea8",
+                    "secondary": "#505f76",
+                    "error": "#ba1a1a",
+                    "surface-variant": "#e1e2ed",
+                    "surface-dim": "#d9d9e5",
+                    "tertiary": "#4d556b",
+                    "tertiary-container": "#656d84",
+                    "primary-fixed-dim": "#b4c5ff",
+                    "on-secondary-fixed-variant": "#38485d",
+                    "on-tertiary": "#ffffff",
+                    "surface-container-lowest": "#ffffff",
+                    "secondary-container": "#d0e1fb",
+                    "on-secondary": "#ffffff",
+                    "surface-container-high": "#e7e7f3",
+                    "on-error-container": "#93000a",
+                    "surface-container-highest": "#e1e2ed",
+                    "on-primary-fixed": "#00174b",
+                    "surface-bright": "#faf8ff",
+                    "error-container": "#ffdad6",
+                    "secondary-fixed-dim": "#b7c8e1",
+                    "inverse-on-surface": "#f0f0fb"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "base": "4px",
+                    "split-sidebar": "40%",
+                    "lg": "24px",
+                    "md": "16px",
+                    "xl": "32px",
+                    "2xl": "48px",
+                    "sm": "8px",
+                    "split-main": "60%",
+                    "container-max": "1440px",
+                    "gutter": "24px",
+                    "xs": "4px"
+            },
+            "fontFamily": {
+                    "body-md": [
+                            "Inter"
+                    ],
+                    "headline-lg": [
+                            "Inter"
+                    ],
+                    "display-lg": [
+                            "Inter"
+                    ],
+                    "mono-sm": [
+                            "JetBrains Mono"
+                    ],
+                    "label-sm": [
+                            "Inter"
+                    ],
+                    "headline-md": [
+                            "Inter"
+                    ],
+                    "label-md": [
+                            "Inter"
+                    ],
+                    "body-sm": [
+                            "Inter"
+                    ],
+                    "headline-lg-mobile": [
+                            "Inter"
+                    ],
+                    "body-lg": [
+                            "Inter"
+                    ]
+            },
+            "fontSize": {
+                    "body-md": [
+                            "16px",
+                            {
+                                    "lineHeight": "24px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "headline-lg": [
+                            "32px",
+                            {
+                                    "lineHeight": "40px",
+                                    "letterSpacing": "-0.01em",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "display-lg": [
+                            "48px",
+                            {
+                                    "lineHeight": "56px",
+                                    "letterSpacing": "-0.02em",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "mono-sm": [
+                            "13px",
+                            {
+                                    "lineHeight": "20px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "label-sm": [
+                            "12px",
+                            {
+                                    "lineHeight": "16px",
+                                    "letterSpacing": "0.05em",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "headline-md": [
+                            "24px",
+                            {
+                                    "lineHeight": "32px",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "label-md": [
+                            "14px",
+                            {
+                                    "lineHeight": "20px",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "body-sm": [
+                            "14px",
+                            {
+                                    "lineHeight": "20px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "headline-lg-mobile": [
+                            "24px",
+                            {
+                                    "lineHeight": "32px",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "body-lg": [
+                            "18px",
+                            {
+                                    "lineHeight": "28px",
+                                    "fontWeight": "400"
+                            }
+                    ]
+            }
+    },
+        },
+      }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+        .ai-border {
+            position: relative;
+        }
+        .ai-border::before {
+            content: "";
+            position: absolute;
+            inset: -1px;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(45deg, #dbeafe, #2563eb, #dbeafe);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+        
+        /* Circular Progress Ring CSS */
+        .circular-chart {
+            display: block;
+            margin: 0 auto;
+            max-width: 80%;
+            max-height: 250px;
+        }
+        .circle-bg {
+            fill: none;
+            stroke: #f3f3fe;
+            stroke-width: 3.8;
+        }
+        .circle {
+            fill: none;
+            stroke-width: 2.8;
+            stroke-linecap: round;
+            animation: progress 1s ease-out forwards;
+        }
+        @keyframes progress {
+            0% {
+                stroke-dasharray: 0 100;
+            }
+        }
+        .percentage {
+            fill: #191b23;
+            font-family: sans-serif;
+            font-size: 0.5em;
+            text-anchor: middle;
+            font-weight: 700;
+        }
+        .percentage-label {
+            fill: #737686;
+            font-family: sans-serif;
+            font-size: 0.15em;
+            text-anchor: middle;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md h-full flex overflow-hidden">
+<!-- Top Navigation for Mobile (Hidden on Desktop) -->
+<header class="md:hidden flex justify-between items-center w-full px-6 py-3 bg-surface shadow-sm border-b border-outline-variant/30 fixed top-0 z-50">
+<div class="font-headline-md text-headline-md font-bold text-primary">RealDoor</div>
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 0;">notifications</span>
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 0;">settings</span>
+<img alt="User profile" class="w-8 h-8 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuANjsfUmTWQeNf_5TD5hl_I9vgYQodN9Pp_C3HCYH16Bc408OvJsI9VICrR3WaINB350oZ7kDORZ06iJI9Qz0kSZG2ssN5LNx2Z7R26VY9TSLfNqLSpaEKXpDIRYR7Jpc5zgZALotW10Z2mr-CirtOTOYdWR2ppBk6RkF_VNKbiGdw9zyEhEn6n46XF-__mGtYulRlDLdEumuZAZezlzDNd6I0XbDwM5G6_Y5dYUEjkx7san3d82xFz8Q"/>
+</div>
+</header>
+<!-- SideNavBar (Hidden on Mobile) -->
+<nav class="hidden md:flex fixed left-0 top-0 h-full flex-col z-40 w-64 bg-surface-container-low shadow-md border-r border-outline-variant/20">
+<!-- Brand / Header -->
+<div class="p-6 border-b border-outline-variant/20">
+<div class="font-headline-md text-headline-md font-black text-primary mb-4">RealDoor</div>
+<div class="flex items-center gap-3">
+<img alt="RealDoor AI" class="w-10 h-10 rounded-full border border-primary-fixed" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB9Dsy8rE_W5ULQ_YxTf6mT0YsnYOJDMdmq3pbKrXS6GHhfxNUoeJPrjtVY58XnT5N_XU_et8HGL8fvklgIYK_22Kjh2BBaJFzkfT5KW7s1XCbIkkFsrBiqS9Mp04VE_wMI76vma3LWgStn4TceKi51VxkXVZC9cp1DZvuSSMeQk4sBroF2ydW9MgLNZtV_wNRyeKEhA-TO-tvKGzUiAOKaHi8QRK9K1nGMVxk-MEGr5QWmfZsoZo4RLg"/>
+<div>
+<div class="font-label-md text-label-md font-bold text-on-surface">Copilot</div>
+<div class="font-label-sm text-label-sm text-secondary">Application Readiness</div>
+</div>
+</div>
+</div>
+<!-- Navigation Links -->
+<div class="flex-1 py-4 px-3 flex flex-col gap-2">
+<a class="flex items-center gap-3 bg-primary-container text-on-primary-container rounded-lg px-4 py-3 font-bold scale-98 duration-150" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="font-label-md text-label-md">Workspace</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:bg-surface-variant hover:text-on-surface rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">description</span>
+<span class="font-label-md text-label-md">Documents</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:bg-surface-variant hover:text-on-surface rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">gavel</span>
+<span class="font-label-md text-label-md">Rules</span>
+</a>
+</div>
+<div class="p-4">
+<button class="w-full py-2 px-4 bg-primary text-on-primary rounded-lg font-label-md text-label-md font-medium hover:bg-primary/90 transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">spark</span> Ask AI
+             </button>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 md:ml-64 mt-[60px] md:mt-0 flex flex-col md:flex-row h-full overflow-hidden">
+<!-- Left Side: 60% Workspace (Readiness Progress) -->
+<section class="w-full md:w-[60%] h-full p-4 md:p-lg lg:p-xl overflow-y-auto bg-surface flex flex-col gap-lg">
+<header>
+<h1 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface mb-2">Application Readiness</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Review missing items and warnings before submission.</p>
+</header>
+<!-- Progress Ring -->
+<div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30 flex flex-col md:flex-row items-center gap-6 shadow-[0_4px_6px_-1px_rgba(37,99,235,0.05),0_2px_4px_-2px_rgba(37,99,235,0.03)]">
+<div class="w-48 h-48 relative flex-shrink-0">
+<svg class="circular-chart w-full h-full" viewbox="0 0 36 36">
+<path class="circle-bg" d="M18 2.0845
+                          a 15.9155 15.9155 0 0 1 0 31.831
+                          a 15.9155 15.9155 0 0 1 0 -31.831"></path>
+<path class="circle" d="M18 2.0845
+                          a 15.9155 15.9155 0 0 1 0 31.831
+                          a 15.9155 15.9155 0 0 1 0 -31.831" stroke="#004ac6" stroke-dasharray="65, 100"></path>
+<text class="percentage font-headline-lg" x="18" y="19">65%</text>
+<text class="percentage-label font-label-sm" x="18" y="24">Ready</text>
+</svg>
+</div>
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface mb-2">Attention Required</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-4">You have 2 missing documents and 1 low-confidence field blocking submission.</p>
+<div class="flex gap-3">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full font-label-sm text-label-sm bg-error-container text-on-error-container">
+<span class="material-symbols-outlined text-[14px] mr-1">warning</span> 3 Issues
+                        </span>
+</div>
+</div>
+</div>
+<!-- Issues List -->
+<div class="flex flex-col gap-4">
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Required Actions</h3>
+<!-- Missing Document Item -->
+<div class="bg-surface-container-lowest rounded-xl p-5 border-l-4 border-l-error border border-outline-variant/30 flex flex-col gap-3 shadow-[0_4px_6px_-1px_rgba(37,99,235,0.05)]">
+<div class="flex justify-between items-start">
+<div class="flex gap-3">
+<span class="material-symbols-outlined text-error mt-0.5">description</span>
+<div>
+<h4 class="font-body-md text-body-md font-semibold text-on-surface">Missing 2023 W2</h4>
+<div class="flex items-center gap-4 mt-1">
+<button class="font-label-sm text-label-sm text-primary hover:underline flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">info</span> Why this is required
+                                    </button>
+<span class="font-mono-sm text-mono-sm text-secondary bg-surface-container px-2 py-0.5 rounded flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">gavel</span> HUD Section 8 Guide
+                                    </span>
+</div>
+</div>
+</div>
+<button class="px-4 py-2 bg-primary text-on-primary rounded-lg font-label-md text-label-md hover:bg-primary/90 transition-colors">
+                            Upload Missing
+                        </button>
+</div>
+</div>
+<!-- Expired Document Item -->
+<div class="bg-surface-container-lowest rounded-xl p-5 border-l-4 border-l-[#f59e0b] border border-outline-variant/30 flex flex-col gap-3 shadow-[0_4px_6px_-1px_rgba(37,99,235,0.05)]">
+<div class="flex justify-between items-start">
+<div class="flex gap-3">
+<span class="material-symbols-outlined text-[#f59e0b] mt-0.5">history</span>
+<div>
+<h4 class="font-body-md text-body-md font-semibold text-on-surface">Expired State ID</h4>
+<div class="flex items-center gap-4 mt-1">
+<button class="font-label-sm text-label-sm text-primary hover:underline flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">info</span> Why this is required
+                                    </button>
+<span class="font-mono-sm text-mono-sm text-secondary bg-surface-container px-2 py-0.5 rounded flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">gavel</span> Title 24 CFR 5.659
+                                    </span>
+</div>
+</div>
+</div>
+<button class="px-4 py-2 border border-primary text-primary rounded-lg font-label-md text-label-md hover:bg-primary/5 transition-colors">
+                            Update
+                        </button>
+</div>
+</div>
+<!-- Low Confidence Field Item -->
+<div class="bg-surface-container-lowest rounded-xl p-5 border-l-4 border-l-surface-tint border border-outline-variant/30 flex flex-col gap-3 shadow-[0_4px_6px_-1px_rgba(37,99,235,0.05)]">
+<div class="flex justify-between items-start">
+<div class="flex gap-3">
+<span class="material-symbols-outlined text-surface-tint mt-0.5">find_in_page</span>
+<div>
+<h4 class="font-body-md text-body-md font-semibold text-on-surface">Low Confidence: Annual Income</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Extracted value does not match supporting documents.</p>
+<div class="flex items-center gap-4 mt-2">
+<button class="font-label-sm text-label-sm text-primary hover:underline flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">info</span> Review Extraction
+                                    </button>
+</div>
+</div>
+</div>
+<button class="px-4 py-2 border border-outline text-on-surface rounded-lg font-label-md text-label-md hover:bg-surface-variant transition-colors">
+                            Verify Field
+                        </button>
+</div>
+</div>
+</div>
+</section>
+<!-- Right Side: 40% AI Copilot Panel -->
+<aside class="w-full md:w-[40%] h-full bg-surface-container-low border-l border-outline-variant/20 flex flex-col relative z-10 shadow-[-4px_0_15px_-3px_rgba(37,99,235,0.05)]">
+<div class="p-4 md:p-6 border-b border-outline-variant/20 flex items-center gap-3 bg-surface-container-low">
+<span class="material-symbols-outlined text-primary">psychology</span>
+<h2 class="font-headline-md text-headline-md font-semibold text-on-surface">AI Copilot</h2>
+</div>
+<div class="flex-1 overflow-y-auto p-4 md:p-6 flex flex-col gap-6">
+<!-- Initial AI Message / Action Card -->
+<div class="ai-border rounded-xl bg-surface p-5 shadow-sm">
+<div class="flex items-center gap-2 mb-3">
+<span class="material-symbols-outlined text-primary text-[20px]">error</span>
+<span class="font-label-md text-label-md font-bold text-on-surface">Action Required: Missing Tax Return</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-4">
+                        Based on the applicant's stated income sources, a complete 2023 Federal Tax Return (1040) is necessary to verify self-employment earnings. The current upload only includes Schedule C.
+                    </p>
+<!-- Source Citation Badges -->
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="font-mono-sm text-mono-sm text-primary bg-primary-fixed/30 px-2 py-1 rounded border border-primary-fixed hover:bg-primary-fixed/50 cursor-pointer transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">description</span> Uploaded_SchC_2023.pdf
+                         </span>
+</div>
+<button class="w-full py-2 bg-primary text-on-primary rounded-lg font-label-md text-label-md hover:bg-primary/90 transition-colors shadow-sm">
+                        Fix Now
+                    </button>
+</div>
+<!-- Suggested Questions Section -->
+<div class="mt-auto pt-4 border-t border-outline-variant/20">
+<h3 class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-3">Suggested Questions</h3>
+<div class="flex flex-col gap-2">
+<button class="text-left px-4 py-2.5 rounded-lg bg-surface border border-outline-variant/40 hover:bg-surface-variant hover:border-primary-fixed transition-colors font-body-sm text-body-sm text-on-surface flex justify-between items-center group">
+                             Why is this document required?
+                             <span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors text-[18px]">arrow_forward</span>
+</button>
+<button class="text-left px-4 py-2.5 rounded-lg bg-surface border border-outline-variant/40 hover:bg-surface-variant hover:border-primary-fixed transition-colors font-body-sm text-body-sm text-on-surface flex justify-between items-center group">
+                             What should I upload next?
+                             <span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors text-[18px]">arrow_forward</span>
+</button>
+<button class="text-left px-4 py-2.5 rounded-lg bg-surface border border-outline-variant/40 hover:bg-surface-variant hover:border-primary-fixed transition-colors font-body-sm text-body-sm text-on-surface flex justify-between items-center group">
+                             Explain this warning
+                             <span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Chat Input (Sticky Bottom) -->
+<div class="mt-4 relative">
+<input class="w-full bg-surface border border-outline-variant rounded-xl pl-4 pr-12 py-3 font-body-md text-body-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary focus:ring-offset-2 transition-all" placeholder="Ask Copilot anything..." type="text"/>
+<button class="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-primary hover:bg-primary-container/10 rounded-full transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">send</span>
+</button>
+</div>
+</div>
+</aside>
+</main>
+<!-- Bottom Navigation for Mobile (Hidden on Desktop) - Destination rule applies (Workspace) -->
+<nav class="md:hidden fixed bottom-0 w-full bg-surface shadow-[0_-1px_3px_rgba(0,0,0,0.05)] border-t border-outline-variant/30 flex justify-around items-center h-16 z-50">
+<a class="flex flex-col items-center justify-center w-full h-full text-primary" href="#">
+<div class="bg-primary-container/20 px-4 py-1 rounded-full mb-1">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+</div>
+<span class="font-label-sm text-label-sm">Workspace</span>
+</a>
+<a class="flex flex-col items-center justify-center w-full h-full text-on-surface-variant hover:text-on-surface transition-colors" href="#">
+<div class="px-4 py-1 mb-1">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">description</span>
+</div>
+<span class="font-label-sm text-label-sm">Documents</span>
+</a>
+<a class="flex flex-col items-center justify-center w-full h-full text-on-surface-variant hover:text-on-surface transition-colors" href="#">
+<div class="px-4 py-1 mb-1">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">gavel</span>
+</div>
+<span class="font-label-sm text-label-sm">Rules</span>
+</a>
+</nav>
+</body></html>

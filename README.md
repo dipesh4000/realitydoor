@@ -496,17 +496,20 @@ Escalate when household composition is ambiguous, program rules conflict, the ap
 
 For the MVP, use a curated static resource directory.
 
-## Suggested Technology Stack
+## Technology Stack
 
-### Frontend
+### Frontend (Implemented)
 
-- Next.js or React
-- TypeScript
+- **Vite 5** + **React 18** (JavaScript, `.jsx`)
+- **React Router DOM v6** — client-side routing
+- **Lucide React** — icon library
+- **Axios** — HTTP client (mock API layer included)
+- `src/api/` contains mock API functions structured as real endpoint contracts; swap return values for `axios` calls when the backend is ready.
 
-### Backend
+### Backend (Planned)
 
 - FastAPI
-- Python
+- Python 3.11+
 
 ### Structured Data
 
@@ -536,16 +539,38 @@ For the MVP, use a curated static resource directory.
 - retrieval regression tests
 - safety and prompt-injection tests
 
-## Suggested Repository Structure
+## Repository Structure
 
 ```text
 realdoor-ai/
 ├── frontend/
-│   ├── app/
-│   ├── components/
-│   ├── lib/
-│   └── types/
-├── backend/
+│   └── realdoor-app/              ← Vite + React app (JavaScript)
+│       ├── src/
+│       │   ├── api/               ← Mock API contracts (swap for real calls)
+│       │   │   ├── session.js     →  GET/DELETE  /api/session
+│       │   │   ├── documents.js   →  POST/GET/DELETE /api/documents/...
+│       │   │   ├── readiness.js   →  GET  /api/readiness
+│       │   │   ├── rules.js       →  GET  /api/rules
+│       │   │   ├── chat.js        →  POST /api/chat
+│       │   │   └── income.js      →  POST /api/income/calculate
+│       │   ├── components/
+│       │   │   └── layout/
+│       │   │       ├── Sidebar.jsx
+│       │   │       └── AiPanel.jsx
+│       │   ├── pages/
+│       │   │   ├── PolicySelectPage.jsx   /            ← Program selection
+│       │   │   ├── UploadPage.jsx         /upload      ← Step 1
+│       │   │   ├── ExtractionPage.jsx     /extraction  ← Step 2
+│       │   │   ├── WorkspacePage.jsx      /readiness   ← Readiness report
+│       │   │   ├── DocumentsPage.jsx      /documents
+│       │   │   └── RulesPage.jsx          /rules
+│       │   ├── App.jsx
+│       │   ├── main.jsx
+│       │   └── index.css          ← Design tokens + global styles
+│       ├── index.html
+│       ├── vite.config.js
+│       └── package.json
+├── backend/                       ← To be implemented (FastAPI)
 │   ├── app/
 │   │   ├── api/
 │   │   ├── document_service/
@@ -604,11 +629,31 @@ Never commit real credentials.
 ### Prerequisites
 
 - Node.js 20+
-- Python 3.11+
+- Python 3.11+ (for backend when implemented)
 - `pip` or `uv`
-- optional Docker
+- Optional: Docker
 
-### Backend
+### Frontend
+
+```bash
+cd frontend/realdoor-app
+npm install
+npm run dev
+# → http://localhost:5173
+```
+
+### User Flow
+
+```text
+/ (Programs)  →  Select LIHTC program
+/upload       →  Upload documents (drag & drop, AI scans)
+/extraction   →  Review AI-extracted fields, confirm or correct values
+/readiness    →  Application Readiness report (score, required actions)
+/documents    →  Full document list
+/rules        →  LIHTC rules library with citations and formulas
+```
+
+### Backend (when implemented)
 
 ```bash
 cd backend
@@ -616,14 +661,27 @@ python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 uvicorn app.main:app --reload
+# → http://localhost:8000
+# → http://localhost:8000/docs  (Swagger UI)
 ```
 
-### Frontend
+### Connecting Frontend to Backend
 
-```bash
-cd frontend
-npm install
-npm run dev
+All API calls are currently mocked in `frontend/realdoor-app/src/api/`. Each function has a comment showing the real endpoint path. To connect the backend:
+
+1. Create a `.env` file in `frontend/realdoor-app/`:
+   ```
+   VITE_API_URL=http://localhost:8000
+   ```
+2. In each `src/api/*.js` file, uncomment the `axios` call and remove the mock return.
+
+Example (`src/api/readiness.js`):
+```js
+// Before (mock):
+return { score: 65, ... };
+
+// After (real):
+return (await axios.get(`${API}/api/readiness`)).data;
 ```
 
 ### Tests
