@@ -14,7 +14,7 @@ class Settings(BaseSettings):
     """Application configuration loaded from the repository-level .env file."""
 
     model_config = SettingsConfigDict(
-        env_file=REPOSITORY_ROOT / ".env",
+        env_file=REPOSITORY_ROOT / "backend/.env",
         env_file_encoding="utf-8",
         case_sensitive=False,
         extra="ignore",
