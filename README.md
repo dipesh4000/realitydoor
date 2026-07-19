@@ -188,15 +188,17 @@ uv run python scripts/verify_synthetic_documents.py
 uv run python scripts/cleanup_expired_data.py
 ```
 
-## Container deployment
+## Backend container deployment
 
-Build and run the complete frontend and API on one origin:
+Build and run the API locally from the repository root:
 
 ```powershell
 docker compose up --build
 ```
 
-Open `http://localhost:8000`. The container builds the React application with `/api` as its API base, serves SPA routes through FastAPI, runs as a non-root user, and exposes `/api/health` for platform health checks.
+The API is available at `http://localhost:8000` and exposes `/api/health` for platform health checks. Run the frontend separately from `frontend/` with `npm run dev`.
+
+For Render, create a Blueprint from `render.yaml`. It uses `backend/Dockerfile` with the repository root as its Docker context because the API also needs the shared `data/` policy files. Its build filter watches only `backend/**` and `data/**`, so frontend-only commits do not redeploy the backend. Set the frontend's `VITE_API_URL` to the Render service URL.
 
 For a durable production deployment, set `APP_ENV=production`, `FRONTEND_ORIGINS` to the exact HTTPS application origin, `USE_IN_MEMORY_REPOSITORY=false`, and configure the PostgreSQL/Supabase variables from `backend/.env.example`. Apply database migrations before directing traffic to a new database. Provider API keys remain optional.
 

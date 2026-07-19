@@ -2,13 +2,13 @@ services:
   realdoor:
     build:
       context: .
-      args:
-        VITE_API_URL: /api
+      dockerfile: backend/Dockerfile
     ports:
       - "8000:8000"
     environment:
       APP_ENV: development
-      FRONTEND_ORIGINS: http://localhost:8000
+      PORT: "8000"
+      FRONTEND_ORIGINS: http://localhost:5173
       USE_IN_MEMORY_REPOSITORY: "true"
       SESSION_TTL_MINUTES: "60"
       PACKET_TTL_MINUTES: "60"

@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: realdoor-api
+    runtime: docker
+    plan: free
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: .
+    healthCheckPath: /api/health
+    autoDeployTrigger: commit
+    buildFilter:
+      paths:
+        - backend/**
+        - data/**
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: FRONTEND_ORIGINS
+        value: https://real-door-theta.vercel.app
+      - key: USE_IN_MEMORY_REPOSITORY
+        value: "true"
+      - key: SESSION_TTL_MINUTES
+        value: "60"
+      - key: PACKET_TTL_MINUTES
+        value: "60"
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: NVIDIA_API_KEY
+        sync: false
