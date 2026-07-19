@@ -1,55 +1,21 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, Lock, CheckCircle2, Sparkles, Building2, Home, Landmark } from 'lucide-react';
+import { ArrowRight, Building2, CheckCircle2, Home, Landmark, LockKeyhole, ShieldCheck } from 'lucide-react';
 import { selectProgram } from '../api/session';
+import { Badge, Button, Callout, Card } from '../components/ui';
+import { WelcomeIllustration } from '../components/illustrations/JourneyIllustrations';
 
-const POLICIES = [
-  {
-    id: 'lihtc',
-    label: 'LIHTC Program',
-    tag: '2026 Active',
-    tagColor: 'var(--color-success)',
-    tagBg: 'var(--color-success-container)',
-    icon: <Building2 size={28} />,
-    description:
-      'Low-Income Housing Tax Credit — the primary affordable rental housing production program in the U.S. Supports 60% and 50% AMI income limits.',
-    details: ['FY2026 Albany MTSP table', 'Cited frozen rule set', 'Deterministic income math'],
-    available: true,
-    gradient: 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)',
-  },
-  {
-    id: 'section8',
-    label: 'Section 8 HCV',
-    tag: 'Coming Soon',
-    tagColor: 'var(--color-outline)',
-    tagBg: 'var(--color-surface-highest)',
-    icon: <Home size={28} />,
-    description:
-      'Housing Choice Voucher program — tenant-based rental assistance allowing eligible low-income families to choose their own housing.',
-    details: ['HUD Section 8 guidelines', 'Payment standard lookup', 'Utility allowance rules'],
-    available: false,
-    gradient: 'linear-gradient(135deg, #64748b 0%, #475569 100%)',
-  },
-  {
-    id: 'home',
-    label: 'HOME Program',
-    tag: 'Coming Soon',
-    tagColor: 'var(--color-outline)',
-    tagBg: 'var(--color-surface-highest)',
-    icon: <Landmark size={28} />,
-    description:
-      'HOME Investment Partnerships Program — federal block grant funds for building, buying, or rehabilitating affordable housing.',
-    details: ['HUD HOME regulations', 'Income targeting rules', '24 CFR Part 92 compliance'],
-    available: false,
-    gradient: 'linear-gradient(135deg, #64748b 0%, #475569 100%)',
-  },
+const futurePrograms = [
+  { name: 'Section 8 HCV', description: 'Housing Choice Voucher preparation guidance', icon: Home },
+  { name: 'HOME Program', description: 'HOME Investment Partnerships guidance', icon: Landmark },
 ];
 
 export default function PolicySelectPage({ onProgramSelected }) {
   const navigate = useNavigate();
   const [selecting, setSelecting] = useState(false);
   const [selectionError, setSelectionError] = useState('');
-  const beginLihtc = async () => {
+
+  const begin = async () => {
     if (selecting) return;
     setSelecting(true);
     setSelectionError('');
@@ -59,159 +25,62 @@ export default function PolicySelectPage({ onProgramSelected }) {
       onProgramSelected?.(session);
       navigate('/profile');
     } catch {
-      setSelectionError('Program selection could not be saved. Make sure the RealDoor API is running, then try again.');
+      setSelectionError('We could not start your LIHTC workspace. Make sure the RealDoor API is running, then try again.');
     } finally {
       setSelecting(false);
     }
   };
 
   return (
-    <main className="policy-page">
-      {/* Hero */}
-      <div className="policy-hero" style={{
-        background: 'linear-gradient(135deg, #001f6b 0%, #003ea8 60%, #2563eb 100%)',
-        position: 'relative',
-        overflow: 'hidden',
-      }}>
-        {/* Background decoration */}
-        <div style={{ position: 'absolute', top: -80, right: -80, width: 320, height: 320, borderRadius: '50%', background: 'rgba(255,255,255,0.04)', pointerEvents: 'none' }} />
-        <div style={{ position: 'absolute', bottom: -40, left: '40%', width: 200, height: 200, borderRadius: '50%', background: 'rgba(255,255,255,0.03)', pointerEvents: 'none' }} />
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 32 }}>
-          <Sparkles size={14} color="rgba(255,255,255,0.6)" />
-          <span style={{ fontSize: 12, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.6)' }}>
-            Application Readiness Copilot
-          </span>
-        </div>
-
-        <h1 className="policy-title" style={{ fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', lineHeight: 1.15, maxWidth: 600, marginBottom: 16 }}>
-          Select Your Housing Program
-        </h1>
-        <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.72)', lineHeight: 1.7, maxWidth: 520 }}>
-          RealDoor checks your documents against the selected program's 2026 rules and income limits — helping you understand exactly what's needed before you apply.
-        </p>
-
-        <div style={{ display: 'flex', gap: 20, marginTop: 28, flexWrap: 'wrap' }}>
-          {[
-            { label: 'Evidence-based', icon: '✦' },
-            { label: 'Citation-backed rules', icon: '✦' },
-            { label: 'No eligibility decisions', icon: '✦' },
-          ].map((item) => (
-            <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, color: 'rgba(255,255,255,0.65)', fontWeight: 500 }}>
-              <span style={{ fontSize: 8, color: '#93c5fd' }}>{item.icon}</span> {item.label}
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Policy cards */}
-      <div className="policy-content">
-        <div style={{ marginBottom: 28 }}>
-          <h2 style={{ fontSize: 20, fontWeight: 700, color: 'var(--color-on-surface)', marginBottom: 4 }}>Available Programs</h2>
-          <p style={{ fontSize: 14, color: 'var(--color-on-surface-variant)' }}>
-            Select a program to begin your application readiness review.
-          </p>
-        </div>
-
-        {selectionError && <div className="selection-error" role="alert">{selectionError}</div>}
-
-        <div className="policy-grid">
-          {POLICIES.map((policy) => (
-            <PolicyCard key={policy.id} policy={policy} onSelect={beginLihtc} selecting={selecting} />
-          ))}
-        </div>
-
-        {/* Disclaimer */}
-        <div style={{
-          marginTop: 40, padding: '14px 20px',
-          background: 'var(--color-surface-white)',
-          border: '1px solid var(--color-outline-variant)',
-          borderRadius: 'var(--radius-lg)',
-          display: 'flex', alignItems: 'flex-start', gap: 10,
-          fontSize: 12, color: 'var(--color-on-surface-variant)', lineHeight: 1.7,
-        }}>
-          <span style={{ color: 'var(--color-primary-container)', fontWeight: 700, flexShrink: 0 }}>ℹ</span>
-          <span>
-            RealDoor provides application readiness assistance only. It does not approve, reject, rank, or determine housing eligibility. Final decisions remain with the housing provider or administering agency.
-          </span>
-        </div>
-      </div>
-    </main>
-  );
-}
-
-function PolicyCard({ policy, onSelect, selecting }) {
-  return (
-    <div
-      aria-disabled={!policy.available}
-      style={{
-        background: 'var(--color-surface-white)',
-        border: '1.5px solid var(--color-outline-variant)',
-        borderRadius: 'var(--radius-2xl)',
-        overflow: 'hidden',
-        boxShadow: 'var(--shadow-card)',
-        cursor: policy.available ? 'pointer' : 'not-allowed',
-        opacity: policy.available ? 1 : 0.68,
-        transition: 'all 0.2s ease',
-        display: 'flex',
-        flexDirection: 'column',
-        position: 'relative',
-      }}
-      onMouseEnter={(e) => {
-        if (!policy.available) return;
-        e.currentTarget.style.transform = 'translateY(-3px)';
-        e.currentTarget.style.boxShadow = '0 12px 32px -4px rgba(37,99,235,0.15)';
-        e.currentTarget.style.borderColor = 'var(--color-primary-container)';
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.transform = 'translateY(0)';
-        e.currentTarget.style.boxShadow = 'var(--shadow-card)';
-        e.currentTarget.style.borderColor = 'var(--color-outline-variant)';
-      }}
-    >
-      {/* Card header gradient */}
-      <div style={{ background: policy.gradient, padding: '20px 22px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <div style={{ width: 48, height: 48, background: 'rgba(255,255,255,0.15)', borderRadius: 'var(--radius-xl)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
-          {policy.icon}
-        </div>
-        <span style={{ padding: '4px 10px', background: policy.tagBg, borderRadius: 'var(--radius-full)', fontSize: 11, fontWeight: 700, color: policy.tagColor, letterSpacing: '0.04em' }}>
-          {policy.tag}
-        </span>
-      </div>
-
-      {/* Card body */}
-      <div style={{ padding: '20px 22px', flex: 1, display: 'flex', flexDirection: 'column' }}>
-        <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 8, color: 'var(--color-on-surface)' }}>{policy.label}</h3>
-        <p style={{ fontSize: 13, color: 'var(--color-on-surface-variant)', lineHeight: 1.65, marginBottom: 16, flex: 1 }}>
-          {policy.description}
-        </p>
-
-        {/* Details */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 20 }}>
-          {policy.details.map((d) => (
-            <div key={d} style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 12, color: 'var(--color-on-surface-variant)' }}>
-              <CheckCircle2 size={12} color={policy.available ? 'var(--color-primary-container)' : 'var(--color-outline)'} />
-              {d}
-            </div>
-          ))}
-        </div>
-
-        {/* CTA */}
-        {policy.available ? (
-          <button
-            className="btn btn-primary"
-            style={{ width: '100%', justifyContent: 'center', gap: 6, fontWeight: 600 }}
-            onClick={onSelect}
-            disabled={selecting}
-          >
-            {selecting ? 'Selecting…' : 'Select Program'} <ArrowRight size={15} />
-          </button>
-        ) : (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '9px 14px', background: 'var(--color-surface-container)', borderRadius: 'var(--radius-md)', fontSize: 13, color: 'var(--color-outline)', fontWeight: 500, justifyContent: 'center' }}>
-            <Lock size={13} /> Not yet available
+    <main id="main-content" className="main-content">
+      <section className="welcome-layout">
+        <div>
+          <div className="eyebrow">Application preparation, made clearer</div>
+          <h1>Know what you need before you apply.</h1>
+          <p>RealDoor helps you collect, review, and understand your housing documents—one calm step at a time.</p>
+          <Button size="lg" loading={selecting} onClick={begin}>Start with LIHTC <ArrowRight size={17} /></Button>
+          <div className="trust-row" aria-label="RealDoor trust commitments">
+            <span><ShieldCheck size={15} /> Temporary, private session</span>
+            <span><CheckCircle2 size={15} /> Cited 2026 guidance</span>
+            <span><LockKeyhole size={15} /> No eligibility decisions</span>
           </div>
-        )}
+        </div>
+        <div className="welcome-layout__art" aria-hidden="true"><WelcomeIllustration /></div>
+      </section>
+
+      {selectionError && <Callout className="packet-success" tone="error" title="Could not start your workspace">{selectionError}</Callout>}
+
+      <div className="section-intro">
+        <div><h2>Available program</h2><p>RealDoor currently supports one carefully scoped preparation flow.</p></div>
+        <Badge tone="success">FY2026 active</Badge>
       </div>
-    </div>
+
+      <Card className="program-card">
+        <div className="program-card__icon"><Building2 size={24} /></div>
+        <div className="program-card__content">
+          <h3>Low-Income Housing Tax Credit</h3>
+          <p>Albany, Georgia MSA · 50% and 60% MTSP income-limit bands</p>
+          <div className="program-card__features">
+            <Badge tone="info">Official HUD sources</Badge>
+            <Badge tone="neutral">Deterministic income math</Badge>
+            <Badge tone="neutral">Renter-controlled packet</Badge>
+          </div>
+        </div>
+        <Button loading={selecting} onClick={begin}>Choose LIHTC <ArrowRight size={16} /></Button>
+      </Card>
+
+      <details className="future-programs">
+        <summary>See programs planned for future releases</summary>
+        <div className="future-program-grid">
+          {futurePrograms.map(({ name, description, icon: Icon }) => (
+            <div className="future-program" key={name}><Icon size={18} aria-hidden="true" /><strong>{name}</strong><span>{description} · Coming later</span></div>
+          ))}
+        </div>
+      </details>
+
+      <Callout title="Preparation help—not a housing decision" tone="info" className="packet-success">
+        RealDoor helps you understand documents and published rules. The housing provider or administering agency makes every final decision.
+      </Callout>
+    </main>
   );
 }

@@ -1,158 +1,110 @@
-import { useState, useRef, useEffect } from 'react';
-import { Bot, Sparkles, Send, ChevronRight } from 'lucide-react';
-import { sendMessage } from '../../api/chat';
+import { useEffect, useRef, useState } from 'react';
+import { Bot, ChevronDown, ChevronRight, MessageCircle, PanelRightClose, PanelRightOpen, Send, Sparkles, X } from 'lucide-react';
+import { streamMessage } from '../../api/chat';
 
-export default function AiPanel({ title = 'AI Copilot', subtitle, actionCard, suggestedQuestions = [], initialMessages = [] }) {
+export default function AiPanel({ title, subtitle, suggestedQuestions = [], initialMessages = [], open, onOpenChange, collapsed = false, onCollapsedChange, resizeHandleProps }) {
   const [messages, setMessages] = useState(initialMessages);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [historyOpen, setHistoryOpen] = useState(true);
   const feedRef = useRef(null);
+  const requestRef = useRef(null);
+
+  useEffect(() => () => requestRef.current?.abort(), []);
 
   useEffect(() => {
     if (feedRef.current) feedRef.current.scrollTop = feedRef.current.scrollHeight;
-  }, [messages]);
+  }, [messages, loading]);
 
   const handleSend = async (text) => {
-    const msg = text || input.trim();
-    if (!msg) return;
+    const message = text || input.trim();
+    if (!message || loading) return;
     setInput('');
-    setMessages((prev) => [...prev, { role: 'user', text: msg }]);
+    setMessages((current) => [...current, { role: 'user', text: message }]);
+    setHistoryOpen(true);
     setLoading(true);
+    const replyId = `reply-${Date.now()}`;
+    const controller = new AbortController();
+    requestRef.current = controller;
+    setMessages((current) => [...current, { id: replyId, role: 'ai', text: '', streaming: true }]);
     try {
-      const res = await sendMessage(msg);
-      setMessages((prev) => [...prev, { role: 'ai', text: res.reply, sources: res.sources }]);
+      await streamMessage(message, {
+        signal: controller.signal,
+        onDelta: (delta) => setMessages((current) => current.map((item) => item.id === replyId ? { ...item, text: item.text + delta } : item)),
+        onComplete: (response) => setMessages((current) => current.map((item) => item.id === replyId ? { ...item, sources: response.sources, streaming: false } : item)),
+      });
     } catch {
-      setMessages((prev) => [...prev, { role: 'ai', text: 'The grounded assistant is temporarily unavailable. Please use the Rules page citations.' }]);
+      if (!controller.signal.aborted) setMessages((current) => current.map((item) => item.id === replyId ? {
+        ...item,
+        text: 'I am temporarily unavailable. Your documents and progress are safe. You can still use the cited Rules & sources page.',
+        error: true,
+        streaming: false,
+      } : item));
     } finally {
+      requestRef.current = null;
       setLoading(false);
     }
   };
 
   return (
-    <aside className="ai-panel">
-      {/* Header */}
-      <div className="ai-panel-header">
-        <div className="ai-panel-avatar">
-          <Bot size={18} color="var(--color-primary-container)" />
-        </div>
-        <div>
-          <div style={{ fontWeight: 700, fontSize: 15, color: 'var(--color-on-surface)' }}>{title}</div>
-          {subtitle && (
-            <div style={{ fontSize: 11, color: 'var(--color-on-surface-variant)', letterSpacing: '0.06em', textTransform: 'uppercase', fontWeight: 600 }}>
-              {subtitle}
-            </div>
-          )}
-        </div>
-      </div>
+    <>
+      <button className="assistant-fab" onClick={() => onOpenChange(true)} aria-label="Ask RealDoor" aria-expanded={open}>
+        <MessageCircle size={20} /><span>Ask RealDoor</span>
+      </button>
+      {open && <button className="assistant-scrim" aria-label="Close assistant" onClick={() => onOpenChange(false)} />}
+      <aside className={`assistant-panel ${open ? 'is-open' : ''}${collapsed ? ' is-collapsed' : ''}`} aria-label="RealDoor assistant">
+        {!collapsed && <div className="panel-resize-handle panel-resize-handle--left" role="separator" aria-orientation="vertical" aria-label="Resize assistant" tabIndex="0" {...resizeHandleProps} />}
+        <header className="assistant-panel__header">
+          <div className="assistant-avatar"><Sparkles size={17} /></div>
+          <div className="assistant-panel__title"><strong>{title}</strong><span>{subtitle}</span></div>
+          <button className="icon-button assistant-panel__collapse" aria-label={collapsed ? 'Expand assistant' : 'Collapse assistant'} onClick={() => onCollapsedChange?.(!collapsed)}>{collapsed ? <PanelRightOpen size={18} /> : <PanelRightClose size={18} />}</button>
+          <button className="icon-button assistant-panel__close" aria-label="Close assistant" onClick={() => onOpenChange(false)}><X size={19} /></button>
+        </header>
 
-      {/* Body */}
-      <div className="ai-panel-body" ref={feedRef} aria-live="polite" aria-busy={loading}>
-        {/* Action card */}
-        {actionCard && (
-          <div className="ai-card primary-card">
-            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8, marginBottom: 8 }}>
-              <Sparkles size={15} color="var(--color-primary-container)" style={{ marginTop: 2, flexShrink: 0 }} />
-              <div style={{ fontWeight: 700, fontSize: 13, color: 'var(--color-on-surface)' }}>{actionCard.title}</div>
-            </div>
-            <p style={{ fontSize: 13, color: 'var(--color-on-surface-variant)', lineHeight: 1.6, marginBottom: 10 }}>
-              {actionCard.message}
-            </p>
-            {actionCard.fileRef && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '5px 10px', background: 'var(--color-surface-white)', border: '1px solid var(--color-outline-variant)', borderRadius: 'var(--radius-md)', fontSize: 12, color: 'var(--color-on-surface-variant)', marginBottom: 10, width: 'fit-content' }}>
-                <FileIcon /> {actionCard.fileRef}
-              </div>
-            )}
-            {actionCard.action && (
-              <button className="btn btn-primary" style={{ width: '100%', justifyContent: 'center', fontSize: 13 }}>
-                {actionCard.action}
-              </button>
-            )}
-          </div>
-        )}
+        <div className="assistant-panel__context">
+          <Bot size={18} aria-hidden="true" />
+          <p><strong>Grounded help, not a decision.</strong> I explain what RealDoor found and show where it came from.</p>
+        </div>
 
-        {/* Chat messages */}
-        {messages.length > 0 && (
-          <div className="chat-feed">
-            {messages.map((m, i) =>
-              m.role === 'user' ? (
-                <div key={i} style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-end', gap: 8 }}>
-                  <div className="user-message-bubble" style={{ whiteSpace: 'pre-wrap' }}>{m.text}</div>
-                  <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'var(--color-surface-highest)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 700, flexShrink: 0, color: 'var(--color-on-surface-variant)' }}>JD</div>
-                </div>
-              ) : (
-                <div key={i} className="ai-message">
-                  <div className="ai-panel-avatar" style={{ flexShrink: 0 }}>
-                    <Bot size={14} color="var(--color-primary-container)" />
-                  </div>
-                  <div className="ai-message-bubble" style={{ whiteSpace: 'pre-wrap' }}>
-                    {m.text}
-                    {m.sources?.length > 0 && (
-                      <div style={{ marginTop: 8, fontSize: 11, color: 'var(--color-primary-container)' }}>
-                        Sources: {m.sources.map((source) => `${source.title}${source.page ? `, p. ${source.page}` : ''}`).join(' · ')}
+        <div className="assistant-panel__body" ref={feedRef} aria-live="polite" aria-busy={loading}>
+          <button className="assistant-history-toggle" onClick={() => setHistoryOpen((value) => !value)} aria-expanded={historyOpen}>
+            Conversation <ChevronDown size={15} />
+          </button>
+          {historyOpen && (
+            <div className="assistant-feed">
+              {messages.map((message, index) => (
+                <div key={message.id || `${message.role}-${index}`} className={`assistant-message assistant-message--${message.role}${message.error ? ' is-error' : ''}`}>
+                  {message.role === 'ai' && <span className="assistant-message__avatar"><Bot size={14} /></span>}
+                  <div className="assistant-message__bubble">
+                    <div>{message.text || (message.streaming ? <><span className="typing-dots"><i /><i /><i /></span><span className="sr-only">RealDoor is responding</span></> : null)}</div>
+                    {message.sources?.length > 0 && (
+                      <div className="assistant-message__sources">
+                        {message.sources.map((source) => <span key={`${source.title}-${source.page || ''}`}>{source.title}{source.page ? `, p. ${source.page}` : ''}</span>)}
                       </div>
                     )}
                   </div>
                 </div>
-              )
-            )}
-            {loading && (
-              <div className="ai-message">
-                <div className="ai-panel-avatar" style={{ flexShrink: 0 }}>
-                  <Bot size={14} color="var(--color-primary-container)" />
-                </div>
-                <div className="ai-message-bubble" style={{ color: 'var(--color-outline)' }}>
-                  <LoadingDots />
-                </div>
-              </div>
-            )}
-          </div>
-        )}
+              ))}
+            </div>
+          )}
 
-        {/* Suggested questions */}
-        {suggestedQuestions.length > 0 && (
-          <div className="suggested-questions">
-            <div className="suggested-questions-label">Suggested Questions</div>
-            {suggestedQuestions.map((q, i) => (
-              <button key={i} className="suggestion-btn" onClick={() => handleSend(q)}>
-                {q}
-                <ChevronRight size={14} color="var(--color-outline)" />
-              </button>
+          <div className="assistant-suggestions">
+            <span>Helpful questions</span>
+            {suggestedQuestions.map((question) => (
+              <button key={question} onClick={() => handleSend(question)} disabled={loading}>{question}<ChevronRight size={15} /></button>
             ))}
           </div>
-        )}
-      </div>
-
-      {/* Input */}
-      <div className="ai-input-area">
-        <div className="ai-input-row">
-          <input
-            aria-label="Ask the grounded RealDoor assistant"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask Copilot anything..."
-            onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-          />
-          <button className="ai-send-btn" aria-label="Send question" onClick={() => handleSend()} disabled={loading}>
-            <Send size={14} />
-          </button>
         </div>
-        <p className="disclaimer" style={{ marginTop: 6 }}>AI can make mistakes. Verify important information.</p>
-      </div>
-    </aside>
-  );
-}
 
-function FileIcon() {
-  return <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>;
-}
-
-function LoadingDots() {
-  return (
-    <span style={{ display: 'inline-flex', gap: 4 }}>
-      {[0,1,2].map(i => (
-        <span key={i} style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--color-outline)', display: 'inline-block', animation: `pulse 1.2s ease-in-out ${i*0.2}s infinite` }} />
-      ))}
-      <style>{`@keyframes pulse { 0%,80%,100%{opacity:0.3} 40%{opacity:1} }`}</style>
-    </span>
+        <form className="assistant-composer" onSubmit={(event) => { event.preventDefault(); handleSend(); }}>
+          <label className="sr-only" htmlFor="assistant-input">Ask the grounded RealDoor assistant</label>
+          <textarea id="assistant-input" rows="1" value={input} onChange={(event) => setInput(event.target.value)} placeholder="Ask about this step…" onKeyDown={(event) => {
+            if (event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); handleSend(); }
+          }} />
+          <button type="submit" aria-label="Send question" disabled={loading || !input.trim()}><Send size={16} /></button>
+          <small>Verify important information using the cited source.</small>
+        </form>
+      </aside>
+    </>
   );
 }

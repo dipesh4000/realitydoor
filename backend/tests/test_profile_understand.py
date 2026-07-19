@@ -13,7 +13,7 @@ def test_consent_profile_and_packet_preview(client):
     assert blocked.status_code == 403
     assert client.patch("/api/session/profile", json={"household_size": 4, "income_band": 50}).status_code == 200
     assert client.post("/api/session/consent", json={"accepted": True}).status_code == 200
-    path = ROOT / "examples" / "01_complete_profile" / "pay_stub_biweekly.pdf"
+    path = ROOT / "examples" / "01_standard_biweekly_paystub.pdf"
     with path.open("rb") as stream:
         upload = client.post("/api/documents/upload", files={"file": (path.name, stream, "application/pdf")})
     assert upload.status_code == 201

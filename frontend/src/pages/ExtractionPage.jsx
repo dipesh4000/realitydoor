@@ -1,30 +1,30 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { AlertTriangle, CheckCircle2, Eye, Pencil } from 'lucide-react';
-import {
-  confirmField,
-  correctField,
-  getDocumentContentUrl,
-  getDocumentPageUrl,
-  getDocumentFields,
-  getDocuments,
-} from '../api/documents';
+import { AlertTriangle, ArrowRight, CheckCircle2, Eye, FileQuestion, Layers3, Pencil, SearchCheck, UploadCloud } from 'lucide-react';
+import { confirmField, correctField, getDocumentContentUrl, getDocumentFields, getDocumentPageUrl, getDocuments } from '../api/documents';
+import { Badge, Button, Callout, Card, EmptyState, LoadingState, PageHeader } from '../components/ui';
+import { ReviewIllustration } from '../components/illustrations/JourneyIllustrations';
 
-function ConfidenceBadge({ value }) {
-  const pct = Math.round(value * 100);
-  const kind = pct >= 90 ? 'success' : pct >= 75 ? 'warning' : 'error';
-  return <span className={`badge badge-${kind}`}>{pct}% confidence</span>;
+const label = (name) => name.replaceAll('_', ' ').replace(/\b\w/g, (character) => character.toUpperCase());
+
+function confidenceState(value) {
+  const percent = Math.round(value * 100);
+  if (percent >= 90) return { label: 'Looks good', tone: 'success', percent };
+  if (percent >= 75) return { label: 'Please review', tone: 'warning', percent };
+  return { label: 'Needs correction', tone: 'error', percent };
 }
 
-const label = (name) => name.replaceAll('_', ' ').replace(/\b\w/g, (char) => char.toUpperCase());
-
 export default function ExtractionPage() {
-  const [documents, setDocuments] = useState([]);
+  const [documents, setDocuments] = useState(null);
   const [activeId, setActiveId] = useState(null);
-  const [fields, setFields] = useState([]);
+  const [fields, setFields] = useState(null);
+  const [pageCount, setPageCount] = useState(1);
+  const [duplicatesOmitted, setDuplicatesOmitted] = useState(0);
+  const [activePage, setActivePage] = useState(1);
   const [editingId, setEditingId] = useState(null);
   const [editValue, setEditValue] = useState('');
   const [selectedField, setSelectedField] = useState(null);
+  const [error, setError] = useState('');
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
@@ -33,22 +33,41 @@ export default function ExtractionPage() {
       setDocuments(records);
       const requested = searchParams.get('document');
       setActiveId(records.some((item) => item.id === requested) ? requested : records[0]?.id || null);
-    });
+    }).catch(() => { setDocuments([]); setError('We could not load your documents.'); });
   }, [searchParams]);
 
   useEffect(() => {
-    if (!activeId) {
-      setFields([]);
-      return;
-    }
-    getDocumentFields(activeId).then((res) => { setFields(res.fields); setSelectedField(res.fields[0] || null); });
+    if (!activeId) { setFields([]); return; }
+    setFields(null);
+    setError('');
+    getDocumentFields(activeId).then((response) => {
+      setFields(response.fields);
+      setPageCount(response.page_count || 1);
+      setDuplicatesOmitted(response.duplicates_omitted || 0);
+      const firstPage = response.fields[0]?.page || 1;
+      setActivePage(firstPage);
+      setSelectedField(response.fields[0] || null);
+    }).catch(() => { setFields([]); setPageCount(1); setDuplicatesOmitted(0); setError('We could not load the extracted details for this document.'); });
   }, [activeId]);
 
-  const activeDocument = documents.find((item) => item.id === activeId);
+  const activeDocument = documents?.find((document) => document.id === activeId);
+  const confirmedCount = useMemo(() => fields?.filter((field) => ['confirmed', 'corrected'].includes(field.status)).length || 0, [fields]);
+  const reviewCount = (fields?.length || 0) - confirmedCount;
+  const hasUsefulData = fields === null || fields.length > 0 || duplicatesOmitted > 0;
+  const pageNumbers = useMemo(() => Array.from({ length: pageCount }, (_, index) => index + 1), [pageCount]);
+  const pageFields = useMemo(() => fields?.filter((field) => (field.page || 1) === activePage) || [], [fields, activePage]);
+
+  const selectPage = (page) => {
+    setActivePage(page);
+    setSelectedField((fields || []).find((field) => (field.page || 1) === page) || null);
+  };
 
   const confirm = async (field) => {
-    await confirmField(activeId, field.id);
-    setFields((current) => current.map((item) => item.id === field.id ? { ...item, status: 'confirmed' } : item));
+    setError('');
+    try {
+      await confirmField(activeId, field.id);
+      setFields((current) => current.map((item) => item.id === field.id ? { ...item, status: 'confirmed' } : item));
+    } catch { setError(`We could not confirm ${label(field.field_name)}. Please try again.`); }
   };
 
   const save = async (field) => {
@@ -57,83 +76,108 @@ export default function ExtractionPage() {
       const parsed = Number(editValue.replaceAll(',', '').replace('$', ''));
       value = Number.isNaN(parsed) ? editValue : parsed;
     }
-    await correctField(activeId, field.id, value);
-    setFields((current) => current.map((item) => item.id === field.id ? { ...item, normalized_value: value, status: 'corrected' } : item));
-    setEditingId(null);
+    setError('');
+    try {
+      await correctField(activeId, field.id, value);
+      setFields((current) => current.map((item) => item.id === field.id ? { ...item, normalized_value: value, status: 'corrected' } : item));
+      setEditingId(null);
+    } catch { setError(`We could not save the correction to ${label(field.field_name)}.`); }
   };
 
-  return (
-    <main className="main-content">
-        <div className="page-header">
-          <div className="step-indicator"><span>Step 3 of 5</span><span>›</span><span>Evidence review</span></div>
-          <h1 className="page-title">Review Extracted Fields</h1>
-          <p className="page-subtitle">Confirm or correct values before RealDoor uses them in a calculation.</p>
-        </div>
+  if (documents === null) return <main id="main-content" className="main-content"><LoadingState label="Loading your document workspace…" /></main>;
 
-        {documents.length > 0 && (
-          <div className="card" style={{ marginBottom: 16, display: 'flex', alignItems: 'center', gap: 12 }}>
-            <label htmlFor="document-select" style={{ fontWeight: 600, fontSize: 13 }}>Document</label>
-            <select id="document-select" value={activeId || ''} onChange={(event) => setActiveId(event.target.value)} style={{ flex: 1, padding: '8px 10px', border: '1px solid var(--color-outline-variant)', borderRadius: 8 }}>
+  return (
+    <main id="main-content" className="main-content">
+      <PageHeader eyebrow="Step 3 of 5" title="Check what RealDoor found" description="Choose a document and inspect every page. Compare each policy-relevant detail with its source, then confirm or correct it." illustration={<ReviewIllustration />} />
+
+      {error && <Callout tone="error" title="Something needs attention">{error}</Callout>}
+      {activeDocument?.safety_flags?.length > 0 && <Callout className="packet-success" tone="warning" title="Instruction-like text was ignored" icon={AlertTriangle}>RealDoor treated the document as untrusted evidence and did not follow instructions found inside it. Review or remove this file.</Callout>}
+
+      {documents.length === 0 ? (
+        <Card><EmptyState icon={SearchCheck} title="No documents to review yet" description="Add at least one document before reviewing extracted details." action={<Button onClick={() => navigate('/upload')}>Add documents</Button>} /></Card>
+      ) : (
+        <>
+          <Card className="evidence-toolbar">
+            <label htmlFor="document-select">Selected document</label>
+            <select id="document-select" value={activeId || ''} onChange={(event) => setActiveId(event.target.value)}>
               {documents.map((document) => <option key={document.id} value={document.id}>{document.name}</option>)}
             </select>
-            {activeDocument && (
-              <a className="btn btn-outline btn-sm" href={getDocumentContentUrl(activeDocument.id)} target="_blank" rel="noreferrer"><Eye size={13} /> View source</a>
-            )}
-          </div>
-        )}
+            {activeDocument && <a className="button button--secondary button--sm" href={getDocumentContentUrl(activeDocument.id)} target="_blank" rel="noreferrer"><Eye size={14} /> Open original</a>}
+          </Card>
 
-        {activeDocument?.safety_flags?.length > 0 && (
-          <div className="card" style={{ marginBottom: 16, borderColor: 'var(--color-error)', background: 'var(--color-error-container)' }}>
-            <b>Untrusted instruction detected.</b> RealDoor ignored instruction-like document text; remove or review this file.
-          </div>
-        )}
+          {fields === null ? <LoadingState label="Reading extracted details…" /> : (
+            <>
+              {!hasUsefulData && (
+                <Callout tone="warning" title="No useful application data was found" icon={FileQuestion} actions={<Button size="sm" onClick={() => navigate('/upload')}><UploadCloud size={15} /> Add a different document</Button>}>
+                  This file does not appear to contain supported income, identity, banking, or employment details. Check that you uploaded the intended document, or choose another file.
+                </Callout>
+              )}
+              {duplicatesOmitted > 0 && (
+                <Callout tone="info" title={`${duplicatesOmitted} repeated ${duplicatesOmitted === 1 ? 'detail was' : 'details were'} removed`}>
+                  Those exact values are already represented by another document, so you only need to review them once.
+                </Callout>
+              )}
 
-        {activeDocument && selectedField && (
-          <div className="card" style={{ marginBottom: 16 }}>
-            <div className="section-label">Source evidence · {label(selectedField.field_name)} · page {selectedField.page || 1}</div>
-            <div style={{ position: 'relative', maxWidth: 560, border: '1px solid var(--color-outline-variant)' }}>
-              <img src={getDocumentPageUrl(activeDocument.id, selectedField.page || 1)} alt={`Page ${selectedField.page || 1} of ${activeDocument.name}`} style={{ width: '100%', display: 'block' }} />
-              {selectedField.bounding_box && <div aria-label="Extracted source region" style={{ position: 'absolute', left: `${selectedField.bounding_box[0] / 612 * 100}%`, top: `${selectedField.bounding_box[1] / 792 * 100}%`, width: `${(selectedField.bounding_box[2] - selectedField.bounding_box[0]) / 612 * 100}%`, height: `${(selectedField.bounding_box[3] - selectedField.bounding_box[1]) / 792 * 100}%`, border: '3px solid #ef4444', background: 'rgba(239,68,68,.15)', pointerEvents: 'none' }} />}
-            </div>
-          </div>
-        )}
-
-        <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
-          {fields.map((field) => {
-            const flagged = field.status === 'needs_review' || field.confidence < 0.75;
-            return (
-              <div key={field.id} style={{ padding: '13px 18px', borderBottom: '1px solid var(--color-outline-variant)', background: flagged ? '#fffbeb' : 'white' }}>
-                <div className="extracted-field-grid">
-                  <div className="field-name">{flagged && <AlertTriangle size={13} color="var(--color-warning)" style={{ marginRight: 5 }} />}{label(field.field_name)}</div>
-                  <div className="field-value">
-                    {editingId === field.id ? (
-                      <input aria-label={`Correct ${label(field.field_name)}`} value={editValue} onChange={(event) => setEditValue(event.target.value)} autoFocus style={{ width: '100%', padding: '6px 8px', border: '1.5px solid var(--color-primary-container)', borderRadius: 6 }} />
-                    ) : String(field.normalized_value ?? '—')}
-                  </div>
-                  <ConfidenceBadge value={field.confidence} />
-                  <div style={{ display: 'flex', gap: 6 }}>
-                    {editingId === field.id ? (
-                      <button className="btn btn-primary btn-sm" onClick={() => save(field)}>Save</button>
-                    ) : (
-                      <>
-                        <button aria-label={`Confirm ${label(field.field_name)}`} className="btn btn-ghost btn-sm" disabled={['confirmed', 'corrected'].includes(field.status)} onClick={() => confirm(field)}><CheckCircle2 size={13} /> {field.status === 'confirmed' ? 'Confirmed' : field.status === 'corrected' ? 'Corrected' : 'Confirm'}</button>
-                        <button aria-label={`Correct ${label(field.field_name)}`} className="btn btn-outline btn-sm" onClick={() => { setEditingId(field.id); setEditValue(String(field.normalized_value ?? '')); }}><Pencil size={13} /></button>
-                      </>
-                    )}
-                  </div>
+              <Card className="page-selector" aria-label="Document pages">
+                <div className="page-selector__heading"><Layers3 size={16} /><strong>{pageCount} {pageCount === 1 ? 'page' : 'pages'} in {activeDocument?.name}</strong><span>Select a page to inspect its extracted details.</span></div>
+                <div className="page-selector__tabs" role="tablist" aria-label="PDF pages">
+                  {pageNumbers.map((page) => {
+                    const count = fields.filter((field) => (field.page || 1) === page).length;
+                    return <button key={page} type="button" role="tab" aria-selected={activePage === page} className={activePage === page ? 'is-active' : ''} onClick={() => selectPage(page)}>Page {page}<small>{count ? `${count} ${count === 1 ? 'detail' : 'details'}` : 'No data'}</small></button>;
+                  })}
                 </div>
-                {field.source_text && <button className="btn btn-ghost btn-sm" style={{ marginTop: 7 }} onClick={() => setSelectedField(field)}>Show source: “{field.source_text}” · page {field.page || 1}</button>}
-                {field.note && <div style={{ marginTop: 4, fontSize: 12, color: 'var(--color-warning)' }}>{field.note}</div>}
-              </div>
-            );
-          })}
-          {documents.length === 0 && <div style={{ padding: 40, textAlign: 'center' }}>Upload a document to review extracted evidence.</div>}
-        </div>
+              </Card>
 
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 24 }}>
-          <button className="btn btn-ghost" onClick={() => navigate('/upload')}>Back</button>
-          <button className="btn btn-primary btn-lg" onClick={() => navigate('/readiness')}>Continue to readiness →</button>
-        </div>
+              <div className={`evidence-workspace${!hasUsefulData ? ' evidence-workspace--empty' : ''}`}>
+                <Card className="document-preview">
+                  <div className="document-preview__header"><div><strong>Source evidence · page {activePage}</strong><span>{selectedField ? label(selectedField.field_name) : 'No extracted detail selected on this page'}</span></div><Badge tone="info">Page {activePage} of {pageCount}</Badge></div>
+                  {activeDocument && (
+                    <div className="document-preview__canvas">
+                      <img src={getDocumentPageUrl(activeDocument.id, activePage)} alt={`Page ${activePage} of ${activeDocument.name}`} />
+                      {selectedField?.bounding_box && (selectedField.page || 1) === activePage && <div className="evidence-highlight" aria-label="Highlighted extracted source region" style={{ left: `${selectedField.bounding_box[0] / 612 * 100}%`, top: `${selectedField.bounding_box[1] / 792 * 100}%`, width: `${(selectedField.bounding_box[2] - selectedField.bounding_box[0]) / 612 * 100}%`, height: `${(selectedField.bounding_box[3] - selectedField.bounding_box[1]) / 792 * 100}%` }} />}
+                    </div>
+                  )}
+                </Card>
+
+                <Card className="field-panel">
+                  <div className="field-panel__header"><h2>Extracted details · page {activePage}</h2><p>{pageFields.length ? `${pageFields.length} ${pageFields.length === 1 ? 'detail was' : 'details were'} found on this page. ${reviewCount} remain to review across the document.` : 'No policy-relevant details were found on this page.'}</p></div>
+                  {!hasUsefulData ? (
+                    <EmptyState icon={FileQuestion} title="Nothing useful to review" description="RealDoor could not find application-related details in this document. The file remains in your workspace until you replace or remove it." action={<Button variant="secondary" onClick={() => navigate('/documents')}>Manage this document</Button>} />
+                  ) : pageFields.length === 0 ? (
+                    <EmptyState icon={FileQuestion} title={`No useful data found on page ${activePage}`} description="This page is still shown so you can verify it individually. Try a clearer scan if this page should contain renter, income, employment, banking, or identity details." />
+                  ) : pageFields.map((field) => {
+                    const confidence = confidenceState(field.confidence);
+                    const reviewed = ['confirmed', 'corrected'].includes(field.status);
+                    return (
+                      <div className={`extracted-field ${confidence.tone !== 'success' && !reviewed ? 'is-review' : ''}`} key={field.id}>
+                        <div className="extracted-field__top">
+                          <div><span className="extracted-field__label">{label(field.field_name)}</span><span className="extracted-field__value">{String(field.normalized_value ?? 'Not found')}</span></div>
+                          <Badge tone={reviewed ? 'success' : confidence.tone}>{reviewed ? (field.status === 'corrected' ? 'Corrected' : 'Confirmed') : confidence.label}</Badge>
+                        </div>
+                        {editingId === field.id ? (
+                          <div className="field-edit"><input type="text" aria-label={`Edit ${label(field.field_name)}`} value={editValue} onChange={(event) => setEditValue(event.target.value)} autoFocus /><Button size="sm" onClick={() => save(field)}>Save</Button><Button size="sm" variant="ghost" onClick={() => setEditingId(null)}>Cancel</Button></div>
+                        ) : (
+                          <div className="extracted-field__actions">
+                            <Button size="sm" variant={reviewed ? 'secondary' : 'primary'} disabled={reviewed} onClick={() => confirm(field)}><CheckCircle2 size={14} /> {reviewed ? 'Reviewed' : 'This is correct'}</Button>
+                            <Button size="sm" variant="secondary" onClick={() => { setEditingId(field.id); setEditValue(String(field.normalized_value ?? '')); }}><Pencil size={14} /> Correct</Button>
+                          </div>
+                        )}
+                        {field.source_text && <button className="source-button" title={field.source_text} onClick={() => { setActivePage(field.page || 1); setSelectedField(field); }}>Show source: “{field.source_text}” · page {field.page || 1}</button>}
+                        {field.note && <Callout tone="warning" className="packet-success">{field.note}</Callout>}
+                      </div>
+                    );
+                  })}
+                </Card>
+              </div>
+            </>
+          )}
+
+          {hasUsefulData && <div className="confirmation-summary">
+            <div><strong>{confirmedCount} of {fields?.length || 0} details reviewed</strong><span>Readiness checks every field declared by the policy dataset and keeps missing or open details flagged.</span></div>
+            <Button onClick={() => navigate('/readiness')}>See readiness <ArrowRight size={16} /></Button>
+          </div>}
+        </>
+      )}
     </main>
   );
 }

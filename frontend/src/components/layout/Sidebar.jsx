@@ -1,8 +1,20 @@
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutGrid, CheckSquare, FileText, BookOpen, LogOut, PackageCheck, X } from 'lucide-react';
+import { ChevronDown, LockKeyhole, LogOut, PanelLeftClose, PanelLeftOpen, ShieldCheck } from 'lucide-react';
+import { MOBILE_NAV, PRIMARY_NAV, ROUTES } from '../../routeConfig';
+import RealDoorLogo from '../RealDoorLogo';
+import { Button, Modal } from '../ui';
 
-export default function Sidebar({ onTerminate }) {
+function Brand() {
+  return (
+    <NavLink to="/" className="brand" aria-label="RealDoor home">
+      <RealDoorLogo />
+    </NavLink>
+  );
+}
+
+export default function Sidebar({ onTerminate, collapsed = false, onCollapsedChange, resizeHandleProps }) {
+  const [menuOpen, setMenuOpen] = useState(false);
   const [confirming, setConfirming] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
@@ -13,87 +25,78 @@ export default function Sidebar({ onTerminate }) {
     try {
       await onTerminate();
       setConfirming(false);
+      setMenuOpen(false);
     } catch {
-      setError('Could not terminate the session. Please try again.');
+      setError('We could not delete the session. Please try again.');
     } finally {
       setBusy(false);
     }
   };
 
   return (
-    <aside className="sidebar">
-      {/* Logo */}
-      <div className="sidebar-logo">
-        <div className="sidebar-logo-mark">R</div>
-        <span className="sidebar-logo-text">RealDoor</span>
-      </div>
-
-      {/* User */}
-      <div className="sidebar-user">
-        <div className="sidebar-avatar">RK</div>
-        <div>
-          <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--color-on-surface)' }}>Copilot</div>
-          <div style={{ fontSize: 11, color: 'var(--color-on-surface-variant)' }}>Application Readiness</div>
+    <>
+      <aside className={`sidebar${collapsed ? ' is-collapsed' : ''}`}>
+        <div className="sidebar__header">
+          <Brand />
+          <button className="icon-button sidebar__collapse" aria-label={collapsed ? 'Expand navigation' : 'Collapse navigation'} onClick={() => onCollapsedChange?.(!collapsed)}>
+            {collapsed ? <PanelLeftOpen size={18} /> : <PanelLeftClose size={18} />}
+          </button>
         </div>
-      </div>
 
-      {/* Nav */}
-      <nav className="sidebar-nav">
-        <NavLink
-          to="/"
-          end
-          className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}
-        >
-          <LayoutGrid size={16} />
-          Programs
-        </NavLink>
+        <div className="sidebar__trust">
+          <span className="sidebar__trust-icon"><ShieldCheck size={17} /></span>
+          <span><strong>Private workspace</strong><small>Your files stay in this session</small></span>
+        </div>
 
-        <NavLink
-          to="/readiness"
-          className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}
-        >
-          <CheckSquare size={16} />
-          Readiness
-        </NavLink>
+        <nav className="sidebar__nav" aria-label="Primary navigation">
+          {PRIMARY_NAV.map((path) => {
+            const item = ROUTES[path];
+            const Icon = item.icon;
+            return (
+              <NavLink key={path} to={path} end={path === '/'} title={collapsed ? item.label : undefined} className={({ isActive }) => `nav-link${isActive ? ' is-active' : ''}`}>
+                <Icon size={18} aria-hidden="true" />
+                <span>{item.label}</span>
+              </NavLink>
+            );
+          })}
+        </nav>
 
-        <NavLink
-          to="/documents"
-          className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}
-        >
-          <FileText size={16} />
-          Documents
-        </NavLink>
+        <div className={`session-menu ${menuOpen ? 'is-open' : ''}`}>
+          <button className="session-menu__trigger" aria-label="Privacy and session controls" aria-expanded={menuOpen} onClick={() => setMenuOpen((value) => !value)}>
+            <span className="session-menu__avatar"><ShieldCheck size={16} /></span>
+            <span><strong>Privacy & session</strong><small>Review or delete your data</small></span>
+            <ChevronDown size={16} />
+          </button>
+          {menuOpen && (
+            <div className="session-menu__popover">
+              <div className="session-menu__note"><LockKeyhole size={16} /><span>Uploads expire with this temporary session and are never sent automatically.</span></div>
+              <button className="session-menu__danger" onClick={() => setConfirming(true)}><LogOut size={16} /> End and delete session</button>
+            </div>
+          )}
+        </div>
+        {!collapsed && <div className="panel-resize-handle panel-resize-handle--right" role="separator" aria-orientation="vertical" aria-label="Resize navigation" tabIndex="0" {...resizeHandleProps} />}
+      </aside>
 
-        <NavLink
-          to="/rules"
-          className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}
-        >
-          <BookOpen size={16} />
-          Rules
-        </NavLink>
-
-        <NavLink to="/packet" className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}>
-          <PackageCheck size={16} /> Packet
-        </NavLink>
+      <nav className="mobile-nav" aria-label="Mobile navigation">
+        {MOBILE_NAV.map((path) => {
+          const item = ROUTES[path];
+          const Icon = item.icon;
+          return <NavLink key={path} to={path} end={path === '/'} className={({ isActive }) => isActive ? 'is-active' : ''}><Icon size={20} /><span>{item.shortLabel}</span></NavLink>;
+        })}
       </nav>
 
-      <div className="sidebar-footer">
-        {confirming ? (
-          <div className="terminate-confirm" role="alert">
-            <p>Delete this session, chat, documents, and packets?</p>
-            <div>
-              <button className="btn btn-ghost btn-sm" onClick={() => setConfirming(false)} disabled={busy}><X size={13} /> Cancel</button>
-              <button className="btn btn-sm terminate-confirm-button" onClick={terminate} disabled={busy}>{busy ? 'Deleting…' : 'Delete all'}</button>
-            </div>
-            {error && <small>{error}</small>}
-          </div>
-        ) : (
-          <button className="terminate-session-btn" onClick={() => setConfirming(true)}>
-            <LogOut size={15} />
-            Terminate Session
-          </button>
-        )}
-      </div>
-    </aside>
+      <Modal
+        open={confirming}
+        onClose={() => !busy && setConfirming(false)}
+        title="End and delete this session?"
+        description="This permanently removes the session, assistant conversation, uploaded documents, and generated packets. This cannot be undone."
+      >
+        {error && <div className="inline-error" role="alert">{error}</div>}
+        <div className="modal__actions">
+          <Button variant="secondary" onClick={() => setConfirming(false)} disabled={busy}>Keep session</Button>
+          <Button variant="danger" loading={busy} onClick={terminate}>End and delete</Button>
+        </div>
+      </Modal>
+    </>
   );
 }

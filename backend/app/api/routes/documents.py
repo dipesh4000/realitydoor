@@ -21,7 +21,7 @@ from app.schemas.documents import (
     FieldListResponse,
     SuccessResponse,
 )
-from app.services.documents import detect_mime, process_upload, safe_filename
+from app.services.documents import TRUSTED_FIELD_STATUSES, detect_mime, field_dedupe_key, process_upload, safe_filename, validate_field_correction
 from app.services.storage import StorageService
 
 
@@ -117,12 +117,42 @@ async def document_fields(
     raw_session_id: str | None = Cookie(default=None, alias="realdoor_session"),
     sessions: SessionRepository = Depends(get_session_repository),
     documents: DocumentRepository = Depends(get_document_repository),
+    storage: StorageService = Depends(get_storage_service),
 ) -> FieldListResponse:
     session_id = await require_session(raw_session_id, sessions)
+    record = await documents.get(session_id, document_id)
     fields = await documents.fields(session_id, document_id)
-    if fields is None:
+    if fields is None or record is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Document not found")
-    return FieldListResponse(fields=fields)
+    owners: dict[tuple[str, str], tuple[UUID, str]] = {}
+    candidates = sorted(
+        await documents.list_for_session(session_id),
+        key=lambda candidate: candidate.uploaded_at,
+    )
+    for candidate in candidates:
+        for field in await documents.fields(session_id, candidate.id) or []:
+            key = field_dedupe_key(field)
+            if key is None:
+                continue
+            current = owners.get(key)
+            if current is None or (
+                current[1] not in TRUSTED_FIELD_STATUSES
+                and field.status in TRUSTED_FIELD_STATUSES
+            ):
+                owners[key] = (candidate.id, field.status)
+    unique_fields = [
+        field for field in fields
+        if (key := field_dedupe_key(field)) is None or owners.get(key, (document_id, ""))[0] == document_id
+    ]
+    duplicates_omitted = len(fields) - len(unique_fields)
+    page_count = 1
+    if record.mime_type == "application/pdf":
+        data = await storage.download(record.storage_path) if record.storage_path.startswith("supabase://") else Path(record.storage_path).read_bytes()
+        try:
+            page_count = max(1, len(PdfReader(io.BytesIO(data)).pages))
+        except Exception as exc:
+            raise HTTPException(status_code=422, detail="The PDF can no longer be read") from exc
+    return FieldListResponse(fields=unique_fields, page_count=page_count, duplicates_omitted=duplicates_omitted)
 
 
 @router.get("/{document_id}/content")
@@ -196,8 +226,16 @@ async def correct_field(
     documents: DocumentRepository = Depends(get_document_repository),
 ) -> SuccessResponse:
     session_id = await require_session(raw_session_id, sessions)
+    fields = await documents.fields(session_id, document_id)
+    current = next((field for field in fields or [] if field.id == field_id), None)
+    if current is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Field not found")
+    try:
+        value = validate_field_correction(current.field_name, payload.value)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
     field = await documents.mutate_field(
-        session_id, document_id, field_id, status="corrected", value=payload.value
+        session_id, document_id, field_id, status="corrected", value=value
     )
     if field is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Field not found")

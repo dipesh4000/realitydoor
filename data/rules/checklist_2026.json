@@ -15,6 +15,16 @@
       "minimum_count": 2,
       "date_field": "pay_date",
       "max_age_days": 60,
+      "required_fields": [
+        { "name": "full_name", "label": "Renter name" },
+        { "name": "employer_name", "label": "Employer name" },
+        { "name": "gross_pay", "label": "Gross pay" },
+        { "name": "pay_frequency", "label": "Pay frequency" },
+        { "name": "pay_period_start", "label": "Pay period start" },
+        { "name": "pay_period_end", "label": "Pay period end" },
+        { "name": "pay_date", "label": "Pay date" },
+        { "name": "ytd_gross", "label": "Year-to-date gross pay" }
+      ],
       "citation": "RealDoor demo checklist, DOC-PAY-STUBS-001"
     },
     {
@@ -24,6 +34,14 @@
       "minimum_count": 1,
       "date_field": "issue_date",
       "max_age_days": 90,
+      "required_fields": [
+        { "name": "full_name", "label": "Renter name" },
+        { "name": "employer_name", "label": "Employer name" },
+        { "name": "employment_start_date", "label": "Employment start date" },
+        { "name": "gross_pay", "label": "Gross pay" },
+        { "name": "pay_frequency", "label": "Pay frequency" },
+        { "name": "issue_date", "label": "Verification date" }
+      ],
       "citation": "RealDoor demo checklist, DOC-EMPLOYMENT-001"
     },
     {
@@ -33,6 +51,11 @@
       "minimum_count": 1,
       "date_field": "statement_date",
       "max_age_days": 60,
+      "required_fields": [
+        { "name": "full_name", "label": "Account holder name" },
+        { "name": "statement_date", "label": "Statement date" },
+        { "name": "ending_balance", "label": "Ending balance" }
+      ],
       "citation": "RealDoor demo checklist, DOC-BANK-001"
     },
     {
@@ -41,6 +64,11 @@
       "label": "Unexpired government-issued ID",
       "minimum_count": 1,
       "expiry_field": "expiry_date",
+      "required_fields": [
+        { "name": "full_name", "label": "Renter name" },
+        { "name": "issue_date", "label": "Issue date" },
+        { "name": "expiry_date", "label": "Expiration date" }
+      ],
       "citation": "RealDoor demo checklist, DOC-ID-001"
     }
   ]

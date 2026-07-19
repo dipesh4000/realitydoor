@@ -26,6 +26,23 @@ class ConfirmedIncomeCalculation(BaseModel):
     disclaimer: str = "The housing provider makes the final determination."
 
 
+class RequiredFieldDefinition(BaseModel):
+    name: str
+    label: str
+
+
+class ChecklistRequirement(BaseModel):
+    id: str
+    document_type: str
+    label: str
+    minimum_count: int = Field(ge=1)
+    date_field: str | None = None
+    expiry_field: str | None = None
+    max_age_days: int | None = None
+    required_fields: list[RequiredFieldDefinition]
+    citation: str
+
+
 class ReadinessResponse(BaseModel):
     completion_percent: int = Field(ge=0, le=100)
     label: str
@@ -35,6 +52,8 @@ class ReadinessResponse(BaseModel):
     checks_total: int
     confirmed_income: ConfirmedIncomeCalculation | None = None
     checklist_id: str
+    checklist_title: str
+    requirements: list[ChecklistRequirement]
     evaluated_on: str
     notice: str
     suggested_questions: list[str]

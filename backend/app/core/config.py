@@ -66,7 +66,9 @@ class Settings(BaseSettings):
     @property
     def cors_origins(self) -> list[str]:
         origins = [item.strip() for item in self.frontend_origins.split(",") if item.strip()]
-        return origins or ["*"]
+        if not origins or "*" in origins:
+            raise ValueError("FRONTEND_ORIGINS must list explicit origins when session cookies are enabled")
+        return origins
 
     @property
     def is_production(self) -> bool:

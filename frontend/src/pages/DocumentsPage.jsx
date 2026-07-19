@@ -1,76 +1,65 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FileText, Trash2, Eye, CheckCircle2, Loader2, AlertCircle, PlusCircle } from 'lucide-react';
-import { getDocuments, deleteDocument } from '../api/documents';
+import { Eye, FilePlus2, FileText, Loader2, Plus, Trash2 } from 'lucide-react';
+import { deleteDocument, getDocuments } from '../api/documents';
+import { Badge, Button, Card, EmptyState, LoadingState, Modal, PageHeader } from '../components/ui';
 
-const STATUS_CONFIG = {
-  scanning: { label: 'Scanning…', icon: <Loader2 size={13} style={{ animation: 'spin 1s linear infinite' }} />, color: 'var(--color-primary-container)' },
-  scanned:  { label: 'Scanned',   icon: <CheckCircle2 size={13} />, color: 'var(--color-success)' },
-  needs_review: { label: 'Needs review', icon: <AlertCircle size={13} />, color: 'var(--color-warning)' },
-  error:    { label: 'Error',     icon: <AlertCircle size={13} />,  color: 'var(--color-error)' },
+const statusConfig = {
+  scanning: { label: 'Reading', tone: 'info' },
+  scanned: { label: 'Ready', tone: 'success' },
+  needs_review: { label: 'Needs review', tone: 'warning' },
+  error: { label: 'Could not read', tone: 'error' },
 };
 
 export default function DocumentsPage() {
-  const [docs, setDocs] = useState([]);
+  const [documents, setDocuments] = useState(null);
+  const [filter, setFilter] = useState('all');
+  const [deleting, setDeleting] = useState(null);
+  const [busy, setBusy] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => { getDocuments().then((res) => setDocs(res.documents)); }, []);
+  useEffect(() => { getDocuments().then((response) => setDocuments(response.documents)).catch(() => setDocuments([])); }, []);
+  const filtered = useMemo(() => documents?.filter((document) => filter === 'all' || (filter === 'review' ? ['needs_review', 'error'].includes(document.status) : document.status === filter)) || [], [documents, filter]);
 
-  const handleDelete = async (id) => {
-    await deleteDocument(id);
-    setDocs((prev) => prev.filter((d) => d.id !== id));
+  const remove = async () => {
+    if (!deleting) return;
+    setBusy(true);
+    try {
+      await deleteDocument(deleting.id);
+      setDocuments((current) => current.filter((document) => document.id !== deleting.id));
+      setDeleting(null);
+    } finally { setBusy(false); }
   };
 
-  const sc = (s) => STATUS_CONFIG[s] || STATUS_CONFIG.scanned;
+  if (documents === null) return <main id="main-content" className="main-content"><LoadingState label="Loading your documents…" /></main>;
 
   return (
-    <main className="main-content">
-        <div className="page-header responsive-page-header">
-          <div>
-            <h1 className="page-title">Documents</h1>
-            <p className="page-subtitle">Manage your uploaded files and view extraction results.</p>
-          </div>
-          <button className="btn btn-primary" style={{ gap: 6 }} onClick={() => navigate('/upload')}>
-            <PlusCircle size={15} /> Add Document
-          </button>
-        </div>
+    <main id="main-content" className="main-content">
+      <PageHeader eyebrow="Your secure workspace" title="Documents" description="Review extraction status, revisit a source, or remove a file from this temporary session." actions={<Button onClick={() => navigate('/upload')}><Plus size={16} /> Add documents</Button>} />
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-          {docs.map((doc) => {
-            const s = sc(doc.status);
+      {documents.length > 0 && <div className="filters"><div className="filter-tabs" aria-label="Filter documents">{[['all','All'],['scanned','Ready'],['review','Needs review'],['scanning','Reading']].map(([value,label]) => <button className={filter === value ? 'is-active' : ''} onClick={() => setFilter(value)} key={value}>{label}</button>)}</div></div>}
+
+      {documents.length === 0 ? (
+        <Card><EmptyState icon={FilePlus2} title="No documents yet" description="Add the files you have. RealDoor will help identify what may still be needed." action={<Button onClick={() => navigate('/upload')}>Add your first document</Button>} /></Card>
+      ) : filtered.length === 0 ? (
+        <Card><EmptyState icon={FileText} title="No documents match this filter" description="Choose another status to see your files." action={<Button variant="secondary" onClick={() => setFilter('all')}>Show all documents</Button>} /></Card>
+      ) : (
+        <div className="document-grid">
+          {filtered.map((document) => {
+            const status = statusConfig[document.status] || statusConfig.scanned;
             return (
-              <div key={doc.id} className="card document-card-row">
-                <div style={{ width: 40, height: 40, background: 'var(--color-surface-container)', borderRadius: 'var(--radius-lg)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <FileText size={18} color="var(--color-primary-container)" />
-                </div>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontWeight: 600, fontSize: 14, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{doc.name}</div>
-                  <div style={{ fontSize: 12, color: 'var(--color-outline)' }}>{doc.size} · Uploaded {doc.uploadedAt}</div>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 12, fontWeight: 500, color: s.color, flexShrink: 0 }}>
-                  {s.icon} {s.label}
-                </div>
-                <div className="document-card-actions">
-                  <button className="btn btn-outline btn-sm" style={{ gap: 4 }} onClick={() => navigate(`/extraction?document=${doc.id}`)}>
-                    <Eye size={13} /> Review
-                  </button>
-                  <button aria-label={`Delete ${doc.name}`} className="btn btn-sm" style={{ color: 'var(--color-error)', background: 'var(--color-error-container)', border: 'none', gap: 4 }} onClick={() => handleDelete(doc.id)}>
-                    <Trash2 size={13} />
-                  </button>
-                </div>
-              </div>
+              <Card className="document-card" key={document.id}>
+                <div className="document-card__top"><div className="document-card__icon"><FileText size={20} /></div><div className="document-card__title"><strong title={document.name}>{document.name}</strong><span>{document.size || 'Uploaded file'} · {document.uploadedAt ? `Uploaded ${document.uploadedAt}` : 'Temporary session'}</span></div><Badge tone={status.tone}>{document.status === 'scanning' && <Loader2 className="spin" size={12} />}{status.label}</Badge></div>
+                <div className="document-card__actions"><Button size="sm" variant="secondary" onClick={() => navigate(`/extraction?document=${document.id}`)}><Eye size={14} /> Review details</Button><Button size="sm" variant="ghost" aria-label={`Delete ${document.name}`} onClick={() => setDeleting(document)}><Trash2 size={14} /> Remove</Button></div>
+              </Card>
             );
           })}
-
-          {docs.length === 0 && (
-            <div style={{ textAlign: 'center', padding: '60px 0', color: 'var(--color-outline)' }}>
-              <FileText size={40} style={{ margin: '0 auto 12px', opacity: 0.3 }} />
-              <p>No documents uploaded yet.</p>
-              <button className="btn btn-primary" style={{ marginTop: 14 }} onClick={() => navigate('/upload')}>Upload Documents</button>
-            </div>
-          )}
         </div>
-        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      )}
+
+      <Modal open={Boolean(deleting)} onClose={() => !busy && setDeleting(null)} title="Remove this document?" description={deleting ? `${deleting.name} and its extracted fields will be permanently removed from this temporary session.` : ''}>
+        <div className="modal__actions"><Button variant="secondary" onClick={() => setDeleting(null)} disabled={busy}>Keep document</Button><Button variant="danger" loading={busy} onClick={remove}>Remove document</Button></div>
+      </Modal>
     </main>
   );
 }

@@ -70,6 +70,8 @@ class DocumentListResponse(BaseModel):
 
 class FieldListResponse(BaseModel):
     fields: list[ExtractedField]
+    page_count: int = Field(ge=1)
+    duplicates_omitted: int = Field(default=0, ge=0)
 
 
 class FieldCorrectionRequest(BaseModel):

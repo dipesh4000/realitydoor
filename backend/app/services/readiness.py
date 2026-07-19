@@ -10,11 +10,13 @@ from app.repositories.documents import DocumentRepository
 from app.schemas.documents import DocumentRecord, ExtractedField
 from app.schemas.income import IncomeCalculationRequest, PayFrequency
 from app.schemas.readiness import (
+    ChecklistRequirement,
     ConfirmedIncomeCalculation,
     ReadinessIssue,
     ReadinessResponse,
 )
 from app.services.income import calculate_income
+from app.services.documents import field_dedupe_key
 
 
 CHECKLIST_PATH = REPOSITORY_ROOT / "data" / "rules" / "checklist_2026.json"
@@ -82,6 +84,21 @@ async def evaluate_readiness(
         fields = await repository.fields(session_id, document.id) or []
         document_fields.append((document, fields))
 
+    canonical_documents: dict[tuple[str, str], UUID] = {}
+    canonical_statuses: dict[tuple[str, str], str] = {}
+    for document, fields in sorted(document_fields, key=lambda pair: pair[0].uploaded_at):
+        for field in fields:
+            key = field_dedupe_key(field)
+            if key is None:
+                continue
+            current_status = canonical_statuses.get(key)
+            if key not in canonical_documents or (
+                current_status not in TRUSTED_FIELD_STATUSES
+                and field.status in TRUSTED_FIELD_STATUSES
+            ):
+                canonical_documents[key] = document.id
+                canonical_statuses[key] = field.status
+
     issues: list[ReadinessIssue] = []
     passed = 0
     for item in checklist["items"]:
@@ -105,6 +122,62 @@ async def evaluate_readiness(
         item_passed = True
         for document, fields in matching:
             values = _field_map(fields)
+            value_groups = {
+                field_name: [
+                    field for field in fields
+                    if field.field_name == field_name and field.status != "rejected"
+                ]
+                for field_name in {field.field_name for field in fields}
+            }
+            required_fields = item.get("required_fields", [])
+            missing_fields = [
+                field["label"]
+                for field in required_fields
+                if not any(
+                    value.normalized_value not in (None, "")
+                    for value in value_groups.get(field["name"], [])
+                )
+            ]
+            if missing_fields:
+                item_passed = False
+                issues.append(
+                    ReadinessIssue(
+                        id=f"missing-fields-{document.id}",
+                        type="missing_fields",
+                        severity="error",
+                        title=f"Missing details: {document.name}",
+                        description="RealDoor could not find: " + ", ".join(missing_fields) + ". Upload a clearer document or review its extraction.",
+                        rule_ref=item["citation"],
+                        action="Review fields",
+                        doc_type=item["document_type"],
+                        doc_id=str(document.id),
+                    )
+                )
+            unreviewed_fields = [
+                field["label"]
+                for field in required_fields
+                if any(
+                    value.normalized_value not in (None, "")
+                    and value.status not in TRUSTED_FIELD_STATUSES
+                    and canonical_documents.get(field_dedupe_key(value)) == document.id
+                    for value in value_groups.get(field["name"], [])
+                )
+            ]
+            if unreviewed_fields:
+                item_passed = False
+                issues.append(
+                    ReadinessIssue(
+                        id=f"unreviewed-fields-{document.id}",
+                        type="unconfirmed_fields",
+                        severity="info",
+                        title=f"Review details: {document.name}",
+                        description="Confirm or correct: " + ", ".join(unreviewed_fields) + ".",
+                        rule_ref=item["citation"],
+                        action="Review fields",
+                        doc_type=item["document_type"],
+                        doc_id=str(document.id),
+                    )
+                )
             date_field = item.get("date_field")
             if date_field and item.get("max_age_days") is not None:
                 document_date = _parse_date(values.get(date_field).normalized_value) if values.get(date_field) else None
@@ -160,18 +233,6 @@ async def evaluate_readiness(
         )
 
     income = _confirmed_income(document_fields)
-    if any(document.document_type in {"pay_stub", "employment_verification"} for document in documents) and income is None:
-        issues.append(
-            ReadinessIssue(
-                id="confirm-income-fields",
-                type="unconfirmed_fields",
-                severity="info",
-                title="Confirm income fields",
-                description="Review and confirm both gross pay and pay frequency before RealDoor annualizes income.",
-                rule_ref="INC-BIWEEKLY-001",
-                action="Review fields",
-            )
-        )
 
     total = len(checklist["items"])
     completion = round((passed / total) * 100) if total else 100
@@ -190,6 +251,8 @@ async def evaluate_readiness(
         checks_total=total,
         confirmed_income=income,
         checklist_id=checklist["id"],
+        checklist_title=checklist["title"],
+        requirements=[ChecklistRequirement.model_validate(item) for item in checklist["items"]],
         evaluated_on=today.isoformat(),
         notice=checklist["notice"],
         suggested_questions=[

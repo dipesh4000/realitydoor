@@ -1,164 +1,134 @@
-import { useState, useRef, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CloudUpload, FileText, Image, CheckCircle2, Loader2, Wallet, Building2, CreditCard, ChevronRight, ArrowRight } from 'lucide-react';
+import { ArrowRight, BriefcaseBusiness, CheckCircle2, CloudUpload, CreditCard, FileText, Landmark, Loader2, LockKeyhole, WalletCards } from 'lucide-react';
 import { getDocuments, uploadDocument } from '../api/documents';
+import { getReadiness } from '../api/readiness';
+import { Badge, Button, Callout, Card, PageHeader } from '../components/ui';
+import { UploadIllustration } from '../components/illustrations/JourneyIllustrations';
 
-const REQUIRED_DOCS = [
-  { id: 'pay_stub', label: 'Recent Pay Stubs', icon: <Wallet size={16} /> },
-  { id: 'employment_verification', label: 'Employment Verification', icon: <Building2 size={16} /> },
-  { id: 'bank_statement', label: 'Recent Bank Statement', icon: <Wallet size={16} /> },
-  { id: 'government_id', label: 'Government ID', icon: <CreditCard size={16} /> },
-];
+const requirementIcons = {
+  pay_stub: WalletCards,
+  employment_verification: BriefcaseBusiness,
+  bank_statement: Landmark,
+  government_id: CreditCard,
+};
+
+function requirementDetail(requirement) {
+  const parts = [`${requirement.minimum_count} required`];
+  if (requirement.max_age_days) parts.push(`within ${requirement.max_age_days} days`);
+  if (requirement.expiry_field) parts.push('must be unexpired');
+  parts.push(`${requirement.required_fields.length} details checked`);
+  return parts.join(' · ');
+}
 
 export default function UploadPage() {
-  const [dragOver, setDragOver] = useState(false);
-  const [uploaded, setUploaded] = useState([]);
+  const [dragging, setDragging] = useState(false);
+  const [documents, setDocuments] = useState([]);
+  const [requirements, setRequirements] = useState([]);
+  const [checklistTitle, setChecklistTitle] = useState('Preparation checklist');
   const [uploading, setUploading] = useState(false);
-  const [uploadError, setUploadError] = useState('');
+  const [error, setError] = useState('');
   const inputRef = useRef(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    getDocuments().then((res) => setUploaded(res.documents));
+    Promise.all([getDocuments(), getReadiness()]).then(([documentResponse, readiness]) => {
+      setDocuments(documentResponse.documents);
+      setRequirements(readiness.requirements || []);
+      setChecklistTitle(readiness.checklist_title || 'Preparation checklist');
+    }).catch(() => setError('We could not load your document checklist.'));
   }, []);
 
   const handleFiles = async (files) => {
     if (!files.length) return;
     setUploading(true);
-    setUploadError('');
+    setError('');
+    const existingNames = new Set(documents.map((document) => document.name.toLowerCase()));
+    const uniqueFiles = files.filter((file) => !existingNames.has(file.name.toLowerCase()));
+    if (!uniqueFiles.length) {
+      setError('Those files are already in your workspace. Rename a genuinely different file before adding it.');
+      setUploading(false);
+      return;
+    }
     try {
-      for (const file of files) {
-        const res = await uploadDocument(file);
-        setUploaded((prev) => [...prev, res.document]);
+      for (const file of uniqueFiles) {
+        const response = await uploadDocument(file);
+        setDocuments((current) => current.some((document) => document.id === response.document.id) ? current : [...current, response.document]);
       }
     } catch {
-      setUploadError('One or more files could not be uploaded. Your successfully uploaded files are still available below.');
+      setError('One or more files could not be added. Any successful uploads remain safely available below.');
     } finally {
       setUploading(false);
     }
   };
 
-  const readyForReview = uploaded.length > 0 && uploaded.every((d) => d.status !== 'scanning');
+  const ready = documents.length > 0 && documents.every((document) => document.status !== 'scanning');
 
   return (
-    <main className="main-content">
-        <div className="page-header">
-          <h1 className="page-title">Upload Documents</h1>
-          <p className="page-subtitle">Step 2 of 5: Securely upload your required files to begin the readiness review.</p>
-        </div>
+    <main id="main-content" className="main-content">
+      <PageHeader eyebrow="Step 2 of 5" title="Add the documents you have" description="Start with any available document. RealDoor will show what is missing and ask you to review every extracted detail." illustration={<UploadIllustration />} />
 
-        {readyForReview && (
-          <div style={{
-            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-            padding: '12px 18px', marginBottom: 20,
-            background: 'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)',
-            border: '1.5px solid #bae6fd', borderRadius: 'var(--radius-xl)',
-            gap: 12,
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <CheckCircle2 size={18} color="var(--color-success)" />
-              <div>
-                <div style={{ fontWeight: 600, fontSize: 14, color: 'var(--color-on-surface)' }}>{uploaded.length} document{uploaded.length === 1 ? '' : 's'} ready for review</div>
-                <div style={{ fontSize: 12, color: 'var(--color-on-surface-variant)' }}>
-                  You can keep adding files. RealDoor will proceed only when you choose.
-                </div>
+      {ready && <Callout tone="success" title={`${documents.length} ${documents.length === 1 ? 'document is' : 'documents are'} ready to review`} actions={<Button size="sm" onClick={() => navigate('/extraction')}>Review details <ArrowRight size={15} /></Button>}>You can add more now or continue when you are ready.</Callout>}
+      {error && <Callout className="packet-success" tone="error" title="Check your files">{error}</Callout>}
+
+      <div className="upload-layout packet-success">
+        <div>
+          <div
+            className={`upload-zone ${dragging ? 'is-dragging' : ''}`}
+            role="button"
+            tabIndex="0"
+            aria-label="Upload PDF, JPG, or PNG documents"
+            aria-busy={uploading}
+            onDragOver={(event) => { event.preventDefault(); setDragging(true); }}
+            onDragLeave={() => setDragging(false)}
+            onDrop={(event) => { event.preventDefault(); setDragging(false); handleFiles([...event.dataTransfer.files]); }}
+            onClick={() => inputRef.current?.click()}
+            onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); inputRef.current?.click(); } }}
+          >
+            <input ref={inputRef} className="sr-only" type="file" multiple accept=".pdf,.jpg,.jpeg,.png" onChange={(event) => { handleFiles([...event.target.files]); event.target.value = ''; }} />
+            <div className="upload-zone__icon">{uploading ? <Loader2 className="spin" size={26} /> : <CloudUpload size={27} />}</div>
+            <h2>{uploading ? 'Adding your documents…' : 'Drop files here or choose from your device'}</h2>
+            <p>We accept PDF, JPG, and PNG files up to 50 MB each.</p>
+            <div className="upload-zone__meta"><span>PDF</span><span>JPG / PNG</span><span>Private session</span></div>
+          </div>
+
+          {documents.length > 0 && (
+            <Card className="packet-success">
+              <div className="panel-title"><h2>Your uploaded files</h2><Badge tone={ready ? 'success' : 'info'}>{ready ? 'Ready to review' : 'Processing'}</Badge></div>
+              <div className="file-list">
+                {documents.map((document) => (
+                  <div className="file-row" key={document.id}>
+                    <div className="file-row__icon"><FileText size={17} /></div>
+                    <div className="file-row__copy"><strong title={document.name}>{document.name}</strong><small>{document.size || 'Uploaded securely'}</small></div>
+                    {document.status === 'scanning' ? <Badge tone="info"><Loader2 className="spin" size={12} /> Reading</Badge> : <Badge tone="success">Added</Badge>}
+                  </div>
+                ))}
               </div>
-            </div>
-            <button className="btn btn-primary" style={{ gap: 5, flexShrink: 0 }} onClick={() => navigate('/extraction')} disabled={uploading}>
-              Submit documents for review <ArrowRight size={14} />
-            </button>
-          </div>
-        )}
-
-        {uploadError && <div className="card" role="alert" style={{ marginBottom: 16, color: 'var(--color-error)', background: 'var(--color-error-container)' }}>{uploadError}</div>}
-
-        {/* Drop zone */}
-        <div
-          className={`upload-zone${dragOver ? ' drag-over' : ''}`}
-          role="button"
-          tabIndex={0}
-          aria-label="Upload PDF, JPG, or PNG documents"
-          aria-busy={uploading}
-          onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
-          onDragLeave={() => setDragOver(false)}
-          onDrop={(e) => { e.preventDefault(); setDragOver(false); handleFiles([...e.dataTransfer.files]); }}
-          onClick={() => inputRef.current?.click()}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault();
-              inputRef.current?.click();
-            }
-          }}
-        >
-          <input ref={inputRef} type="file" multiple accept=".pdf,.jpg,.jpeg,.png" style={{ display: 'none' }} onChange={(e) => { handleFiles([...e.target.files]); e.target.value = ''; }} />
-          <div className="upload-icon">
-            {uploading ? <Loader2 size={24} color="var(--color-primary-container)" style={{ animation: 'spin 1s linear infinite' }} /> : <CloudUpload size={24} color="var(--color-primary-container)" />}
-          </div>
-          <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 6 }}>Drag &amp; Drop files here</h2>
-          <p style={{ fontSize: 14, color: 'var(--color-on-surface-variant)', marginBottom: 12 }}>or browse to choose files from your computer</p>
-          <div style={{ display: 'flex', gap: 16, justifyContent: 'center', color: 'var(--color-outline)', fontSize: 13 }}>
-            <span><FileText size={13} style={{ verticalAlign: 'middle', marginRight: 4 }} />PDF</span>
-            <span><Image size={13} style={{ verticalAlign: 'middle', marginRight: 4 }} />JPG/PNG</span>
-            <span>Max 50MB</span>
-          </div>
+            </Card>
+          )}
         </div>
 
-        {/* Two-column: required docs + uploaded */}
-        <div className="upload-columns">
-          <div className="card">
-            <div style={{ fontWeight: 600, fontSize: 14, marginBottom: 14, display: 'flex', alignItems: 'center', gap: 6 }}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1" ry="1"/><path d="M9 12h6m-6 4h4"/></svg>
-              Required Documents
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              {REQUIRED_DOCS.map((d) => (
-                <div key={d.id} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <div style={{ width: 34, height: 34, borderRadius: 'var(--radius-md)', background: 'var(--color-surface-container)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--color-on-surface-variant)' }}>{d.icon}</div>
-                  <span style={{ flex: 1, fontSize: 14 }}>{d.label}</span>
-                  <span className="badge badge-neutral">Required</span>
-                </div>
-              ))}
-            </div>
+        <Card>
+          <div className="panel-title"><h2>{checklistTitle}</h2><Badge tone="neutral">Policy dataset</Badge></div>
+          <div className="requirement-list">
+            {requirements.map((requirement) => {
+              const Icon = requirementIcons[requirement.document_type] || FileText;
+              const uploadedCount = documents.filter((document) => document.type === requirement.document_type).length;
+              const supplied = uploadedCount >= requirement.minimum_count;
+              return (
+              <div className="requirement-item" key={requirement.id}>
+                <div className="requirement-item__icon"><Icon size={16} /></div>
+                <div className="requirement-item__copy"><strong>{requirement.label}</strong><small>{requirementDetail(requirement)}</small></div>
+                <CheckCircle2 size={16} color={supplied ? 'var(--sage-700)' : 'var(--border-strong)'} aria-label={supplied ? 'Required file count supplied' : 'Still needed'} />
+              </div>
+              );
+            })}
           </div>
+          <div className="privacy-note"><LockKeyhole size={15} /><span>RealDoor reads only allowlisted fields and ignores instruction-like text inside uploaded documents.</span></div>
+        </Card>
+      </div>
 
-          <div className="card">
-            <div style={{ fontWeight: 600, fontSize: 14, marginBottom: 14, display: 'flex', alignItems: 'center', gap: 6 }}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
-              Uploaded Files
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              {uploaded.map((f) => (
-                <div key={f.id} className="file-item">
-                  <div style={{ width: 32, height: 32, borderRadius: 'var(--radius-md)', background: 'var(--color-surface-container)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <FileText size={15} color="var(--color-on-surface-variant)" />
-                  </div>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: 13, fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{f.name}</div>
-                    <div style={{ fontSize: 11, color: 'var(--color-outline)' }}>{f.size}</div>
-                  </div>
-                  {f.status === 'scanning' ? (
-                    <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: 'var(--color-primary-container)', fontWeight: 500, flexShrink: 0 }}>
-                      <Loader2 size={13} style={{ animation: 'spin 1s linear infinite' }} /> Scanning...
-                    </span>
-                  ) : (
-                    <CheckCircle2 size={16} color="var(--color-success)" />
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {uploaded.length > 0 && (
-          <div style={{ display: 'flex', justifyContent: 'center', marginTop: 28 }}>
-            <button className="btn btn-primary btn-lg" disabled={!readyForReview || uploading} onClick={() => navigate('/extraction')}>
-              Submit {uploaded.length} document{uploaded.length === 1 ? '' : 's'} for review <ChevronRight size={16} />
-            </button>
-          </div>
-        )}
-
-        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      {documents.length > 0 && <div className="responsive-actions"><Button variant="ghost" onClick={() => navigate('/profile')}>Back</Button><Button size="lg" disabled={!ready || uploading} onClick={() => navigate('/extraction')}>Review extracted details <ArrowRight size={17} /></Button></div>}
     </main>
   );
 }
-

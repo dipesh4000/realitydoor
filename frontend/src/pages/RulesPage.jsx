@@ -1,129 +1,48 @@
-import { useState, useEffect } from 'react';
-import { Search, ChevronDown, ChevronUp } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { BookOpen, ChevronDown, ChevronUp, ExternalLink, Search } from 'lucide-react';
 import { getRules } from '../api/rules';
-
-// eslint-disable-next-line no-unused-vars
-function CalculationCard() {
-  return (
-    <div style={{ background: 'var(--color-surface-container)', borderRadius: 'var(--radius-lg)', padding: 14, marginTop: 10, fontSize: 13 }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--color-on-surface-variant)', marginBottom: 10 }}>
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="12" y1="8" x2="12" y2="16"/></svg>
-        Calculation Breakdown
-      </div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', padding: '5px 0', borderBottom: '1px solid var(--color-outline-variant)', color: 'var(--color-on-surface-variant)' }}>
-        <span>Base Salary (Annualized)</span><span style={{ fontWeight: 500 }}>$45,000.00</span>
-      </div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', padding: '5px 0', borderBottom: '1px solid var(--color-outline-variant)', color: 'var(--color-primary-container)' }}>
-        <span>+ Projected Bonus</span><span style={{ fontWeight: 600 }}>$2,500.00</span>
-      </div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid var(--color-outline-variant)' }}>
-        <span style={{ fontWeight: 700 }}>Total Anticipated Gross</span><span style={{ fontWeight: 700 }}>$47,500.00</span>
-      </div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', padding: '5px 0', color: 'var(--color-error)' }}>
-        <span>60% AMI Limit (2 Persons)</span><span style={{ fontWeight: 600 }}>$49,200.00</span>
-      </div>
-    </div>
-  );
-}
+import { Badge, Card, EmptyState, LoadingState, PageHeader } from '../components/ui';
 
 function RuleCard({ rule }) {
   const [expanded, setExpanded] = useState(rule.id === 'RULE-MTSP-DEFINITION-2026');
-
   return (
-    <div className="rule-card">
-      <button type="button" className="rule-card-header" onClick={() => setExpanded(!expanded)} aria-expanded={expanded}>
-        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, flex: 1 }}>
-          <div style={{ width: 10, height: 10, borderRadius: '50%', background: expanded ? 'var(--color-primary-container)' : 'var(--color-outline-variant)', marginTop: 6, flexShrink: 0 }} />
-          <div>
-            <h3 className="rule-card-title">{rule.title}</h3>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 4 }}>
-              <span className="badge badge-primary" style={{ fontSize: 11, padding: '2px 8px' }}>ACTIVE RULE</span>
-              <span style={{ fontSize: 12, color: 'var(--color-on-surface-variant)' }}>• Category: {rule.category}</span>
-            </div>
-          </div>
-        </div>
-        {expanded ? <ChevronUp size={18} color="var(--color-outline)" /> : <ChevronDown size={18} color="var(--color-outline)" />}
+    <Card className="rule-card">
+      <button type="button" className="rule-card__trigger" onClick={() => setExpanded((value) => !value)} aria-expanded={expanded}>
+        <div><h3>{rule.title}</h3><div className="program-card__features"><Badge tone="success">Active FY2026 rule</Badge><Badge tone="neutral">{rule.category}</Badge></div></div>
+        {expanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
       </button>
-
       {expanded && (
-        <div style={{ marginTop: 16 }}>
-          {/* Plain English */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--color-on-surface-variant)', marginBottom: 8 }}>
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-            Plain English
-          </div>
-          <p style={{ fontSize: 14, lineHeight: 1.7, color: 'var(--color-on-surface)', marginBottom: 16 }}>{rule.plain_english}</p>
-
-          {/* Citations */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--color-on-surface-variant)', marginBottom: 8 }}>
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-            Official Citation
-          </div>
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 16 }}>
-            {rule.citations.map((c, i) => c.url ? (
-              <a key={i} className="citation-tag" href={c.url} target="_blank" rel="noreferrer">{c.label}</a>
-            ) : <span key={i} className="citation-tag">{c.label}</span>)}
-          </div>
-
-          {/* Formula */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--color-on-surface-variant)', marginBottom: 8 }}>
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
-            Computational Formula
-          </div>
-          <div className="code-block">{rule.formula}</div>
-
+        <div className="rule-card__body">
+          <div className="rule-block"><span className="rule-block__label">In plain language</span><p>{rule.plain_english}</p></div>
+          <div className="rule-block"><span className="rule-block__label">Official sources</span><div className="citation-list">{rule.citations.map((citation, index) => citation.url ? <a key={`${citation.label}-${index}`} href={citation.url} target="_blank" rel="noreferrer">{citation.label} <ExternalLink size={10} /></a> : <span key={`${citation.label}-${index}`}>{citation.label}</span>)}</div></div>
+          {rule.formula && <div className="rule-block"><span className="rule-block__label">Formula used by RealDoor</span><div className="formula">{rule.formula}</div></div>}
         </div>
       )}
-    </div>
+    </Card>
   );
 }
 
 export default function RulesPage() {
-  const [rules, setRules] = useState([]);
+  const [rules, setRules] = useState(null);
   const [categories, setCategories] = useState([]);
-  const [activeCategory, setActiveCategory] = useState('All Rules');
+  const [category, setCategory] = useState('All Rules');
   const [search, setSearch] = useState('');
 
   useEffect(() => {
-    getRules(activeCategory).then((res) => {
-      setRules(res.rules);
-      setCategories(res.categories);
-    });
-  }, [activeCategory]);
+    setRules(null);
+    getRules(category).then((response) => { setRules(response.rules); setCategories(response.categories); }).catch(() => setRules([]));
+  }, [category]);
 
-  const filtered = rules.filter((r) =>
-    !search || r.title.toLowerCase().includes(search.toLowerCase()) || r.plain_english.toLowerCase().includes(search.toLowerCase())
-  );
+  const filtered = rules?.filter((rule) => !search || rule.title.toLowerCase().includes(search.toLowerCase()) || rule.plain_english.toLowerCase().includes(search.toLowerCase())) || [];
 
   return (
-    <main className="main-content">
-        <div className="page-header">
-          <h1 className="page-title">Rules Library</h1>
-          <p className="page-subtitle">Inspect the frozen, cited rules and deterministic formulas used by this demo.</p>
-        </div>
-
-        {/* Search */}
-        <div className="search-bar" style={{ marginBottom: 16 }}>
-          <Search size={16} color="var(--color-outline)" />
-          <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search rules, citations, or formulas..." />
-        </div>
-
-        {/* Filters */}
-        <div className="filter-chips" style={{ marginBottom: 24 }}>
-          {categories.map((cat) => (
-            <button key={cat} className={`chip${activeCategory === cat ? ' active' : ''}`} onClick={() => setActiveCategory(cat)}>
-              {cat}
-            </button>
-          ))}
-        </div>
-
-        {/* Rules */}
-        <div>
-          {filtered.map((rule) => <RuleCard key={rule.id} rule={rule} />)}
-          {filtered.length === 0 && (
-            <div style={{ textAlign: 'center', padding: '40px 0', color: 'var(--color-outline)' }}>No rules match your search.</div>
-          )}
-        </div>
+    <main id="main-content" className="main-content">
+      <PageHeader eyebrow="Official guidance" title="Rules & sources" description="See the frozen FY2026 guidance and deterministic formulas RealDoor uses to explain your preparation checklist." />
+      <div className="filters"><label className="search-box"><Search size={17} color="var(--ink-500)" /><span className="sr-only">Search rules and sources</span><input type="search" value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search a rule, term, or formula…" /></label></div>
+      <div className="rules-layout">
+        <Card className="rules-sidebar"><h2>Browse topics</h2>{categories.map((item) => <button className={category === item ? 'is-active' : ''} onClick={() => setCategory(item)} key={item}>{item}</button>)}</Card>
+        <div>{rules === null ? <LoadingState label="Loading cited guidance…" /> : filtered.length ? filtered.map((rule) => <RuleCard key={rule.id} rule={rule} />) : <Card><EmptyState icon={BookOpen} title="No matching guidance" description="Try a broader phrase or choose another topic." /></Card>}</div>
+      </div>
     </main>
   );
 }

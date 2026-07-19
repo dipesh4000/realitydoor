@@ -1,148 +1,114 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AlertTriangle, FileText, RefreshCw, Info, CheckCircle2 } from 'lucide-react';
+import { AlertTriangle, ArrowRight, Calculator, CheckCircle2, FilePlus2, FileText, Info, Landmark, RefreshCw } from 'lucide-react';
 import { getReadiness } from '../api/readiness';
+import { getSession } from '../api/session';
+import { getMtspLimit } from '../api/rules';
+import { Badge, Button, Callout, Card, EmptyState, LoadingState, PageHeader } from '../components/ui';
 
-/* ── Donut chart ─────────────────────────────────────────── */
-function DonutChart({ value }) {
-  const r = 54, cx = 64, cy = 64;
-  const circ = 2 * Math.PI * r;
-  const dash = (value / 100) * circ;
+function ActionCard({ issue, onAction }) {
+  const config = {
+    error: { icon: FilePlus2, className: '' },
+    warning: { icon: RefreshCw, className: 'action-card--warning' },
+    info: { icon: Info, className: 'action-card--info' },
+  }[issue.severity] || { icon: FileText, className: 'action-card--info' };
+  const Icon = config.icon;
   return (
-    <svg width="128" height="128" viewBox="0 0 128 128">
-      <circle cx={cx} cy={cy} r={r} fill="none" stroke="var(--color-surface-container)" strokeWidth="12" />
-      <circle
-        cx={cx} cy={cy} r={r} fill="none"
-        stroke="var(--color-primary-container)"
-        strokeWidth="12"
-        strokeDasharray={`${dash} ${circ}`}
-        strokeLinecap="round"
-        transform="rotate(-90 64 64)"
-        style={{ transition: 'stroke-dasharray 0.8s ease' }}
-      />
-      <text x={cx} y={cy - 4} textAnchor="middle" fontSize="22" fontWeight="700" fill="var(--color-on-surface)" fontFamily="Inter">{value}%</text>
-      <text x={cx} y={cy + 14} textAnchor="middle" fontSize="11" fill="var(--color-on-surface-variant)" fontFamily="Inter">Complete</text>
-    </svg>
-  );
-}
-
-/* ── Action item ─────────────────────────────────────────── */
-function ActionItem({ issue, onAction }) {
-  const severityIcon = {
-    error:   <FileText size={18} color="var(--color-error)" />,
-    warning: <RefreshCw size={18} color="var(--color-warning)" />,
-    info:    <Info size={18} color="var(--color-primary-container)" />,
-  };
-  const actionClass = {
-    error:   'btn btn-primary',
-    warning: 'btn btn-outline',
-    info:    'btn btn-outline',
-  };
-
-  return (
-    <div className={`action-item ${issue.severity}`}>
-      <div style={{ flexShrink: 0 }}>{severityIcon[issue.severity]}</div>
-      <div className="action-item-content">
-        <div className="action-item-title">{issue.title}</div>
-        {issue.description && <div className="action-item-desc">{issue.description}</div>}
-        <div className="action-item-meta">
-          {issue.severity === 'info' && issue.type === 'low_confidence' && (
-            <button className="btn btn-ghost btn-sm" style={{ fontSize: 12 }}>
-              <Info size={12} /> Review Extraction
-            </button>
-          )}
-          {issue.rule_ref && (
-            <span className="citation-tag">
-              <BookStack size={10} /> {issue.rule_ref}
-            </span>
-          )}
-          {issue.type === 'missing_document' && (
-            <button style={{ fontSize: 12, color: 'var(--color-primary-container)', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 500 }}>
-              <Info size={12} style={{ verticalAlign: 'middle', marginRight: 3 }} />
-              Why this is required
-            </button>
-          )}
-        </div>
-      </div>
-      <button className={actionClass[issue.severity]} style={{ flexShrink: 0, fontSize: 13 }} onClick={() => onAction && onAction(issue)}>
-        {issue.action}
-      </button>
+    <div className={`action-card ${config.className}`}>
+      <div className="action-card__icon"><Icon size={19} /></div>
+      <div className="action-card__copy"><strong>{issue.title}</strong>{issue.description && <p>{issue.description}</p>}{issue.rule_ref && <span className="citation-chip">{issue.rule_ref}</span>}</div>
+      <Button size="sm" variant={issue.severity === 'error' ? 'primary' : 'secondary'} onClick={() => onAction(issue)}>{issue.action || 'Review'} <ArrowRight size={14} /></Button>
     </div>
   );
 }
 
-function BookStack({ size }) {
-  return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25"/></svg>;
-}
-
 export default function WorkspacePage() {
   const [data, setData] = useState(null);
+  const [comparison, setComparison] = useState(null);
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  useEffect(() => { getReadiness().then(setData); }, []);
+  const load = () => {
+    setError('');
+    getReadiness().then(setData).catch(() => setError('Your readiness checklist could not be loaded. Please try again.'));
+    getSession().then((session) => getMtspLimit({
+      area: session.area,
+      fiscal_year: session.year,
+      income_band: session.income_band,
+      household_size: session.household_size,
+    }).then((limit) => setComparison({ session, limit }))).catch(() => setComparison(null));
+  };
+  useEffect(load, []);
 
   const handleAction = (issue) => {
     if (['missing_document', 'expired_document', 'stale_document'].includes(issue.type)) navigate('/upload');
-    if (['low_confidence', 'unconfirmed_fields', 'untrusted_document_instruction'].includes(issue.type)) navigate(issue.doc_id ? `/extraction?document=${issue.doc_id}` : '/extraction');
+    else if (['missing_fields', 'low_confidence', 'unconfirmed_fields', 'untrusted_document_instruction'].includes(issue.type)) navigate(issue.doc_id ? `/extraction?document=${issue.doc_id}` : '/extraction');
   };
 
-  if (!data) {
-    return (
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'var(--color-on-surface-variant)' }}>
-        Loading…
-      </div>
-    );
-  }
+  if (!data && !error) return <main id="main-content" className="main-content"><LoadingState label="Building your readiness checklist…" /></main>;
+
+  const openIssues = data?.issues || [];
+  const doNext = openIssues.filter((issue) => issue.severity === 'error');
+  const review = openIssues.filter((issue) => issue.severity !== 'error');
+  const completed = data ? Math.max(0, data.checks_passed) : 0;
 
   return (
-    <main className="main-content">
-        <div className="page-header">
-          <div className="step-indicator">Step 4 of 5</div>
-          <h1 className="page-title">Application Readiness</h1>
-          <p className="page-subtitle">Review missing items and warnings before submission.</p>
-        </div>
+    <main id="main-content" className="main-content">
+      <PageHeader eyebrow="Step 4 of 5" title="Application Readiness" description="Review missing items and warnings before preparing your packet. This checklist describes document readiness—not housing eligibility." />
+      {error && <Callout tone="error" title="We could not load readiness" actions={<Button size="sm" variant="secondary" onClick={load}>Try again</Button>}>{error}</Callout>}
 
-        {/* Readiness summary */}
-        <div className="readiness-summary">
-          <DonutChart value={data.completion_percent} />
-          <div>
-            <h2 style={{ fontSize: 22, fontWeight: 700, marginBottom: 6 }}>{data.label}</h2>
-            <p style={{ fontSize: 14, color: 'var(--color-on-surface-variant)', lineHeight: 1.6 }}>
-              {data.checks_passed} of {data.checks_total} preparation checks currently pass. This is checklist completion, not an eligibility score.
-            </p>
-            <div style={{ marginTop: 12 }}>
-              <span className="badge badge-error">
-                <AlertTriangle size={11} /> {data.issues_count} Issues
-              </span>
+      {data && (
+        <>
+          <Card className="readiness-hero">
+            <div>
+              <div className="readiness-hero__count"><strong>{data.issues_count}</strong><span>{data.issues_count === 1 ? 'item remaining' : 'items remaining'}</span></div>
+              <h2>{data.issues_count ? 'A few steps will strengthen your packet' : 'Your preparation checklist is complete'}</h2>
+              <p>{data.checks_passed} of {data.checks_total} policy-dataset requirements pass. This is never an eligibility score.</p>
             </div>
-          </div>
-        </div>
+            <div className="check-progress" aria-label={`${data.completion_percent}% of preparation checks complete`}><div className="check-progress__bar"><span style={{ width: `${data.completion_percent}%` }} /></div><small>{data.completion_percent}% checklist complete</small></div>
+          </Card>
 
-        {data.confirmed_income && (
-          <div className="card" style={{ marginBottom: 22, background: 'var(--color-surface-container)' }}>
-            <div className="section-label" style={{ marginBottom: 8 }}>Confirmed calculation</div>
-            <div style={{ fontSize: 24, fontWeight: 700 }}>${data.confirmed_income.annualized_income.toLocaleString(undefined, { minimumFractionDigits: 2 })}</div>
-            <div style={{ marginTop: 5, fontSize: 13, color: 'var(--color-on-surface-variant)' }}>
-              {data.confirmed_income.inputs.gross_pay.toLocaleString(undefined, { style: 'currency', currency: 'USD' })} × {data.confirmed_income.inputs.periods_per_year} pay periods · {data.confirmed_income.rule_id}
+          <section className="plan-section">
+            <div className="plan-section__title"><h2>Requirements from the policy dataset</h2><Badge tone="neutral">{data.requirements.length} document groups</Badge></div>
+            <div className="policy-requirement-grid">
+              {data.requirements.map((requirement) => (
+                <Card className="policy-requirement" key={requirement.id}>
+                  <div className="panel-title"><h3>{requirement.label}</h3><Badge tone="info">{requirement.minimum_count} required</Badge></div>
+                  <p>{requirement.max_age_days ? `Must be dated within ${requirement.max_age_days} days. ` : ''}{requirement.expiry_field ? 'Must be unexpired. ' : ''}RealDoor checks these extracted details:</p>
+                  <div className="required-field-chips">{requirement.required_fields.map((field) => <span key={field.name}>{field.label}</span>)}</div>
+                  <small>{requirement.citation}</small>
+                </Card>
+              ))}
             </div>
-            <div style={{ marginTop: 7, fontSize: 11, color: 'var(--color-outline)' }}>{data.confirmed_income.disclaimer}</div>
-          </div>
-        )}
+          </section>
 
-        {/* Actions */}
-        <div className="section-label">Required Actions</div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-          {data.issues.map((issue) => (
-            <ActionItem key={issue.id} issue={issue} onAction={handleAction} />
-          ))}
-        </div>
+          {comparison && (
+            <Card className="understand-card">
+              <div className="understand-card__heading"><span><Landmark size={20} /></span><div><Badge tone="info">Published FY{comparison.limit.fiscal_year} comparison</Badge><h2>Understand the rule and calculation</h2><p>This explains the selected table row and confirmed math. It is not an eligibility decision.</p></div></div>
+              <div className="understand-grid">
+                <div><span>Selected profile</span><strong>{comparison.limit.household_size}-person household</strong><small>{comparison.limit.income_band}% MTSP band · {comparison.limit.area_name}</small></div>
+                <div><span>Published threshold</span><strong>{comparison.limit.income_limit.toLocaleString(undefined, { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })}</strong><small>Effective {comparison.limit.effective_from}</small></div>
+                <div><span>Confirmed value</span><strong>{data.confirmed_income ? data.confirmed_income.annualized_income.toLocaleString(undefined, { style: 'currency', currency: 'USD' }) : 'Waiting for confirmation'}</strong><small>{data.confirmed_income ? 'Renter-confirmed or corrected evidence only' : 'Confirm gross pay and pay frequency to calculate'}</small></div>
+                <div><span>Deterministic formula</span><strong>{data.confirmed_income ? `${data.confirmed_income.inputs.gross_pay.toLocaleString(undefined, { style: 'currency', currency: 'USD' })} × ${data.confirmed_income.inputs.periods_per_year}` : 'Confirmed gross × pay periods'}</strong><small>{data.confirmed_income?.rule_id || 'Income rule applied after confirmation'}</small></div>
+              </div>
+              <div className="understand-card__source"><strong>Authoritative source</strong><span>{comparison.limit.source_title} · page {comparison.limit.source_page} · {comparison.limit.source_id}</span></div>
+            </Card>
+          )}
 
-        {/* Packet button */}
-        <div style={{ marginTop: 28, display: 'flex', gap: 10 }}>
-          <button className="btn btn-outline" style={{ gap: 6 }} onClick={() => navigate('/packet')}>
-            <CheckCircle2 size={15} /> Preview Readiness Packet
-          </button>
-        </div>
+          {data.confirmed_income && (
+            <Card className="income-card" tone="teal">
+              <div className="income-card__icon"><Calculator size={21} /></div>
+              <div><Badge tone="success">Confirmed calculation</Badge><strong>${data.confirmed_income.annualized_income.toLocaleString(undefined, { minimumFractionDigits: 2 })} annualized</strong><p>{data.confirmed_income.inputs.gross_pay.toLocaleString(undefined, { style: 'currency', currency: 'USD' })} × {data.confirmed_income.inputs.periods_per_year} pay periods · {data.confirmed_income.rule_id}</p><p>{data.confirmed_income.disclaimer}</p></div>
+            </Card>
+          )}
+
+          {doNext.length > 0 && <section className="plan-section"><div className="plan-section__title"><h2>Do next</h2><Badge tone="error">{doNext.length} required</Badge></div><div className="action-list">{doNext.map((issue) => <ActionCard key={issue.id} issue={issue} onAction={handleAction} />)}</div></section>}
+          {review.length > 0 && <section className="plan-section"><div className="plan-section__title"><h2>Review when ready</h2><Badge tone="warning">{review.length} to review</Badge></div><div className="action-list">{review.map((issue) => <ActionCard key={issue.id} issue={issue} onAction={handleAction} />)}</div></section>}
+          <section className="plan-section"><div className="plan-section__title"><h2>Completed</h2><Badge tone="success">{completed} checks</Badge></div>{completed ? <Callout tone="success" title={`${completed} preparation ${completed === 1 ? 'check is' : 'checks are'} complete`}>Completed checks remain visible in the packet preview.</Callout> : <Card><EmptyState icon={CheckCircle2} title="Completed items will appear here" description="Add and review documents to complete your preparation checklist." /></Card>}</section>
+
+          <Callout className="packet-success" tone="info" title="You can preview a packet at any time" icon={AlertTriangle} actions={<Button size="sm" variant="secondary" onClick={() => navigate('/packet')}>Preview packet</Button>}>Open findings remain clearly labeled. RealDoor never sends the packet automatically.</Callout>
+        </>
+      )}
     </main>
   );
 }

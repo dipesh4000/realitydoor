@@ -5,8 +5,8 @@ def test_health(client):
     assert response.headers["X-Request-ID"]
 
 
-def test_docs_openapi_and_allow_all_origin_middleware(client):
-    origin = "https://any-frontend.example"
+def test_docs_openapi_and_configured_origin_middleware(client):
+    origin = "http://localhost:5173"
     docs = client.get("/docs", headers={"Origin": origin})
     assert docs.status_code == 200
     assert docs.headers["access-control-allow-origin"] == origin
@@ -28,6 +28,9 @@ def test_docs_openapi_and_allow_all_origin_middleware(client):
     assert preflight.status_code == 200
     assert preflight.headers["access-control-allow-origin"] == origin
     assert "authorization" in preflight.headers["access-control-allow-headers"].lower()
+
+    untrusted = client.get("/api/session", headers={"Origin": "https://untrusted.example"})
+    assert "access-control-allow-origin" not in untrusted.headers
 
 
 def test_session_lifecycle(client):

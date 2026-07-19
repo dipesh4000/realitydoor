@@ -21,10 +21,7 @@ def create_app() -> FastAPI:
     app.add_middleware(RequestIdMiddleware)
     app.add_middleware(
         CORSMiddleware,
-        # Reflect every requesting origin instead of returning the literal "*".
-        # Literal wildcard + credentialed session cookies is rejected by browsers.
-        allow_origins=[],
-        allow_origin_regex=r".*",
+        allow_origins=settings.cors_origins,
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
