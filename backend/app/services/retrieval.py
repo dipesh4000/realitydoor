@@ -21,6 +21,7 @@ class RetrievedContext:
     text: str
     sources: list[ChatSource]
     version: str
+    relevance: float
 
 
 def _tokens(value: str) -> list[str]:
@@ -49,7 +50,13 @@ def retrieve(query: str, limit: int = 5) -> RetrievedContext:
         score = overlap + 3 * cosine + phrase_bonus
         if score > 0:
             scored.append((score, chunk))
-    selected = [chunk for _, chunk in sorted(scored, key=lambda pair: (-pair[0], pair[1]["id"]))[:limit]]
+    ranked = sorted(scored, key=lambda pair: (-pair[0], pair[1]["id"]))
+    selected = [chunk for _, chunk in ranked[:limit]]
+    if ranked and query_counts:
+        top_counts = Counter(_tokens(ranked[0][1]["text"] + " " + ranked[0][1]["title"]))
+        relevance = len(set(query_counts) & set(top_counts)) / len(set(query_counts))
+    else:
+        relevance = 0.0
     sources, seen = [], set()
     for chunk in selected:
         key = (chunk["source_id"], chunk.get("page"))
@@ -57,4 +64,4 @@ def retrieve(query: str, limit: int = 5) -> RetrievedContext:
             seen.add(key)
             sources.append(ChatSource(id=chunk["source_id"], title=chunk["title"], page=chunk.get("page"), url=chunk.get("url")))
     text = "\n\n".join(f"[{chunk['source_id']} p.{chunk.get('page') or 'n/a'}] {chunk['text']}" for chunk in selected)
-    return RetrievedContext(text=text, sources=sources, version=document["version"])
+    return RetrievedContext(text=text, sources=sources, version=document["version"], relevance=relevance)

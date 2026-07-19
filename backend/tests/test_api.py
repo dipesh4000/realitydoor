@@ -32,6 +32,13 @@ def test_docs_openapi_and_configured_origin_middleware(client):
     untrusted = client.get("/api/session", headers={"Origin": "https://untrusted.example"})
     assert "access-control-allow-origin" not in untrusted.headers
 
+    live = client.get(
+        "/api/session",
+        headers={"Origin": "https://real-door-theta.vercel.app"},
+    )
+    assert live.headers["access-control-allow-origin"] == "https://real-door-theta.vercel.app"
+    assert live.headers["access-control-allow-credentials"] == "true"
+
 
 def test_session_lifecycle(client):
     created = client.get("/api/session")

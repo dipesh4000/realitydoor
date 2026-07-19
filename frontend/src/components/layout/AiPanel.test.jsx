@@ -7,7 +7,16 @@ vi.mock('../../api/chat', () => ({
   streamMessage: vi.fn(async (_message, handlers) => {
     handlers.onDelta('Add two ');
     handlers.onDelta('recent pay stubs.');
-    handlers.onComplete({ sources: [{ title: 'Demo checklist', page: 1 }] });
+    handlers.onComplete({
+      answer: {
+        type: 'answer',
+        title: 'Documents to add',
+        summary: 'Add two recent pay stubs.',
+        key_points: ['Check each extracted value.'],
+        next_steps: ['Open the upload checklist.'],
+      },
+      sources: [{ id: 'DEMO', title: 'Demo checklist', page: 1 }],
+    });
   }),
 }));
 
@@ -17,7 +26,9 @@ describe('AiPanel', () => {
     render(<AiPanel open onOpenChange={() => {}} title="Document guide" subtitle="Know what to add" suggestedQuestions={['What documents are required?']} initialMessages={[]} />);
 
     await user.click(screen.getByRole('button', { name: 'What documents are required?' }));
-    expect(await screen.findByText('Add two recent pay stubs.')).toBeInTheDocument();
+    expect(await screen.findByText('Documents to add')).toBeInTheDocument();
+    expect(screen.getByText('Add two recent pay stubs.')).toBeInTheDocument();
+    expect(screen.getByText('Open the upload checklist.')).toBeInTheDocument();
     expect(screen.getByText('Demo checklist, p. 1')).toBeInTheDocument();
   });
 });

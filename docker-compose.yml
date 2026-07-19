@@ -1,0 +1,15 @@
+services:
+  realdoor:
+    build:
+      context: .
+      args:
+        VITE_API_URL: /api
+    ports:
+      - "8000:8000"
+    environment:
+      APP_ENV: development
+      FRONTEND_ORIGINS: http://localhost:8000
+      USE_IN_MEMORY_REPOSITORY: "true"
+      SESSION_TTL_MINUTES: "60"
+      PACKET_TTL_MINUTES: "60"
+    restart: unless-stopped

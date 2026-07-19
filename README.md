@@ -188,6 +188,18 @@ uv run python scripts/verify_synthetic_documents.py
 uv run python scripts/cleanup_expired_data.py
 ```
 
+## Container deployment
+
+Build and run the complete frontend and API on one origin:
+
+```powershell
+docker compose up --build
+```
+
+Open `http://localhost:8000`. The container builds the React application with `/api` as its API base, serves SPA routes through FastAPI, runs as a non-root user, and exposes `/api/health` for platform health checks.
+
+For a durable production deployment, set `APP_ENV=production`, `FRONTEND_ORIGINS` to the exact HTTPS application origin, `USE_IN_MEMORY_REPOSITORY=false`, and configure the PostgreSQL/Supabase variables from `backend/.env.example`. Apply database migrations before directing traffic to a new database. Provider API keys remain optional.
+
 ## Safety invariants
 
 Contributions must preserve these rules:

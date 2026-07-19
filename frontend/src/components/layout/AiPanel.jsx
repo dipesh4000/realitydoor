@@ -1,6 +1,29 @@
 import { useEffect, useRef, useState } from 'react';
-import { Bot, ChevronDown, ChevronRight, MessageCircle, PanelRightClose, PanelRightOpen, Send, Sparkles, X } from 'lucide-react';
+import { Bot, Calculator, ChevronDown, ChevronRight, CircleHelp, ExternalLink, ListChecks, MessageCircle, PanelRightClose, PanelRightOpen, Send, Sparkles, X } from 'lucide-react';
 import { streamMessage } from '../../api/chat';
+
+function StructuredAnswer({ answer }) {
+  if (!answer) return null;
+  return (
+    <div className="assistant-answer">
+      <strong className="assistant-answer__title">{answer.title}</strong>
+      <p>{answer.summary}</p>
+      {answer.key_points?.length > 0 && <ul>{answer.key_points.map((point) => <li key={point}>{point}</li>)}</ul>}
+      {answer.calculation && (
+        <div className="assistant-answer__calculation">
+          <Calculator size={15} />
+          <div><span>{answer.calculation.label}</span><strong>{answer.calculation.expression} = {answer.calculation.result}</strong>{answer.calculation.rule_id && <small>{answer.calculation.rule_id}</small>}</div>
+        </div>
+      )}
+      {answer.missing_facts?.length > 0 && (
+        <div className="assistant-answer__section"><CircleHelp size={14} /><div><strong>Information needed</strong><ul>{answer.missing_facts.map((fact) => <li key={fact}>{fact}</li>)}</ul></div></div>
+      )}
+      {answer.next_steps?.length > 0 && (
+        <div className="assistant-answer__section"><ListChecks size={14} /><div><strong>Next step</strong><ul>{answer.next_steps.map((step) => <li key={step}>{step}</li>)}</ul></div></div>
+      )}
+    </div>
+  );
+}
 
 export default function AiPanel({ title, subtitle, suggestedQuestions = [], initialMessages = [], open, onOpenChange, collapsed = false, onCollapsedChange, resizeHandleProps }) {
   const [messages, setMessages] = useState(initialMessages);
@@ -31,7 +54,7 @@ export default function AiPanel({ title, subtitle, suggestedQuestions = [], init
       await streamMessage(message, {
         signal: controller.signal,
         onDelta: (delta) => setMessages((current) => current.map((item) => item.id === replyId ? { ...item, text: item.text + delta } : item)),
-        onComplete: (response) => setMessages((current) => current.map((item) => item.id === replyId ? { ...item, sources: response.sources, streaming: false } : item)),
+        onComplete: (response) => setMessages((current) => current.map((item) => item.id === replyId ? { ...item, answer: response.answer, sources: response.sources, streaming: false } : item)),
       });
     } catch {
       if (!controller.signal.aborted) setMessages((current) => current.map((item) => item.id === replyId ? {
@@ -76,10 +99,12 @@ export default function AiPanel({ title, subtitle, suggestedQuestions = [], init
                 <div key={message.id || `${message.role}-${index}`} className={`assistant-message assistant-message--${message.role}${message.error ? ' is-error' : ''}`}>
                   {message.role === 'ai' && <span className="assistant-message__avatar"><Bot size={14} /></span>}
                   <div className="assistant-message__bubble">
-                    <div>{message.text || (message.streaming ? <><span className="typing-dots"><i /><i /><i /></span><span className="sr-only">RealDoor is responding</span></> : null)}</div>
+                    {message.answer ? <StructuredAnswer answer={message.answer} /> : <div>{message.text || (message.streaming ? <><span className="typing-dots"><i /><i /><i /></span><span className="sr-only">RealDoor is responding</span></> : null)}</div>}
                     {message.sources?.length > 0 && (
                       <div className="assistant-message__sources">
-                        {message.sources.map((source) => <span key={`${source.title}-${source.page || ''}`}>{source.title}{source.page ? `, p. ${source.page}` : ''}</span>)}
+                        {message.sources.map((source) => source.url
+                          ? <a key={`${source.id}-${source.page || ''}`} href={source.url} target="_blank" rel="noreferrer">{source.title}{source.page ? `, p. ${source.page}` : ''}<ExternalLink size={10} /></a>
+                          : <span key={`${source.id}-${source.page || ''}`}>{source.title}{source.page ? `, p. ${source.page}` : ''}</span>)}
                       </div>
                     )}
                   </div>

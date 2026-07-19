@@ -1,5 +1,4 @@
 import asyncio
-import json
 import re
 
 from fastapi import APIRouter, Cookie, Depends
@@ -9,7 +8,7 @@ from app.api.dependencies import get_session_repository
 from app.api.routes.documents import require_session
 from app.core.config import Settings, get_settings
 from app.repositories.sessions import SessionRepository
-from app.schemas.chat import ChatRequest, ChatResponse
+from app.schemas.chat import ChatCompleteEvent, ChatDeltaEvent, ChatRequest, ChatResponse
 from app.services.chat import answer_chat
 
 
@@ -40,15 +39,17 @@ async def chat_stream(
         response = await answer_chat(payload.message, settings, payload.context)
         chunks = re.findall(r"\S+\s*", response.reply)
         for index in range(0, len(chunks), 4):
-            yield json.dumps({"type": "delta", "delta": "".join(chunks[index:index + 4])}) + "\n"
+            event = ChatDeltaEvent(delta="".join(chunks[index:index + 4]))
+            yield event.model_dump_json() + "\n"
             await asyncio.sleep(0)
-        yield json.dumps({
-            "type": "complete",
-            "sources": [source.model_dump() for source in response.sources],
-            "route": response.route,
-            "model": response.model,
-            "disclaimer": response.disclaimer,
-        }) + "\n"
+        complete = ChatCompleteEvent(
+            answer=response.answer,
+            sources=response.sources,
+            route=response.route,
+            model=response.model,
+            disclaimer=response.disclaimer,
+        )
+        yield complete.model_dump_json() + "\n"
 
     return StreamingResponse(
         events(),

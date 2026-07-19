@@ -78,7 +78,11 @@ def redact_sensitive_text(text: str) -> str:
     return redacted
 
 
-def provider_reply_violation(reply: str, allowed_source_ids: Collection[str]) -> str | None:
+def provider_reply_violation(
+    reply: str,
+    allowed_source_ids: Collection[str],
+    cited_source_ids: Collection[str] | None = None,
+) -> str | None:
     if _matches(DECISION_OUTPUT_PATTERNS, reply):
         return "decision"
     if _matches(INTERNAL_REASONING_PATTERNS, reply):
@@ -87,11 +91,18 @@ def provider_reply_violation(reply: str, allowed_source_ids: Collection[str]) ->
         return "state_mutation"
 
     allowed = set(allowed_source_ids)
+    if cited_source_ids is not None:
+        cited = set(cited_source_ids)
+        if not cited.issubset(allowed):
+            return "invalid_citation"
+        if allowed and not cited:
+            return "missing_citation"
+
     citations = _CITATION_PATTERN.findall(reply)
     for citation in citations:
         source_id = re.split(r"\s+p(?:age)?\.?\s*\d+", citation, maxsplit=1, flags=re.IGNORECASE)[0].strip()
         if source_id not in allowed:
             return "invalid_citation"
-    if allowed and not citations:
+    if cited_source_ids is None and allowed and not citations:
         return "missing_citation"
     return None

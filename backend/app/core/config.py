@@ -23,7 +23,7 @@ class Settings(BaseSettings):
     app_env: str = "development"
     app_name: str = "RealDoor API"
     api_prefix: str = "/api"
-    frontend_origins: str = "http://localhost:5173"
+    frontend_origins: str = "http://localhost:5173,https://real-door-theta.vercel.app"
 
     supabase_url: str = ""
     supabase_secret_key: str = Field(default="", repr=False)
@@ -65,7 +65,7 @@ class Settings(BaseSettings):
 
     @property
     def cors_origins(self) -> list[str]:
-        origins = [item.strip() for item in self.frontend_origins.split(",") if item.strip()]
+        origins = [item.strip().rstrip("/") for item in self.frontend_origins.split(",") if item.strip()]
         if not origins or "*" in origins:
             raise ValueError("FRONTEND_ORIGINS must list explicit origins when session cookies are enabled")
         return origins

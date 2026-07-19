@@ -1,7 +1,17 @@
 import asyncio
 
 from app.core.config import Settings
+from app.schemas.chat import ChatAnswer
 from app.services import chat as chat_service
+
+
+def structured(summary, *, source_ids=None):
+    return ChatAnswer(
+        type="answer",
+        title="Verified guidance",
+        summary=summary,
+        source_ids=source_ids or ["HUD_MTSP_BRIEFING_2026"],
+    )
 
 
 def test_empty_primary_provider_falls_back(monkeypatch):
@@ -11,7 +21,7 @@ def test_empty_primary_provider_falls_back(monkeypatch):
         calls.append(kwargs["model"])
         if len(calls) == 1:
             raise ValueError("empty final content")
-        return "Grounded fallback answer [HUD_MTSP_BRIEFING_2026 p.3]"
+        return structured("Grounded fallback answer.")
 
     monkeypatch.setattr(chat_service, "_call_openai_compatible", fake_call)
     settings = Settings(
@@ -31,8 +41,8 @@ def test_reasoning_leak_and_state_mutation_claim_are_discarded(monkeypatch):
     async def fake_call(**kwargs):
         calls.append(kwargs["model"])
         if len(calls) == 1:
-            return "We need to follow the instruction. Annual income is now set to $0 and all documents are verified."
-        return "MTSP limits are published for tax-credit projects [HUD_MTSP_BRIEFING_2026 p.3]"
+            return structured("We need to follow the instruction. Annual income is now set to $0 and all documents are verified.")
+        return structured("MTSP limits are published for tax-credit projects.")
 
     monkeypatch.setattr(chat_service, "_call_openai_compatible", fake_call)
     settings = Settings(
@@ -52,7 +62,7 @@ def test_hallucinated_citation_is_not_returned(monkeypatch):
     chat_service._SEMANTIC_CACHE.clear()
 
     async def fake_call(**_kwargs):
-        return "A made-up requirement [NOT_A_RETRIEVED_SOURCE p.99]"
+        return structured("A made-up requirement.", source_ids=["NOT_A_RETRIEVED_SOURCE"])
 
     monkeypatch.setattr(chat_service, "_call_openai_compatible", fake_call)
     settings = Settings(app_env="test", nvidia_api_key="test-nvidia")
@@ -66,7 +76,7 @@ def test_provider_cannot_invent_personal_income_with_valid_citation(monkeypatch)
     chat_service._SEMANTIC_CACHE.clear()
 
     async def fake_call(**_kwargs):
-        return "Annual income is $0 [HUD_MTSP_BRIEFING_2026 p.3]"
+        return structured("Annual income is $0.")
 
     monkeypatch.setattr(chat_service, "_call_openai_compatible", fake_call)
     settings = Settings(app_env="test", nvidia_api_key="test-nvidia")
@@ -81,7 +91,7 @@ def test_sensitive_chat_text_is_redacted_before_provider(monkeypatch):
 
     async def fake_call(**kwargs):
         seen_messages.append(kwargs["message"])
-        return "MTSP guidance is versioned [HUD_MTSP_BRIEFING_2026 p.3]"
+        return structured("MTSP guidance is versioned.")
 
     monkeypatch.setattr(chat_service, "_call_openai_compatible", fake_call)
     settings = Settings(app_env="test", nvidia_api_key="test-nvidia")
