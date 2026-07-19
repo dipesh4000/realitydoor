@@ -1,87 +1,53 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CloudUpload, FileText, Image, CheckCircle2, Loader2, Wallet, Building2, CreditCard, ChevronRight, ArrowRight } from 'lucide-react';
-import AiPanel from '../components/layout/AiPanel';
-import { uploadDocument } from '../api/documents';
+import { getDocuments, uploadDocument } from '../api/documents';
 
 const REQUIRED_DOCS = [
   { id: 'pay_stub', label: 'Recent Pay Stubs', icon: <Wallet size={16} /> },
-  { id: 'w2', label: 'W-2 or Tax Returns', icon: <Building2 size={16} /> },
+  { id: 'employment_verification', label: 'Employment Verification', icon: <Building2 size={16} /> },
+  { id: 'bank_statement', label: 'Recent Bank Statement', icon: <Wallet size={16} /> },
   { id: 'government_id', label: 'Government ID', icon: <CreditCard size={16} /> },
-];
-
-const AI_MESSAGES = [
-  {
-    role: 'ai',
-    text: "Ready to help you prepare. As you upload documents, I will securely scan them to extract necessary data and verify they meet the application requirements.\n\nI'll highlight any missing information or discrepancies before you submit.",
-  },
 ];
 
 export default function UploadPage() {
   const [dragOver, setDragOver] = useState(false);
-  const [uploaded, setUploaded] = useState([
-    { id: 'doc_1', name: 'Q3_PayStub_2024.pdf', size: '2.4 MB', status: 'scanning' },
-    { id: 'doc_2', name: 'Driver_License_Front.jpg', size: '1.1 MB', status: 'scanned' },
-  ]);
+  const [uploaded, setUploaded] = useState([]);
   const [uploading, setUploading] = useState(false);
-  const [countdown, setCountdown] = useState(null); // null = not started
+  const [uploadError, setUploadError] = useState('');
   const inputRef = useRef(null);
   const navigate = useNavigate();
-  const countdownRef = useRef(null);
 
-  // Simulate first doc finishing scan after 2s on mount
   useEffect(() => {
-    const t = setTimeout(() => {
-      setUploaded((prev) => prev.map((d) => d.id === 'doc_1' ? { ...d, status: 'scanned' } : d));
-    }, 2000);
-    return () => clearTimeout(t);
+    getDocuments().then((res) => setUploaded(res.documents));
   }, []);
 
-  // Watch for all docs scanned → start countdown
-  useEffect(() => {
-    const allScanned = uploaded.length > 0 && uploaded.every((d) => d.status === 'scanned');
-    if (allScanned && countdown === null && !uploading) {
-      setCountdown(3);
-    }
-  }, [uploaded, uploading]);
-
-  // Countdown ticker
-  useEffect(() => {
-    if (countdown === null) return;
-    if (countdown === 0) {
-      navigate('/extraction');
-      return;
-    }
-    countdownRef.current = setTimeout(() => setCountdown((c) => c - 1), 1000);
-    return () => clearTimeout(countdownRef.current);
-  }, [countdown, navigate]);
-
   const handleFiles = async (files) => {
-    setCountdown(null); // reset countdown if more files added
-    clearTimeout(countdownRef.current);
+    if (!files.length) return;
     setUploading(true);
-    for (const file of files) {
-      const res = await uploadDocument(file);
-      setUploaded((prev) => [...prev, { id: res.document.id, name: file.name, size: res.document.size, status: 'scanning' }]);
-      setTimeout(() => {
-        setUploaded((prev) => prev.map((d) => d.id === res.document.id ? { ...d, status: 'scanned' } : d));
-      }, 2000);
+    setUploadError('');
+    try {
+      for (const file of files) {
+        const res = await uploadDocument(file);
+        setUploaded((prev) => [...prev, res.document]);
+      }
+    } catch {
+      setUploadError('One or more files could not be uploaded. Your successfully uploaded files are still available below.');
+    } finally {
+      setUploading(false);
     }
-    setUploading(false);
   };
 
-  const allScanned = uploaded.length > 0 && uploaded.every((d) => d.status === 'scanned');
+  const readyForReview = uploaded.length > 0 && uploaded.every((d) => d.status !== 'scanning');
 
   return (
-    <>
-      <main className="main-content">
+    <main className="main-content">
         <div className="page-header">
           <h1 className="page-title">Upload Documents</h1>
-          <p className="page-subtitle">Step 1: Securely upload your required files to begin the readiness assessment.</p>
+          <p className="page-subtitle">Step 2 of 5: Securely upload your required files to begin the readiness review.</p>
         </div>
 
-        {/* Auto-redirect banner */}
-        {allScanned && countdown !== null && (
+        {readyForReview && (
           <div style={{
             display: 'flex', alignItems: 'center', justifyContent: 'space-between',
             padding: '12px 18px', marginBottom: 20,
@@ -92,27 +58,39 @@ export default function UploadPage() {
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
               <CheckCircle2 size={18} color="var(--color-success)" />
               <div>
-                <div style={{ fontWeight: 600, fontSize: 14, color: 'var(--color-on-surface)' }}>All documents scanned successfully</div>
+                <div style={{ fontWeight: 600, fontSize: 14, color: 'var(--color-on-surface)' }}>{uploaded.length} document{uploaded.length === 1 ? '' : 's'} ready for review</div>
                 <div style={{ fontSize: 12, color: 'var(--color-on-surface-variant)' }}>
-                  Redirecting to <strong>Review Extracted Fields</strong> in <strong>{countdown}s</strong>…
+                  You can keep adding files. RealDoor will proceed only when you choose.
                 </div>
               </div>
             </div>
-            <button className="btn btn-primary" style={{ gap: 5, flexShrink: 0 }} onClick={() => navigate('/extraction')}>
-              Review Extracted Fields <ArrowRight size={14} />
+            <button className="btn btn-primary" style={{ gap: 5, flexShrink: 0 }} onClick={() => navigate('/extraction')} disabled={uploading}>
+              Submit documents for review <ArrowRight size={14} />
             </button>
           </div>
         )}
 
+        {uploadError && <div className="card" role="alert" style={{ marginBottom: 16, color: 'var(--color-error)', background: 'var(--color-error-container)' }}>{uploadError}</div>}
+
         {/* Drop zone */}
         <div
           className={`upload-zone${dragOver ? ' drag-over' : ''}`}
+          role="button"
+          tabIndex={0}
+          aria-label="Upload PDF, JPG, or PNG documents"
+          aria-busy={uploading}
           onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
           onDragLeave={() => setDragOver(false)}
           onDrop={(e) => { e.preventDefault(); setDragOver(false); handleFiles([...e.dataTransfer.files]); }}
           onClick={() => inputRef.current?.click()}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              inputRef.current?.click();
+            }
+          }}
         >
-          <input ref={inputRef} type="file" multiple accept=".pdf,.jpg,.jpeg,.png" style={{ display: 'none' }} onChange={(e) => handleFiles([...e.target.files])} />
+          <input ref={inputRef} type="file" multiple accept=".pdf,.jpg,.jpeg,.png" style={{ display: 'none' }} onChange={(e) => { handleFiles([...e.target.files]); e.target.value = ''; }} />
           <div className="upload-icon">
             {uploading ? <Loader2 size={24} color="var(--color-primary-container)" style={{ animation: 'spin 1s linear infinite' }} /> : <CloudUpload size={24} color="var(--color-primary-container)" />}
           </div>
@@ -126,7 +104,7 @@ export default function UploadPage() {
         </div>
 
         {/* Two-column: required docs + uploaded */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginTop: 20 }}>
+        <div className="upload-columns">
           <div className="card">
             <div style={{ fontWeight: 600, fontSize: 14, marginBottom: 14, display: 'flex', alignItems: 'center', gap: 6 }}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1" ry="1"/><path d="M9 12h6m-6 4h4"/></svg>
@@ -171,25 +149,16 @@ export default function UploadPage() {
           </div>
         </div>
 
-        {/* Continue button (fallback if auto-nav hasn't triggered) */}
-        {!allScanned && (
+        {uploaded.length > 0 && (
           <div style={{ display: 'flex', justifyContent: 'center', marginTop: 28 }}>
-            <button className="btn btn-primary btn-lg" onClick={() => navigate('/extraction')}>
-              Continue <ChevronRight size={16} />
+            <button className="btn btn-primary btn-lg" disabled={!readyForReview || uploading} onClick={() => navigate('/extraction')}>
+              Submit {uploaded.length} document{uploaded.length === 1 ? '' : 's'} for review <ChevronRight size={16} />
             </button>
           </div>
         )}
 
         <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-      </main>
-
-      <AiPanel
-        title="Copilot"
-        subtitle="Ready to assist"
-        initialMessages={AI_MESSAGES}
-        suggestedQuestions={['What documents are required?', 'What counts as proof of income?']}
-      />
-    </>
+    </main>
   );
 }
 

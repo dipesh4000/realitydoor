@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AlertTriangle, FileText, RefreshCw, Info, CheckCircle2 } from 'lucide-react';
-import AiPanel from '../components/layout/AiPanel';
 import { getReadiness } from '../api/readiness';
 
 /* ── Donut chart ─────────────────────────────────────────── */
@@ -22,7 +21,7 @@ function DonutChart({ value }) {
         style={{ transition: 'stroke-dasharray 0.8s ease' }}
       />
       <text x={cx} y={cy - 4} textAnchor="middle" fontSize="22" fontWeight="700" fill="var(--color-on-surface)" fontFamily="Inter">{value}%</text>
-      <text x={cx} y={cy + 14} textAnchor="middle" fontSize="11" fill="var(--color-on-surface-variant)" fontFamily="Inter">Ready</text>
+      <text x={cx} y={cy + 14} textAnchor="middle" fontSize="11" fill="var(--color-on-surface-variant)" fontFamily="Inter">Complete</text>
     </svg>
   );
 }
@@ -83,8 +82,8 @@ export default function WorkspacePage() {
   useEffect(() => { getReadiness().then(setData); }, []);
 
   const handleAction = (issue) => {
-    if (issue.type === 'missing_document' || issue.type === 'expired_document') navigate('/upload');
-    if (issue.type === 'low_confidence') navigate('/extraction');
+    if (['missing_document', 'expired_document', 'stale_document'].includes(issue.type)) navigate('/upload');
+    if (['low_confidence', 'unconfirmed_fields', 'untrusted_document_instruction'].includes(issue.type)) navigate(issue.doc_id ? `/extraction?document=${issue.doc_id}` : '/extraction');
   };
 
   if (!data) {
@@ -96,21 +95,20 @@ export default function WorkspacePage() {
   }
 
   return (
-    <>
-      <main className="main-content">
+    <main className="main-content">
         <div className="page-header">
+          <div className="step-indicator">Step 4 of 5</div>
           <h1 className="page-title">Application Readiness</h1>
           <p className="page-subtitle">Review missing items and warnings before submission.</p>
         </div>
 
         {/* Readiness summary */}
         <div className="readiness-summary">
-          <DonutChart value={data.score} />
+          <DonutChart value={data.completion_percent} />
           <div>
             <h2 style={{ fontSize: 22, fontWeight: 700, marginBottom: 6 }}>{data.label}</h2>
             <p style={{ fontSize: 14, color: 'var(--color-on-surface-variant)', lineHeight: 1.6 }}>
-              You have {data.issues.filter(i => i.type === 'missing_document').length} missing documents and{' '}
-              {data.issues.filter(i => i.type === 'low_confidence').length} low-confidence field blocking submission.
+              {data.checks_passed} of {data.checks_total} preparation checks currently pass. This is checklist completion, not an eligibility score.
             </p>
             <div style={{ marginTop: 12 }}>
               <span className="badge badge-error">
@@ -119,6 +117,17 @@ export default function WorkspacePage() {
             </div>
           </div>
         </div>
+
+        {data.confirmed_income && (
+          <div className="card" style={{ marginBottom: 22, background: 'var(--color-surface-container)' }}>
+            <div className="section-label" style={{ marginBottom: 8 }}>Confirmed calculation</div>
+            <div style={{ fontSize: 24, fontWeight: 700 }}>${data.confirmed_income.annualized_income.toLocaleString(undefined, { minimumFractionDigits: 2 })}</div>
+            <div style={{ marginTop: 5, fontSize: 13, color: 'var(--color-on-surface-variant)' }}>
+              {data.confirmed_income.inputs.gross_pay.toLocaleString(undefined, { style: 'currency', currency: 'USD' })} × {data.confirmed_income.inputs.periods_per_year} pay periods · {data.confirmed_income.rule_id}
+            </div>
+            <div style={{ marginTop: 7, fontSize: 11, color: 'var(--color-outline)' }}>{data.confirmed_income.disclaimer}</div>
+          </div>
+        )}
 
         {/* Actions */}
         <div className="section-label">Required Actions</div>
@@ -130,25 +139,10 @@ export default function WorkspacePage() {
 
         {/* Packet button */}
         <div style={{ marginTop: 28, display: 'flex', gap: 10 }}>
-          <button className="btn btn-outline" style={{ gap: 6 }}>
-            <CheckCircle2 size={15} /> Generate Readiness Packet
-          </button>
-          <button className="btn btn-ghost" style={{ gap: 6, color: 'var(--color-error)', borderColor: 'var(--color-error-container)' }}>
-            Delete Session
+          <button className="btn btn-outline" style={{ gap: 6 }} onClick={() => navigate('/packet')}>
+            <CheckCircle2 size={15} /> Preview Readiness Packet
           </button>
         </div>
-      </main>
-
-      <AiPanel
-        title="AI Copilot"
-        actionCard={data.ai_action ? {
-          title: data.ai_action.title,
-          message: data.ai_action.message,
-          fileRef: data.ai_action.file_ref,
-          action: 'Fix Now',
-        } : null}
-        suggestedQuestions={data.suggested_questions}
-      />
-    </>
+    </main>
   );
 }

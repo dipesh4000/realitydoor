@@ -1,0 +1,473 @@
+{
+  "version": "hud-fy2026-d89fe0ae44b7",
+  "chunks": [
+    {
+      "id": "HUD_MTSP_BRIEFING_2026-p1-c1",
+      "source_id": "HUD_MTSP_BRIEFING_2026",
+      "title": "FY 2026 MTSP Briefing",
+      "page": 1,
+      "url": "https://www.huduser.gov/portal/datasets/mtsp.html",
+      "effective_from": "2026-05-01",
+      "text": "1 FY 2026 Multifamily Tax Subsidy Project Income Limits I. OVERVIEW What are Multifamily Tax Subsidy Projects? These are projects financed with tax exempt housing bonds issued to provide qualified residential rental development under section 142 of the Internal Revenue Code (IRC) and low- income housing projects funded with tax credits authorized under section 42 of the IRC, both of which are subject to HUD-determined income limits. Collectively, HUD refers to these projects as Multifamily Tax Subsidy Projects (MTSPs). This set of projects excludes qualified mortgage bonds issued under section 143 of the Code.1 Separate income limits are issued for MTSPs as required by provisions in the Housing and Economic Recovery Act of 2008."
+    },
+    {
+      "id": "HUD_MTSP_BRIEFING_2026-p1-c2",
+      "source_id": "HUD_MTSP_BRIEFING_2026",
+      "title": "FY 2026 MTSP Briefing",
+      "page": 1,
+      "url": "https://www.huduser.gov/portal/datasets/mtsp.html",
+      "effective_from": "2026-05-01",
+      "text": "History of the Use of HUD Income Limits for MTSPs Section 142(d)(2)(B) of the IRC, which is cross referenced in section 42(g)(4) of the IRC, links the income determinations of MTSPs to HUD income limits: \u201cThe income of individuals and area median gross income shall be determined by the Secretary in a manner consistent with determinations of lower income families under section 8 of the United State Housing Act of 1937.\u201d IRS Revenue Ruling 89-242 links MTSP 60 percent income limits to HUD very low-income limits. Specifically, it states: The income limits applicable to qualified residential rental projects and to qualified low- income housing projects are required to be made in a manner consistent with determinations of lower income families under section 8 of the United States Housing Act of 1937. With respect to the 20-50 requirement of sections 142(d)(1)(A) and 42(g)(1)(A) of the Code [IRC], 20 percent or more of the applicable units must be occupied by individuals or families having incomes equal to or less than the income limit for a \u201cvery low-income\u201d family of the same size."
+    },
+    {
+      "id": "HUD_MTSP_BRIEFING_2026-p1-c3",
+      "source_id": "HUD_MTSP_BRIEFING_2026",
+      "title": "FY 2026 MTSP Briefing",
+      "page": 1,
+      "url": "https://www.huduser.gov/portal/datasets/mtsp.html",
+      "effective_from": "2026-05-01",
+      "text": "With respect to the 40-60 requirement of sections 142(d)(1)(B) and 42(g)(1)(B), 40 percent of the applicable units must be occupied by individuals or families having incomes equal to 120 percent or less of the income limit for a very low-income family of the same size. The \u201cincome limit for a \u2018very low-income\u2019 family\u201d is the Section 8 very low-income limit (VLIL) produced by HUD annually. Prior to fiscal year (FY) 2010, HUD had held its VLILs harmless \u2013 that 1 The relevant portions of section 142 are provided in attachment 1. The relevant portions of section 42 are provided in attachment 2. 2 IRS Revenue Ruling 89-24 is provided in its entirety in attachment 3."
+    },
+    {
+      "id": "HUD_MTSP_BRIEFING_2026-p2-c1",
+      "source_id": "HUD_MTSP_BRIEFING_2026",
+      "title": "FY 2026 MTSP Briefing",
+      "page": 2,
+      "url": "https://www.huduser.gov/portal/datasets/mtsp.html",
+      "effective_from": "2026-05-01",
+      "text": "2 is, HUD did not allow income limits to decline in accord with underlying data \u2013 primarily because of their use by MTSPs. Allowing income limits to fall when median family incomes fall would put the financial stability of MTSPs at risk. However, MTSP owners and managers found it difficult to operate in areas where income limits had not increased in several years and sought statutory change in program income limit calculations. These changes were implemented as part of the Housing and Economic Recovery Act of 2008 (HERA). Income Limits for MTSPs Under HERA3 Subpart (E) of Section 142(d)(2), as added by section 3009a of HERA provides for immediate holding harmless of \u201carea median gross income\u201d for MTSPs. HUD has determined that the legislative intent of this addition is to cause applicable MTSP income limits based on HUD\u2019s VLIL to be statutorily held harmless since MTSPs use income limits in determining tenant eligibility and for setting maximum rental rates. Beginning with the FY 2010 Income Limits, HUD no longer holds its Section 8 income limits harmless."
+    },
+    {
+      "id": "HUD_MTSP_BRIEFING_2026-p2-c2",
+      "source_id": "HUD_MTSP_BRIEFING_2026",
+      "title": "FY 2026 MTSP Briefing",
+      "page": 2,
+      "url": "https://www.huduser.gov/portal/datasets/mtsp.html",
+      "effective_from": "2026-05-01",
+      "text": "HUD published a Federal Register notice, dated May 17, 2010, to officially notify the public of this change. In addition, HERA creates a special class of MTSPs labeled \u201cHUD hold-harmless impacted project(s)\u201d (Impacted MTSPs) for which an additional set of income limits are required. An Impacted MTSP is defined as \u201cany project with respect to which area median gross income was determined under subparagraph (B) for calendar year 2007 or 2008 if such determination would have been less but for the HUD hold harmless policy.\u201d Income limits for these projects are the greater of the regular MTSP income limits or the FY 2008 VLIL times the growth in median incomes between the current year and FY 2008.4 Changes to Income Limits for Income Averaging and Trending Section 103 of Division T of the Consolidated Appropriations Act of 2018, Public Law No. 115- 141, 132 Stat. 348 added a third minimum set-aside test, the average income test for low- income housing credit projects. The income limits are calculated in accord with IRS Revenue Ruling 2020-4, pages 6 and 7."
+    },
+    {
+      "id": "HUD_MTSP_BRIEFING_2026-p2-c3",
+      "source_id": "HUD_MTSP_BRIEFING_2026",
+      "title": "FY 2026 MTSP Briefing",
+      "page": 2,
+      "url": "https://www.huduser.gov/portal/datasets/mtsp.html",
+      "effective_from": "2026-05-01",
+      "text": "Beginning with the FY 2019 MTSP income limits, HUD has posted MTSP Income Averaging Limits Summary on its annual MTSP page: https://www.huduser.gov/portal/datasets/mtsp.html. This system provides the income averaging limits (20%, 30%, 40%, 50%, 60%, 70%, 80%) based on the Multifamily Tax Subsidy Project (MTSP) Income Limits for any area of the country selected by the user. 3 The relevant portions of HERA are provided in attachment 4. 4 Legislation specifies that the FY 2008 income limit should be added to, not multiplied by, the growth rate in median income. However, it cannot be the intent of Congress to add a growth rate to a value so HUD is assuming multiplication in its implementation of the legislation."
+    },
+    {
+      "id": "HUD_MTSP_BRIEFING_2026-p3-c1",
+      "source_id": "HUD_MTSP_BRIEFING_2026",
+      "title": "FY 2026 MTSP Briefing",
+      "page": 3,
+      "url": "https://www.huduser.gov/portal/datasets/mtsp.html",
+      "effective_from": "2026-05-01",
+      "text": "3 Per Capita Wages Inflation HUD used the 2024 American Community Survey (ACS) and Puerto Rico Community Survey (PRCS) median family income data (as opposed to household income data) as the basis of FY 2026 Income Limits for all areas of geography, except for the U.S. Virgin Islands and Guam, American Samoa, and the Northern Mariana Islands (the Pacific Islands). HUD inflates median family income estimates from the time of the survey to FY 2026 using the most recent projected change in national per capita wages published by the Congressional Budget Office (CBO). The inflation factor, representing the projected change in national per capita wages from CY 2024 through FY 2026, is approximately 1.055 (a 5.5 percent increase). Geographic Definitions HUD calculates median family incomes and income limits for metropolitan areas, which comprise one or more counties or county-equivalents, and individual nonmetropolitan counties."
+    },
+    {
+      "id": "HUD_MTSP_BRIEFING_2026-p3-c2",
+      "source_id": "HUD_MTSP_BRIEFING_2026",
+      "title": "FY 2026 MTSP Briefing",
+      "page": 3,
+      "url": "https://www.huduser.gov/portal/datasets/mtsp.html",
+      "effective_from": "2026-05-01",
+      "text": "In determining the definitions of metropolitan areas, HUD uses the delineations of metropolitan statistical areas found in Office of Management and Budget (OMB) Bulletin No. 23-01, issued July 21, 2023, as its starting point for the first time. The 2023 delineations are the most recent incorporated into American Community Survey (ACS) data described below. In many cases, HUD has split metropolitan statistical areas into smaller subareas, which HUD designates as \u201cHUD Metropolitan Fair Market Rent Areas (HMFAs).\u201d HUD also groups independent cities in Virginia with their larger containing counties, in cases where the city and county are both non-metropolitan. II. INCOME LIMIT CALCULATIONS FOR MTSPs Income Limits The initial 50 percent income limit for each Non-Impacted MTSP is the Section 8 VLIL. In subsequent years, the income limit for each MTSP may not decline and will be the highest Section 8 VLIL obtained throughout the project\u2019s qualifying period."
+    },
+    {
+      "id": "HUD_MTSP_BRIEFING_2026-p3-c3",
+      "source_id": "HUD_MTSP_BRIEFING_2026",
+      "title": "FY 2026 MTSP Briefing",
+      "page": 3,
+      "url": "https://www.huduser.gov/portal/datasets/mtsp.html",
+      "effective_from": "2026-05-01",
+      "text": "For FY 2026, the MTSP 50 percent income limit for existing projects is equal to the maximum of either the HUD Section 8 VLIL for FY 2026 or the HUD Section 8 VLIL in place for FY2025, as expressed below: MTSP_VLIL2026 = max (VLIL2026, MTSP_VLIL2025)5 The 60 percent income limit for MTSPs is calculated by multiplying the MTSP VLIL by 1.2: MTSP_602026 = MTSP_VLIL2026 * 1.2 5Attachment 5 provides full details about the calculation of VLIL. Full detailed documentation for each area can be found at http://www.huduser.gov/portal/datasets/mtsp.html."
+    },
+    {
+      "id": "HUD_MTSP_BRIEFING_2026-p4-c1",
+      "source_id": "HUD_MTSP_BRIEFING_2026",
+      "title": "FY 2026 MTSP Briefing",
+      "page": 4,
+      "url": "https://www.huduser.gov/portal/datasets/mtsp.html",
+      "effective_from": "2026-05-01",
+      "text": "4 HUD has eliminated its traditional hold-harmless provision for Section 8 income limits. But each Non-Impacted MTSP\u2019s income limit will be the highest Section 8 income limit achieved during the project\u2019s qualifying period. Therefore, each MTSP\u2019s income limit going forward will depend on the path of income limits in its individual area and the year the initial income limit was determined. HUD will publish sufficient historical data on income limits for such determinations to be made, but they will need to be done on a project-by-project basis. Income Limits for HERA-Defined HUD Impacted Projects The Very Low-Income Limit for Impacted MTSPs is equal to the maximum of the Non-Impacted FY2025 VLIL for Impacted Projects or the HUD Section 8 VLIL for FY 2008 times the ratio of the median family income in FY 2026 to the median family income in FY 2008. By including last year\u2019s MTSP VLIL for Impacted Projects in the area, this ensures implementation of the statutory hold harmless found in subpart (E) of Section 142(d)(2), as added by section 3009a of HERA."
+    },
+    {
+      "id": "HUD_MTSP_BRIEFING_2026-p4-c2",
+      "source_id": "HUD_MTSP_BRIEFING_2026",
+      "title": "FY 2026 MTSP Briefing",
+      "page": 4,
+      "url": "https://www.huduser.gov/portal/datasets/mtsp.html",
+      "effective_from": "2026-05-01",
+      "text": "This adjustment ensures that Impacted MTSPs will have increases should the change in the current median family estimate to FY 2008 estimate be larger than the increase from last year\u2019s (FY 2025) income limits. 6 MTSP_VLIL_Impacted2026= max(MTSP_VLIL_Impacted2025, VLIL2008 * (MFI2026/ MFI2008)) The 60 percent income limit merely multiplies the very low-income limit for MTSPs, as determined in the previous step by 1.2. MTSP_60_Impacted2026 = MTSP_VLIL_Impacted2026 * 1.2 6 Both the FY 2026 MTSP regular and special 50 percent income limits are rounded up to the nearest $50 in accordance with the methodology currently in place for calculating very low-income limits (50 percent income limits) for HUD\u2019s Section 8 program."
+    },
+    {
+      "id": "HUD_MTSP_BRIEFING_2026-p5-c1",
+      "source_id": "HUD_MTSP_BRIEFING_2026",
+      "title": "FY 2026 MTSP Briefing",
+      "page": 5,
+      "url": "https://www.huduser.gov/portal/datasets/mtsp.html",
+      "effective_from": "2026-05-01",
+      "text": "5 Attachment 1 Sec. 142. Exempt facility bond [TITLE 26, Subtitle A, CHAPTER 1, Subchapter B, Part IV, Subpart A, Sec. 142] STATUTE \u2026.. (d) Qualified residential rental project For purposes of this section - (1) In general The term \"qualified residential rental project\" means any project for residential rental property if, at all times during the qualified project period, such project meets the requirements of subparagraph (A) or (B), whichever is elected by the issuer at the time of the issuance of the issue with respect to such project: (A) 20-50 test The project meets the requirements of this subparagraph if 20 percent or more of the residential units in such project are occupied by individuals whose income is 50 percent or less of area median gross income. (B) 40-60 test The project meets the requirements of this subparagraph if 40 percent or more of the residential units in such project are occupied by individuals whose income is 60 percent or less of area median gross income."
+    },
+    {
+      "id": "HUD_MTSP_BRIEFING_2026-p5-c2",
+      "source_id": "HUD_MTSP_BRIEFING_2026",
+      "title": "FY 2026 MTSP Briefing",
+      "page": 5,
+      "url": "https://www.huduser.gov/portal/datasets/mtsp.html",
+      "effective_from": "2026-05-01",
+      "text": "For purposes of this paragraph, any property shall not be treated as failing to be residential rental property merely because part of the building in which such property is located is used for purposes other than residential rental purposes. (2) Definitions and special rules For purposes of this subsection - (A) Qualified project period The term \"qualified project period\" means the period beginning on the 1st day on which 10 percent of the residential units in the project are occupied and ending on the latest of - (i) the date which is 15 years after the date on which 50 percent of the residential units in the project are occupied,"
+    },
+    {
+      "id": "HUD_MTSP_BRIEFING_2026-p6-c1",
+      "source_id": "HUD_MTSP_BRIEFING_2026",
+      "title": "FY 2026 MTSP Briefing",
+      "page": 6,
+      "url": "https://www.huduser.gov/portal/datasets/mtsp.html",
+      "effective_from": "2026-05-01",
+      "text": "6 (ii) the 1st day on which no tax-exempt private activity bond issued with respect to the project is outstanding, or (iii) the date on which any assistance provided with respect to the project under section 8 of the United States Housing Act of 1937 terminates. (B) Income of individuals; area median gross income The income of individuals and area median gross income shall be determined by the Secretary in a manner consistent with determinations of lower income families and area median gross income under section 8 of the United States Housing Act of 1937 (or, if such program is terminated, under such program as in effect immediately before such termination). Determinations under the preceding sentence shall include adjustments for family size. Section 7872(g) shall not apply in determining the income of individuals under this subparagraph."
+    },
+    {
+      "id": "HUD_MTSP_BRIEFING_2026-p6-c2",
+      "source_id": "HUD_MTSP_BRIEFING_2026",
+      "title": "FY 2026 MTSP Briefing",
+      "page": 6,
+      "url": "https://www.huduser.gov/portal/datasets/mtsp.html",
+      "effective_from": "2026-05-01",
+      "text": "(3) Current income determinations For purposes of this subsection - (A) In general The determination of whether the income of a resident of a unit in a project exceeds the applicable income limit shall be made at least annually on the basis of the current income of the resident. (B) Continuing resident's income may increase above the applicable limit If the income of a resident of a unit in a project did not exceed the applicable income limit upon commencement of such resident's occupancy of such unit (or as of any prior determination under subparagraph (A)), the income of such resident shall be treated as continuing to not exceed the applicable income limit. The preceding sentence shall cease to apply to any resident whose income as of the most recent determination under subparagraph (A) exceeds 140 percent of the applicable income limit if after such determination, but before the next determination, any residential unit of comparable or smaller size in the same project is occupied by a new resident whose income exceeds the applicable income limit."
+    },
+    {
+      "id": "HUD_MTSP_BRIEFING_2026-p6-c3",
+      "source_id": "HUD_MTSP_BRIEFING_2026",
+      "title": "FY 2026 MTSP Briefing",
+      "page": 6,
+      "url": "https://www.huduser.gov/portal/datasets/mtsp.html",
+      "effective_from": "2026-05-01",
+      "text": "(4) Special rule in case of deep rent skewing (A) In general In the case of any project described in subparagraph (B), the 2d sentence of subparagraph (B) of paragraph (3) shall be applied by substituting - (i) \"170 percent\" for \"140 percent\", and"
+    },
+    {
+      "id": "HUD_MTSP_BRIEFING_2026-p7-c1",
+      "source_id": "HUD_MTSP_BRIEFING_2026",
+      "title": "FY 2026 MTSP Briefing",
+      "page": 7,
+      "url": "https://www.huduser.gov/portal/datasets/mtsp.html",
+      "effective_from": "2026-05-01",
+      "text": "7 (ii) \"any low-income unit in the same project is occupied by a new resident whose income exceeds 40 percent of area median gross income\" for \"any residential unit of comparable or smaller size in the same project is occupied by a new resident whose income exceeds the applicable income limit\". (B) Deep rent skewed project A project is described in this subparagraph if the owner of the project elects to have this paragraph apply and, at all times during the qualified project period, such project meets the requirements of clauses (i), (ii), and (iii): (i) The project meets the requirements of this clause if 15 percent or more of the low-income units in the project are occupied by individuals whose income is 40 percent or less of area median gross income. (ii) The project meets the requirements of this clause if the gross rent with respect to each low-income unit in the project does not exceed 30 percent of the applicable income limit which applies to individuals occupying the unit."
+    },
+    {
+      "id": "HUD_MTSP_BRIEFING_2026-p7-c2",
+      "source_id": "HUD_MTSP_BRIEFING_2026",
+      "title": "FY 2026 MTSP Briefing",
+      "page": 7,
+      "url": "https://www.huduser.gov/portal/datasets/mtsp.html",
+      "effective_from": "2026-05-01",
+      "text": "(iii) The project meets the requirements of this clause if the gross rent with respect to each low-income unit in the project does not exceed 1/2 of the average gross rent with respect to units of comparable size which are not occupied by individuals who meet the applicable income limit. (C) Definitions applicable to subparagraph (B) For purposes of subparagraph (B) - (i) Low-income unit The term \"low-income unit\" means any unit which is required to be occupied by individuals who meet the applicable income limit. (ii) Gross rent The term \"gross rent\" includes - (I) any payment under section 8 of the United States Housing Act of 1937, and (II) any utility allowance determined by the Secretary after taking into account such determinations under such section 8. (5) Applicable income limit For purposes of paragraphs (3) and (4), the term \"applicable income limit\" means - (A) the limitation under subparagraph (A) or (B) of paragraph (1) which applies to the project, or"
+    },
+    {
+      "id": "HUD_MTSP_BRIEFING_2026-p8-c1",
+      "source_id": "HUD_MTSP_BRIEFING_2026",
+      "title": "FY 2026 MTSP Briefing",
+      "page": 8,
+      "url": "https://www.huduser.gov/portal/datasets/mtsp.html",
+      "effective_from": "2026-05-01",
+      "text": "8 (B) in the case of a unit to which paragraph (4)(B)(i) applies, the limitation which applies to such unit. (6) Special rule for certain high cost housing area In the case of a project located in a city having 5 boroughs and a population in excess of 5,000,000, subparagraph (B) of paragraph (1) shall be applied by substituting \"25 percent\" for \"40 percent\". (7) Certification to Secretary The operator of any project with respect to which an election was made under this subsection shall submit to the Secretary (at such time and in such manner as the Secretary shall prescribe) an annual certification as to whether such project continues to meet the requirements of this subsection. Any failure to comply with the provisions of the preceding sentence shall not affect the tax-exempt status of any bond but shall subject the operator to penalty, as provided in section 6652(j). \u2026\u2026"
+    },
+    {
+      "id": "HUD_MTSP_BRIEFING_2026-p9-c1",
+      "source_id": "HUD_MTSP_BRIEFING_2026",
+      "title": "FY 2026 MTSP Briefing",
+      "page": 9,
+      "url": "https://www.huduser.gov/portal/datasets/mtsp.html",
+      "effective_from": "2026-05-01",
+      "text": "9 Attachment 2 Sec. 42. Low-income housing credit [TITLE 26, Subtitle A, CHAPTER 1, Subchapter A, PART IV, Subpart D, Sec. 42] STATUTE \u2026\u2026 g) Qualified low-income housing project For purposes of this section - (1) In general The term \"qualified low-income housing project\" means any project for residential rental property if the project meets the requirements of subparagraph (A) or (B) whichever is elected by the taxpayer: (A) 20-50 test The project meets the requirements of this subparagraph if 20 percent or more of the residential units in such project are both rent-restricted and occupied by individuals whose income is 50 percent or less of area median gross income. (B) 40-60 test The project meets the requirements of this subparagraph if 40 percent or more of the residential units in such project are both rent-restricted and occupied by individuals whose income is 60 percent or less of area median gross income. Any election under this paragraph, once made, shall be irrevocable."
+    },
+    {
+      "id": "HUD_MTSP_BRIEFING_2026-p9-c2",
+      "source_id": "HUD_MTSP_BRIEFING_2026",
+      "title": "FY 2026 MTSP Briefing",
+      "page": 9,
+      "url": "https://www.huduser.gov/portal/datasets/mtsp.html",
+      "effective_from": "2026-05-01",
+      "text": "For purposes of this paragraph, any property shall not be treated as failing to be residential rental property merely because part of the building in which such property is located is used for purposes other than residential rental purposes. (2) Rent-restricted units (A) In general For purposes of paragraph (1), a residential unit is rent-restricted if the gross rent with respect to such unit does not exceed 30 percent of the imputed income limitation applicable to such unit. For purposes of the preceding sentence, the amount of the income limitation under paragraph (1) applicable for any period shall not be less than such limitation applicable for the earliest period the building (which contains the unit) was included in the determination of whether the project is a qualified low-income housing project. (B) Gross rent For purposes of subparagraph (A), gross rent -"
+    },
+    {
+      "id": "HUD_MTSP_BRIEFING_2026-p10-c1",
+      "source_id": "HUD_MTSP_BRIEFING_2026",
+      "title": "FY 2026 MTSP Briefing",
+      "page": 10,
+      "url": "https://www.huduser.gov/portal/datasets/mtsp.html",
+      "effective_from": "2026-05-01",
+      "text": "10 (i) does not include any payment under section 8 of the United States Housing Act of 1937 or any comparable rental assistance program (with respect to such unit or occupants thereof), (ii) includes any utility allowance determined by the Secretary after taking into account such determinations under section 8 of the United States Housing Act of 1937, (iii) does not include any fee for a supportive service which is paid to the owner of the unit (on the basis of the low-income status of the tenant of the unit) by any governmental program of assistance (or by an organization described in section 501(c)(3) and exempt from tax under section 501(a)) if such program (or organization) provides assistance for rent and the amount of assistance provided for rent is not separable from the amount of assistance provided for supportive services, and (iv) does not include any rental payment to the owner of the unit to the extent such owner pays an equivalent amount to the Farmers' Home Administration under section 515 of the Housing Act of 1949."
+    },
+    {
+      "id": "HUD_MTSP_BRIEFING_2026-p10-c2",
+      "source_id": "HUD_MTSP_BRIEFING_2026",
+      "title": "FY 2026 MTSP Briefing",
+      "page": 10,
+      "url": "https://www.huduser.gov/portal/datasets/mtsp.html",
+      "effective_from": "2026-05-01",
+      "text": "For purposes of clause (iii), the term \"supportive service\" means any service provided under a planned program of services designed to enable residents of a residential rental property to remain independent and avoid placement in a hospital, nursing home, or intermediate care facility for the mentally or physically handicapped. In the case of a single-room occupancy unit or a building described in subsection (i)(3)(B)(iii), such term includes any service provided to assist tenants in locating and retaining permanent housing. (C) Imputed income limitation applicable to unit For purposes of this paragraph, the imputed income limitation applicable to a unit is the income limitation which would apply under paragraph (1) to individuals occupying the unit if the number of individuals occupying the unit were as follows: (i) In the case of a unit which does not have a separate bedroom, 1 individual. (ii) In the case of a unit which has 1 or more separate bedrooms, 1.5 individuals for each separate bedroom."
+    },
+    {
+      "id": "HUD_MTSP_BRIEFING_2026-p10-c3",
+      "source_id": "HUD_MTSP_BRIEFING_2026",
+      "title": "FY 2026 MTSP Briefing",
+      "page": 10,
+      "url": "https://www.huduser.gov/portal/datasets/mtsp.html",
+      "effective_from": "2026-05-01",
+      "text": "In the case of a project with respect to which a credit is allowable by reason of this section and for which financing is provided by a bond described in section 142(a)(7), the imputed income limitation shall apply in lieu of the otherwise applicable income limitation for purposes of applying section 142(d)(4)(B)(ii). (D) Treatment of units occupied by individuals whose incomes rise above limit (i) In general Except as provided in clause (ii), notwithstanding an increase in the income of the occupants of a low-income unit above the income limitation applicable under paragraph (1), such unit shall"
+    },
+    {
+      "id": "HUD_MTSP_BRIEFING_2026-p11-c1",
+      "source_id": "HUD_MTSP_BRIEFING_2026",
+      "title": "FY 2026 MTSP Briefing",
+      "page": 11,
+      "url": "https://www.huduser.gov/portal/datasets/mtsp.html",
+      "effective_from": "2026-05-01",
+      "text": "11 continue to be treated as a low-income unit if the income of such occupants initially met such income limitation and such unit continues to be rent-restricted. (ii) Next available unit must be rented to low-income tenant if income rises above 140 percent of income limit If the income of the occupants of the unit increases above 140 percent of the income limitation applicable under paragraph (1), clause (i) shall cease to apply to such unit if any residential rental unit in the building (of a size comparable to, or smaller than, such unit) is occupied by a new resident whose income exceeds such income limitation. In the case of a project described in section 142(d)(4)(B), the preceding sentence shall be applied by substituting \"170 percent\" for \"140 percent\" and by substituting \"any low-income unit in the building is occupied by a new resident whose income exceeds 40 percent of area median gross income\" for \"any residential unit in the building (of a size comparable to, or smaller than, such unit) is occupied by a new resident whose income exceeds such income limitation\"."
+    },
+    {
+      "id": "HUD_MTSP_BRIEFING_2026-p11-c2",
+      "source_id": "HUD_MTSP_BRIEFING_2026",
+      "title": "FY 2026 MTSP Briefing",
+      "page": 11,
+      "url": "https://www.huduser.gov/portal/datasets/mtsp.html",
+      "effective_from": "2026-05-01",
+      "text": "(E) Units where Federal rental assistance is reduced as tenant's income increases If the gross rent with respect to a residential unit exceeds the limitation under subparagraph (A) by reason of the fact that the income of the occupants thereof exceeds the income limitation applicable under paragraph (1), such unit shall, nevertheless, be treated as a rent-restricted unit for purposes of paragraph (1) if - (i) a Federal rental assistance payment described in subparagraph (B)(i) is made with respect to such unit or its occupants, and (ii) the sum of such payment and the gross rent with respect to such unit does not exceed the sum of the amount of such payment which would be made and the gross rent which would be payable with respect to such unit if - (I) the income of the occupants thereof did not exceed the income limitation applicable under paragraph (1), and (II) such units were rent-restricted within the meaning of subparagraph (A)."
+    },
+    {
+      "id": "HUD_MTSP_BRIEFING_2026-p11-c3",
+      "source_id": "HUD_MTSP_BRIEFING_2026",
+      "title": "FY 2026 MTSP Briefing",
+      "page": 11,
+      "url": "https://www.huduser.gov/portal/datasets/mtsp.html",
+      "effective_from": "2026-05-01",
+      "text": "The preceding sentence shall apply to any unit only if the result described in clause (ii) is required by Federal statute as of the date of the enactment of this subparagraph and as of the date the Federal rental assistance payment is made. (3) Date for meeting requirements (A) In general Except as otherwise provided in this paragraph, a building shall be treated as a qualified low-"
+    },
+    {
+      "id": "HUD_MTSP_BRIEFING_2026-p12-c1",
+      "source_id": "HUD_MTSP_BRIEFING_2026",
+      "title": "FY 2026 MTSP Briefing",
+      "page": 12,
+      "url": "https://www.huduser.gov/portal/datasets/mtsp.html",
+      "effective_from": "2026-05-01",
+      "text": "12 income building only if the project (of which such building is a part) meets the requirements of paragraph (1) not later than the close of the 1st year of the credit period for such building. (B) Buildings which rely on later buildings for qualification (i) In general In determining whether a building (hereinafter in this subparagraph referred to as the \"prior building\") is a qualified low-income building, the taxpayer may take into account 1 or more additional buildings placed in service during the 12-month period described in subparagraph (A) with respect to the prior building only if the taxpayer elects to apply clause (ii) with respect to each additional building taken into account. (ii) Treatment of elected buildings In the case of a building which the taxpayer elects to take into account under clause (i), the period under subparagraph (A) for such building shall end at the close of the 12-month period applicable to the prior building."
+    },
+    {
+      "id": "HUD_MTSP_BRIEFING_2026-p12-c2",
+      "source_id": "HUD_MTSP_BRIEFING_2026",
+      "title": "FY 2026 MTSP Briefing",
+      "page": 12,
+      "url": "https://www.huduser.gov/portal/datasets/mtsp.html",
+      "effective_from": "2026-05-01",
+      "text": "(iii) Date prior building is treated as placed in service For purposes of determining the credit period and the compliance period for the prior building, the prior building shall be treated for purposes of this section as placed in service on the most recent date any additional building elected by the taxpayer (with respect to such prior building) was placed in service. (C) Special rule A building - (i) other than the 1st building placed in service as part of a project, and (ii) other than a building which is placed in service during the 12-month period described in subparagraph (A) with respect to a prior building which becomes a qualified low-income building, shall in no event be treated as a qualified low-income building unless the project is a qualified low-income housing project (without regard to such building) on the date such building is placed in service."
+    },
+    {
+      "id": "HUD_MTSP_BRIEFING_2026-p12-c3",
+      "source_id": "HUD_MTSP_BRIEFING_2026",
+      "title": "FY 2026 MTSP Briefing",
+      "page": 12,
+      "url": "https://www.huduser.gov/portal/datasets/mtsp.html",
+      "effective_from": "2026-05-01",
+      "text": "(D) Projects with more than 1 building must be identified For purposes of this section, a project shall be treated as consisting of only 1 building unless, before the close of the 1st calendar year in the project period (as defined in subsection (h)(1)(F)(ii)), each building which is (or will be) part of such project is identified in such form and manner as the Secretary may provide. (4) Certain rules made applicable Paragraphs (2) (other than subparagraph (A) thereof), (3), (4), (5), (6), and (7) of section 142(d),"
+    },
+    {
+      "id": "HUD_MTSP_BRIEFING_2026-p13-c1",
+      "source_id": "HUD_MTSP_BRIEFING_2026",
+      "title": "FY 2026 MTSP Briefing",
+      "page": 13,
+      "url": "https://www.huduser.gov/portal/datasets/mtsp.html",
+      "effective_from": "2026-05-01",
+      "text": "13 and section 6652(j), shall apply for purposes of determining whether any project is a qualified low-income housing project and whether any unit is a low-income unit; except that, in applying such provisions for such purposes, the term \"gross rent\" shall have the meaning given such term by paragraph (2)(B) of this subsection. (5) Election to treat building after compliance period as not part of a project For purposes of this section, the taxpayer may elect to treat any building as not part of a qualified low-income housing project for any period beginning after the compliance period for such building."
+    },
+    {
+      "id": "HUD_MTSP_BRIEFING_2026-p13-c2",
+      "source_id": "HUD_MTSP_BRIEFING_2026",
+      "title": "FY 2026 MTSP Briefing",
+      "page": 13,
+      "url": "https://www.huduser.gov/portal/datasets/mtsp.html",
+      "effective_from": "2026-05-01",
+      "text": "(6) Special rule where de minimis equity contribution Property shall not be treated as failing to be residential rental property for purposes of this section merely because the occupant of a residential unit in the project pays (on a voluntary basis) to the lessor a de minimis amount to be held toward the purchase by such occupant of a residential unit in such project if - (A) all amounts so paid are refunded to the occupant on the cessation of his occupancy of a unit in the project, and (B) the purchase of the unit is not permitted until after the close of the compliance period with respect to the building in which the unit is located. Any amount paid to the lessor as described in the preceding sentence shall be included in gross rent under paragraph (2) for purposes of determining whether the unit is rent- restricted."
+    },
+    {
+      "id": "HUD_MTSP_BRIEFING_2026-p13-c3",
+      "source_id": "HUD_MTSP_BRIEFING_2026",
+      "title": "FY 2026 MTSP Briefing",
+      "page": 13,
+      "url": "https://www.huduser.gov/portal/datasets/mtsp.html",
+      "effective_from": "2026-05-01",
+      "text": "(7) Scattered site projects Buildings which would (but for their lack of proximity) be treated as a project for purposes of this section shall be so treated if all of the dwelling units in each of the buildings are rent- restricted (within the meaning of paragraph (2)) residential rental units. (8) Waiver of certain de minimis errors and recertifications On application by the taxpayer, the Secretary may waive - (A) any recapture under subsection (j) in the case of any de minimis error in complying with paragraph (1), or (B) any annual recertification of tenant income for purposes of this subsection, if the entire building is occupied by low-income tenants. \u2026\u2026"
+    },
+    {
+      "id": "HUD_MTSP_BRIEFING_2026-p14-c1",
+      "source_id": "HUD_MTSP_BRIEFING_2026",
+      "title": "FY 2026 MTSP Briefing",
+      "page": 14,
+      "url": "https://www.huduser.gov/portal/datasets/mtsp.html",
+      "effective_from": "2026-05-01",
+      "text": "14 Attachment 3 IRS Revenue Ruling 89-24 Rev. Rul. 89-24 1989-1 C.B. 24, 1989-9 I.R.B. 5. Internal Revenue Service Revenue Ruling EXEMPT FACILITY BONDS; LOW-INCOME HOUSING CREDIT Published: February 27, 1989 Section 142. - Exempt Facility Bond (Also Sections 42, 103, 6652; 1.42-1T, 1.103-8.) Exempt facility bonds; low-income housing credit. Guidance is provided for computing the income limits applicable to exempt facility bonds issued to provide for qualified residential rental projects under section 142 of the Code and to low-income housing credits under section 42. This Revenue Ruling provides the manner in which properly to compute the income limits applicable both to exempt facility bonds issued to provide for qualified residential rental projects under section 142 of the Internal Revenue Code and to low-income housing credits under section 42. LAW Section 1301 of the Tax Reform Act of 1986, 1986-3 (Vol. I) C.B. 524 (the Act), revised the income limits applicable to exempt facility bonds issued to provide for multifamily residential rental projects."
+    },
+    {
+      "id": "HUD_MTSP_BRIEFING_2026-p14-c2",
+      "source_id": "HUD_MTSP_BRIEFING_2026",
+      "title": "FY 2026 MTSP Briefing",
+      "page": 14,
+      "url": "https://www.huduser.gov/portal/datasets/mtsp.html",
+      "effective_from": "2026-05-01",
+      "text": "COMPARE section 142(d) and former section 103(b)(4)(A) of the Code. In general, in order for interest on an exempt facility bond issued to provide for a multifamily residential rental project to be tax-exempt, the project must meet the income limit requirement of section 142(d)(1) of the Code. Under section 142(d)(1), a 'qualified residential rental project' is defined to include only residential rental projects where, either (A) 20 percent or more of the residential units in the project are occupied by individuals whose income is 50 percent or less of the area median gross income (the 20-50 requirement), or (B) 40 percent or more of the residential units in the project are occupied by individuals whose income is 60 percent or less of the area median gross income (the 40-60 requirement), whichever is elected by the issuer of the bonds providing for such project."
+    },
+    {
+      "id": "HUD_MTSP_BRIEFING_2026-p15-c1",
+      "source_id": "HUD_MTSP_BRIEFING_2026",
+      "title": "FY 2026 MTSP Briefing",
+      "page": 15,
+      "url": "https://www.huduser.gov/portal/datasets/mtsp.html",
+      "effective_from": "2026-05-01",
+      "text": "15 Section 142(d)(4) of the Code provides that, in the case of a deep rent skewed project, 15 percent or more of the low-income units must be occupied by individuals whose income is 40 percent or less of the area median gross income. Section 142(d)(2) of the Code provides that the income of individuals and the area median gross income shall be determined by the Secretary in a manner consistent with determinations of lower income facilities and area median gross income under section 8 of the United States Housing Act of 1937 or, if such program is terminated, under such program as in effect immediately before such termination. Determinations under the preceding sentence shall include adjustments for family size. Section 252 of the Act enacted section 42 of the Code, which provides a new federal income tax credit that may be claimed by owners of residential rental projects providing low-income housing. Section 42(a) provides that the amount of the credit shall be based on an applicable percentage of the qualified basis of each qualified low-income building."
+    },
+    {
+      "id": "HUD_MTSP_BRIEFING_2026-p15-c2",
+      "source_id": "HUD_MTSP_BRIEFING_2026",
+      "title": "FY 2026 MTSP Briefing",
+      "page": 15,
+      "url": "https://www.huduser.gov/portal/datasets/mtsp.html",
+      "effective_from": "2026-05-01",
+      "text": "Section 42(c)(2) defines the term 'qualified low-income building' to mean, in part, any building that at all times during the compliance period with respect to such building is part of a qualified low-income housing project. Section 42(g)(1) provides that the term 'qualified low-income housing project' means any project for residential rental property if, either (A) 20 percent or more of the units in the project are both rent-restricted and occupied by individuals whose income is 50 percent or less of the area median gross income, or (B) 40 percent or more of the units in the project are both rent restricted and occupied by individuals whose income is 60 percent or less of the area median gross income, whichever is elected by the taxpayer. Section 42(g)(4) of the Code provides in part, that paragraph (2) (other than subparagraph (A)) and paragraph (4) of section 142(d) shall apply for purposes of determining whether any project is a qualified low-income housing project and whether any unit is a low-income unit."
+    },
+    {
+      "id": "HUD_MTSP_BRIEFING_2026-p15-c3",
+      "source_id": "HUD_MTSP_BRIEFING_2026",
+      "title": "FY 2026 MTSP Briefing",
+      "page": 15,
+      "url": "https://www.huduser.gov/portal/datasets/mtsp.html",
+      "effective_from": "2026-05-01",
+      "text": "ANALYSIS AND HOLDING The income limits applicable to qualified residential rental projects and to qualified low-income housing projects are required to be made in a manner consistent with determinations of lower income families under section 8 of the United States Housing Act of 1937. With respect to the 20-50 requirement of sections 142(d)(1)(A) and 42(g)(1)(A) of the Code, 20 percent or more of the applicable units must be occupied by individuals or families having incomes equal to or less than the income limit for a 'very low-income' family of the same size. With respect to the 40-60 requirement of sections 142(d)(1)(B) and 42(g)(1)(B), 40 percent of the applicable units must be"
+    },
+    {
+      "id": "HUD_MTSP_BRIEFING_2026-p16-c1",
+      "source_id": "HUD_MTSP_BRIEFING_2026",
+      "title": "FY 2026 MTSP Briefing",
+      "page": 16,
+      "url": "https://www.huduser.gov/portal/datasets/mtsp.html",
+      "effective_from": "2026-05-01",
+      "text": "16 occupied by individuals or families having incomes equal to 120 percent or less of the income limit for a very low-income family of the same size. With respect to certain deep rent skewed projects, as described in section 142(d)(4), the determination of whether 15 percent of the low-income units are occupied by individuals having incomes equal to 40 percent or less of the area median gross income shall be made by determining whether 15 percent of such units are occupied by individuals or families having incomes equal to or less than 80 percent of the income limit for a very low-income family of the same size. The income limits for very low-income families are computed and listed, according to family size, by the Department of Housing and Urban Development (HUD) for every Metropolitan Statistical Area, Primary Metropolitan Statistical Area, and nonmetropolitan county of the United States and Puerto Rico. HUD also releases income limits for the possessions of Guam and the Virgin Islands."
+    },
+    {
+      "id": "HUD_MTSP_BRIEFING_2026-p16-c2",
+      "source_id": "HUD_MTSP_BRIEFING_2026",
+      "title": "FY 2026 MTSP Briefing",
+      "page": 16,
+      "url": "https://www.huduser.gov/portal/datasets/mtsp.html",
+      "effective_from": "2026-05-01",
+      "text": "A list of income limits released by HUD may be relied upon until 30 days after the Internal Revenue Service publishes an announcement or notice in the Internal Revenue Bulletin indicating that HUD has released updated income limits. DRAFTING INFORMATION The principal author of this revenue ruling is Mark Scott of the Office of Assistant Chief Counsel (Financial Institutions and Products). For further information regarding this revenue ruling, contact Mr. Scott on (202) 566-4336 (not a toll-free call). Rev. Rul. 89-24, 1989-1 C.B. 24, 1989-9 I.R.B. 5."
+    },
+    {
+      "id": "HUD_MTSP_BRIEFING_2026-p17-c1",
+      "source_id": "HUD_MTSP_BRIEFING_2026",
+      "title": "FY 2026 MTSP Briefing",
+      "page": 17,
+      "url": "https://www.huduser.gov/portal/datasets/mtsp.html",
+      "effective_from": "2026-05-01",
+      "text": "17 Attachment 4 Housing and Economic Recovery Act of 2008 Section 3009: HOLD HARMLESS FOR REDUCTIONS IN AREA MEDIAN GROSS INCOME In general- Paragraph (2) of section 142(d), as amended by section 3008 by adding at the end the following new subparagraph: HOLD HARMLESS FOR REDUCTIONS IN AREA MEDIAN GROSS INCOME- IN GENERAL \u2013 Any determination of area median gross income under subparagraph (B) with respect to any project for any calendar year after 2008 shall not be less than the area median gross income determined under such subparagraph with respect to such project for the calendar year preceding the calendar year for which such determination is made."
+    },
+    {
+      "id": "HUD_MTSP_BRIEFING_2026-p17-c2",
+      "source_id": "HUD_MTSP_BRIEFING_2026",
+      "title": "FY 2026 MTSP Briefing",
+      "page": 17,
+      "url": "https://www.huduser.gov/portal/datasets/mtsp.html",
+      "effective_from": "2026-05-01",
+      "text": "SPECIAL RULE FOR CERTAIN CENSUS CHANGES- In the case of a HUD hold harmless impacted project, the area median gross income with respect to such project for any calendar year after 2008 (hereafter in this clause referred to as the current calendar year) shall be the greater of the amount determined without regard to this clause or the sum of\u2014 The area median gross income determined under the HUD hold harmless policy with respect to such project for calendar year 2008, plus Any increase in the area median gross income determined under subparagraph (B) (determined without regard to the HUD hold harmless policy and this subparagraph) with respect to such project for the current calendar year over the area median gross income (as so determined) with respect to such project for calendar year 2008."
+    },
+    {
+      "id": "HUD_MTSP_BRIEFING_2026-p17-c3",
+      "source_id": "HUD_MTSP_BRIEFING_2026",
+      "title": "FY 2026 MTSP Briefing",
+      "page": 17,
+      "url": "https://www.huduser.gov/portal/datasets/mtsp.html",
+      "effective_from": "2026-05-01",
+      "text": "HUD HOLD HARMLESS POLICY- The term \u2018HUD hold harmless policy\u2019 means the regulations under which a policy similar to the rules of clause (i) applied to prevent a change in the method of determining area median gross income from resulting in a reduction in the area median gross income determined with respect to certain projects in calendar years 2007 and 2008. HUD HOLD HARMLESS IMPACTED PROJECT- The term \u2018HUD hold harmless impacted project\u2019 means any project with respect to which area median gross income was determined under subparagraph (B) for calendar year 2007 or 2008 if such determination would have been less but for the HUD hold harmless policy\u2019. Effective Date- The amendment made by this section shall apply to determinations of area median gross income for calendar years after 2008."
+    },
+    {
+      "id": "HUD_MTSP_BRIEFING_2026-p18-c1",
+      "source_id": "HUD_MTSP_BRIEFING_2026",
+      "title": "FY 2026 MTSP Briefing",
+      "page": 18,
+      "url": "https://www.huduser.gov/portal/datasets/mtsp.html",
+      "effective_from": "2026-05-01",
+      "text": "18 Attachment 5 HUD Procedure for Estimating FY 2026 Very Low-Income Limits Very Low-Income Limits There are currently several legislated income limit standards (e.g., 30%, extremely low- income limits, 50%, 60%, 80%, 95%, 120%) that were intended to have progressive relationships. To ensure that this occurs, HUD has used the very low-income limits as the basis for deriving other income limits, unless the relevant statutory language has no references or relationship to low- and very low-income limits, as defined by the U.S. Housing Act of 1937. If this were not done, for instance, HUD low-income limits would be less than very low-income limits in areas where very low-income limits had been adjusted upward by more than 60 percent because of unusually low area MFIs relative to the FMRs. HUD calculates very low-income limits using a set of formulae as follows. The first step in calculating very low-income limits is to calculate a four-person income limit equal to 50 percent of the area median family income. HUD then adjusts this estimate if it is outside formula constraints."
+    },
+    {
+      "id": "HUD_MTSP_BRIEFING_2026-p18-c2",
+      "source_id": "HUD_MTSP_BRIEFING_2026",
+      "title": "FY 2026 MTSP Briefing",
+      "page": 18,
+      "url": "https://www.huduser.gov/portal/datasets/mtsp.html",
+      "effective_from": "2026-05-01",
+      "text": "Specifically, HUD calculates the very low-income limit for a four-person family as follows: (1) HUD calculates and sets 50 percent of the area median family income as the preliminary four-person family income limit; (2) HUD increases the four-person very low-income limit if it would otherwise be less than the amount at which 35 percent of it equals 85 percent of the annualized two- bedroom FMR. This adjusts income limits upward for areas where rental housing costs are unusually high in relation to the median family income; (3) HUD reduces the four-person very low-income limit to the greater of 80 percent of the U.S. median family income level, or the amount at which 30 percent of a four-person family\u2019s income equals 100 percent of the two-bedroom FMR. This adjusts income limits downward for areas of unusually high median family incomes; (4) HUD increases the four-person income limit if it is less than 50 percent of the"
+    },
+    {
+      "id": "HUD_MTSP_BRIEFING_2026-p19-c1",
+      "source_id": "HUD_MTSP_BRIEFING_2026",
+      "title": "FY 2026 MTSP Briefing",
+      "page": 19,
+      "url": "https://www.huduser.gov/portal/datasets/mtsp.html",
+      "effective_from": "2026-05-01",
+      "text": "19 relevant state nonmetropolitan median family income level;7 and (5) HUD increases the four-person income limit if it is less than 95 percent of last year\u2019s very low-income limit and reduces to the greater of 105 percent of last year\u2019s very low- income limit or to a level representing twice the rate of change in the unadjusted national median family income estimate if that amount would be larger than five percent with an absolute cap of 10 percent. For 2026, the annualized change is measured by the ACS from 2023 to 2024. Twice this change is approximately 10.09 percent, which is greater than the five percent and the ten percent absolute cap. So, for FY 2026, the income limits \u201ccap\u201d is set at 10 percent. HUD uses FMRs to calculate high and low housing cost areas. 7 Under a Housing and Community Development Act of 1987 amendment, nonmetropolitan area income limits should never be set lower than the State nonmetropolitan median family income level. In implementing this provision, HUD used its discretion to apply this policy to metropolitan areas as well."
+    },
+    {
+      "id": "HUD_MTSP_BRIEFING_2026-p19-c2",
+      "source_id": "HUD_MTSP_BRIEFING_2026",
+      "title": "FY 2026 MTSP Briefing",
+      "page": 19,
+      "url": "https://www.huduser.gov/portal/datasets/mtsp.html",
+      "effective_from": "2026-05-01",
+      "text": "Doing so avoids the anomaly of assigning higher income limits to a nonmetropolitan county than are assigned to a metropolitan area where the median family income is less than the State non-metro level but above the level for the non-metro county."
+    },
+    {
+      "id": "HUD_MTSP_HERA_2026-p43-c1",
+      "source_id": "HUD_MTSP_HERA_2026",
+      "title": "FY 2026 HERA Income Limits Report",
+      "page": 43,
+      "url": "https://www.huduser.gov/portal/datasets/mtsp.html",
+      "effective_from": "2026-05-01",
+      "text": "STATE:GEORGIA ---------------------------I N C O M E L I M I T S---------------------------- PROGRAM 1 PERSON 2 PERSON 3 PERSON 4 PERSON 5 PERSON 6 PERSON 7 PERSON 8 PERSON Albany, GA MSA FY 2026 MFI: $71,200 VERY LOW INCOME 26950 30800 34650 38500 41600 44700 47750 50850 60% INCOME LIMIT 32340 36960 41580 46200 49920 53640 57300 61020 Athens-Clarke County, GA MSA FY 2026 MFI: $100,100 VERY LOW INCOME 35050 40050 45050 50050 54100 58100 62100 66100 60% INCOME LIMIT 42060 48060 54060 60060 64920 69720 74520 79320 HERA Special 50%* 35200 40200 45250 50250 54300 58300 62350 66350 HERA Special 60%* 42240 48240 54300 60300 65160 69960 74820 79620 Atlanta-Sandy Springs-Roswell, GA HMFA FY 2026 MFI: $117,800 VERY LOW INCOME 41250 47150 53050 58900 63650 68350 73050 77750 60% INCOME LIMIT 49500 56580 63660 70680 76380 82020 87660 93300 HERA Special 50%* 42450 48500 54550 60600 65450 70300 75150 80000 HERA Special 60%* 50940 58200 65460 72720 78540 84360 90180 96000 Butts County, GA HMFA FY 2026 MFI: $81,200 VERY LOW INCOME 28450 32500 36550 40600 43850 47100 50350 53600 60% INCOME LIMIT 34140 39000 43860 48720 52620 56520 60420 64320 Haralson County, GA HMFA FY 2026 MFI: $91,500 VERY LOW INCOME 31900 36450 41000 45550 49200 52850 56450 60150 60% INCOME LIMIT 38280 43740 49200 54660 59040 63420 67740 72180 HERA Special 50%* 32250 36850 41450 46050 49750 53450 57150 60800 HERA Special 60%* 38700 44220 49740 55260 59700 64140 68580 72960 Lumpkin County, GA HMFA FY 2026 MFI: $96,200 VERY LOW INCOME 33700 38500 43300 48100 51950 55800 59650 63500 60% INCOME LIMIT 40440 46200 51960 57720 62340 66960 71580 76200 Meriwether County, GA HMFA FY 2026 MFI: $72,100 VERY LOW INCOME 26950 30800 34650 38500 41600 44700 47750 50850 60% INCOME LIMIT 32340 36960 41580 46200 49920 53640 57300 61020 Morgan County, GA HMFA FY 2026 MFI: $100,900 VERY LOW INCOME 35350 40400 45450 50450 54500 58550 62600 66600 60% INCOME LIMIT 42420 48480 54540 60540 65400 70260 75120 79920 HERA Special 50%* 36400 41600 46800 52000 56200 60350 64500 68650 HERA Special 60%* 43680 49920 56160 62400 67440 72420 77400 82380 Augusta-Richmond County, GA-SC HMFA FY 2026 MFI: $90,400 VERY LOW INCOME 31650 36200 40700 45200 48850 52450 56050 59700 60% INCOME LIMIT 37980 43440 48840 54240 58620 62940 67260 71640 Lincoln County, GA HMFA FY 2026 MFI: $69,700 VERY LOW INCOME 26950 30800 34650 38500 41600 44700 47750 50850 60% INCOME LIMIT 32340 36960 41580 46200 49920 53640 57300 61020 * Income Limit for a HUD hold harmless impacted project in a HUD impacted area whose current limit would be less than last year or less than its FY2008 limit times the Current Year Median (FY2026) over the FY2008 median."
+    },
+    {
+      "id": "HUD_MTSP_HERA_2026-p43-c2",
+      "source_id": "HUD_MTSP_HERA_2026",
+      "title": "FY 2026 HERA Income Limits Report",
+      "page": 43,
+      "url": "https://www.huduser.gov/portal/datasets/mtsp.html",
+      "effective_from": "2026-05-01",
+      "text": "HUD impacted areas are areas with Section 8 Income Limits held harmless by HUD in FY2007 or FY2008."
+    },
+    {
+      "id": "RULE-MTSP-DEFINITION-2026",
+      "source_id": "HUD_MTSP_BRIEFING_2026",
+      "title": "Multifamily Tax Subsidy Project income limits",
+      "page": 1,
+      "url": "https://www.huduser.gov/portal/datasets/mtsp.html",
+      "effective_from": "2026-05-01",
+      "text": "LIHTC projects use HUD-published Multifamily Tax Subsidy Project income limits. The applicable value depends on the project, area, income band, household size, and effective year. Formula: exact_lookup(year, area, income_band, household_size)"
+    },
+    {
+      "id": "RULE-MTSP-60-2026",
+      "source_id": "HUD_MTSP_BRIEFING_2026",
+      "title": "60 percent MTSP income limit",
+      "page": 1,
+      "url": "https://www.huduser.gov/portal/datasets/mtsp.html",
+      "effective_from": "2026-05-01",
+      "text": "For the 40-60 minimum set-aside, the published 60 percent MTSP limit is based on 120 percent of HUD's very-low-income limit. RealDoor uses the published table rather than recomputing the limit. Formula: published_mtsp_60_percent_limit"
+    },
+    {
+      "id": "INC-BIWEEKLY-001",
+      "source_id": "REALDOOR_FROZEN_RULES_2026",
+      "title": "Biweekly wage annualization",
+      "page": null,
+      "url": null,
+      "effective_from": "2026-01-01",
+      "text": "A confirmed gross amount paid every two weeks is annualized by multiplying it by 26 pay periods. This is a calculation aid; the housing provider determines which income method applies. Formula: annualized_income = confirmed_biweekly_gross * 26"
+    }
+  ]
+}

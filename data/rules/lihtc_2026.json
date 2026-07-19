@@ -1,0 +1,166 @@
+{
+  "source": {
+    "id": "HUD_MTSP_BRIEFING_2026",
+    "title": "FY 2026 Multifamily Tax Subsidy Project Income Limits Briefing",
+    "publisher": "U.S. Department of Housing and Urban Development",
+    "canonical_url": "https://www.huduser.gov/portal/datasets/mtsp.html",
+    "local_path": "Dataset/official/MTSP-Briefing-26.pdf",
+    "sha256": "b0a9c17134eaf711680f720a035f841ca8b431bea9168c12aa03c52ecc7152ca",
+    "effective_from": "2026-05-01"
+  },
+  "rules": [
+    {
+      "id": "RULE-MTSP-DEFINITION-2026",
+      "title": "Multifamily Tax Subsidy Project income limits",
+      "status": "active",
+      "category": "Income Limits",
+      "plain_english": "LIHTC projects use HUD-published Multifamily Tax Subsidy Project income limits. The applicable value depends on the project, area, income band, household size, and effective year.",
+      "citations": [
+        {
+          "source_id": "HUD_MTSP_BRIEFING_2026",
+          "label": "FY 2026 MTSP Briefing, Overview",
+          "page": 1,
+          "url": "https://www.huduser.gov/portal/datasets/mtsp.html"
+        }
+      ],
+      "formula": "exact_lookup(year, area, income_band, household_size)",
+      "effective_from": "2026-05-01"
+    },
+    {
+      "id": "RULE-MTSP-60-2026",
+      "title": "60 percent MTSP income limit",
+      "status": "active",
+      "category": "Income Limits",
+      "plain_english": "For the 40-60 minimum set-aside, the published 60 percent MTSP limit is based on 120 percent of HUD's very-low-income limit. RealDoor uses the published table rather than recomputing the limit.",
+      "citations": [
+        {
+          "source_id": "HUD_MTSP_BRIEFING_2026",
+          "label": "FY 2026 MTSP Briefing, Revenue Ruling 89-24 discussion",
+          "page": 1,
+          "url": "https://www.huduser.gov/portal/datasets/mtsp.html"
+        }
+      ],
+      "formula": "published_mtsp_60_percent_limit",
+      "effective_from": "2026-05-01"
+    },
+    {
+      "id": "RULE-LIHTC-20-50-TEST",
+      "title": "LIHTC 20-50 minimum set-aside test",
+      "status": "active",
+      "category": "Program Structure",
+      "plain_english": "Under the 20-50 test described in Internal Revenue Code section 42, at least 20 percent of the project's residential units must be rent-restricted and occupied by households at or below 50 percent of area median gross income. This project-level rule is not an individual eligibility decision.",
+      "citations": [
+        {
+          "source_id": "HUD_MTSP_BRIEFING_2026",
+          "label": "FY 2026 MTSP Briefing, IRC section 42(g)(1)(A)",
+          "page": 9,
+          "url": "https://www.huduser.gov/portal/datasets/mtsp.html"
+        }
+      ],
+      "formula": "rent_restricted_units_at_or_below_50_AMGI / total_units >= 20%",
+      "effective_from": "2026-05-01"
+    },
+    {
+      "id": "RULE-LIHTC-40-60-TEST",
+      "title": "LIHTC 40-60 minimum set-aside test",
+      "status": "active",
+      "category": "Program Structure",
+      "plain_english": "Under the 40-60 test described in Internal Revenue Code section 42, at least 40 percent of the project's residential units must be rent-restricted and occupied by households at or below 60 percent of area median gross income. The taxpayer's minimum set-aside election is irrevocable.",
+      "citations": [
+        {
+          "source_id": "HUD_MTSP_BRIEFING_2026",
+          "label": "FY 2026 MTSP Briefing, IRC section 42(g)(1)(B)",
+          "page": 9,
+          "url": "https://www.huduser.gov/portal/datasets/mtsp.html"
+        }
+      ],
+      "formula": "rent_restricted_units_at_or_below_60_AMGI / total_units >= 40%",
+      "effective_from": "2026-05-01"
+    },
+    {
+      "id": "RULE-LIHTC-RENT-RESTRICTION",
+      "title": "Rent-restricted unit calculation",
+      "status": "active",
+      "category": "Rent Calculations",
+      "plain_english": "A residential unit is rent-restricted when its gross rent does not exceed 30 percent of the imputed income limitation applicable to that unit.",
+      "citations": [
+        {
+          "source_id": "HUD_MTSP_BRIEFING_2026",
+          "label": "FY 2026 MTSP Briefing, IRC section 42(g)(2)(A)",
+          "page": 9,
+          "url": "https://www.huduser.gov/portal/datasets/mtsp.html"
+        }
+      ],
+      "formula": "maximum_gross_rent = imputed_income_limit * 30% / 12",
+      "effective_from": "2026-05-01"
+    },
+    {
+      "id": "RULE-LIHTC-GROSS-RENT-UTILITY",
+      "title": "Utility allowances are included in gross rent",
+      "status": "active",
+      "category": "Rent Calculations",
+      "plain_english": "For the LIHTC gross-rent definition in the loaded section 42 source, gross rent includes the applicable utility allowance. Certain rental-assistance payments and qualifying supportive-service fees are excluded as described in the statute.",
+      "citations": [
+        {
+          "source_id": "HUD_MTSP_BRIEFING_2026",
+          "label": "FY 2026 MTSP Briefing, IRC section 42(g)(2)(B)",
+          "page": 10,
+          "url": "https://www.huduser.gov/portal/datasets/mtsp.html"
+        }
+      ],
+      "formula": "gross_rent = tenant_rent + applicable_utility_allowance",
+      "effective_from": "2026-05-01"
+    },
+    {
+      "id": "RULE-LIHTC-IMPUTED-OCCUPANCY",
+      "title": "Bedroom-based imputed occupancy for rent limits",
+      "status": "active",
+      "category": "Rent Calculations",
+      "plain_english": "For imputed income limits used to calculate LIHTC rent restrictions, a unit without a separate bedroom is treated as occupied by one person; a unit with bedrooms uses 1.5 persons per bedroom. This rent-limit convention is distinct from the renter's actual household size.",
+      "citations": [
+        {
+          "source_id": "HUD_MTSP_BRIEFING_2026",
+          "label": "FY 2026 MTSP Briefing, IRC section 42(g)(2)(C)",
+          "page": 10,
+          "url": "https://www.huduser.gov/portal/datasets/mtsp.html"
+        }
+      ],
+      "formula": "imputed_occupants = studio ? 1 : bedrooms * 1.5",
+      "effective_from": "2026-05-01"
+    },
+    {
+      "id": "RULE-LIHTC-NEXT-AVAILABLE-UNIT",
+      "title": "Next available unit rule after income increases",
+      "status": "active",
+      "category": "Occupancy",
+      "plain_english": "A unit may continue to be treated as low-income after the occupants' income rises if it remains rent-restricted. When income rises above 140 percent of the applicable limit, the next available comparable-or-smaller unit rule described in section 42 applies.",
+      "citations": [
+        {
+          "source_id": "HUD_MTSP_BRIEFING_2026",
+          "label": "FY 2026 MTSP Briefing, IRC section 42(g)(2)(D)",
+          "page": 11,
+          "url": "https://www.huduser.gov/portal/datasets/mtsp.html"
+        }
+      ],
+      "formula": "if tenant_income > applicable_limit * 140% then apply_next_available_unit_rule",
+      "effective_from": "2026-05-01"
+    },
+    {
+      "id": "INC-BIWEEKLY-001",
+      "title": "Biweekly wage annualization",
+      "status": "active",
+      "category": "Income Calculations",
+      "plain_english": "A confirmed gross amount paid every two weeks is annualized by multiplying it by 26 pay periods. This is a calculation aid; the housing provider determines which income method applies.",
+      "citations": [
+        {
+          "source_id": "REALDOOR_FROZEN_RULES_2026",
+          "label": "RealDoor frozen 2026 calculation rule INC-BIWEEKLY-001",
+          "page": null,
+          "url": null
+        }
+      ],
+      "formula": "annualized_income = confirmed_biweekly_gross * 26",
+      "effective_from": "2026-01-01"
+    }
+  ]
+}

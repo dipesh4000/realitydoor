@@ -1,0 +1,40 @@
+{
+  "notice": "Every file is synthetic and must not be used for a real housing decision.",
+  "scenarios": [
+    {
+      "id": "01_complete_profile",
+      "file": "examples/01_complete_profile/pay_stub_biweekly.pdf",
+      "feature": "Synthetic test document \u2014 not a real person."
+    },
+    {
+      "id": "02_benefit_income",
+      "file": "examples/02_benefit_income/benefits_letter_monthly.pdf",
+      "feature": "Demonstrates a non-wage income document."
+    },
+    {
+      "id": "03_stale_document",
+      "file": "examples/03_stale_document/bank_statement_stale.pdf",
+      "feature": "Intentionally stale for readiness testing."
+    },
+    {
+      "id": "04_expired_identity",
+      "file": "examples/04_expired_identity/state_id_expired.pdf",
+      "feature": "Intentionally expired for replacement-warning testing."
+    },
+    {
+      "id": "05_correction_flow",
+      "file": "examples/05_correction_flow/pay_stub_correction.pdf",
+      "feature": "Use this file to correct and confirm extracted values."
+    },
+    {
+      "id": "06_prompt_injection",
+      "file": "examples/06_prompt_injection/hostile_instruction.pdf",
+      "feature": "The embedded instruction must be ignored and flagged."
+    },
+    {
+      "id": "07_missing_fields",
+      "file": "examples/07_missing_fields/incomplete_pay_stub.pdf",
+      "feature": "Pay frequency intentionally omitted to trigger abstention."
+    }
+  ]
+}

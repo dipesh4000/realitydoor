@@ -20,7 +20,9 @@ export default function AiPanel({ title = 'AI Copilot', subtitle, actionCard, su
     setLoading(true);
     try {
       const res = await sendMessage(msg);
-      setMessages((prev) => [...prev, { role: 'ai', text: res.reply }]);
+      setMessages((prev) => [...prev, { role: 'ai', text: res.reply, sources: res.sources }]);
+    } catch {
+      setMessages((prev) => [...prev, { role: 'ai', text: 'The grounded assistant is temporarily unavailable. Please use the Rules page citations.' }]);
     } finally {
       setLoading(false);
     }
@@ -44,7 +46,7 @@ export default function AiPanel({ title = 'AI Copilot', subtitle, actionCard, su
       </div>
 
       {/* Body */}
-      <div className="ai-panel-body" ref={feedRef}>
+      <div className="ai-panel-body" ref={feedRef} aria-live="polite" aria-busy={loading}>
         {/* Action card */}
         {actionCard && (
           <div className="ai-card primary-card">
@@ -74,7 +76,7 @@ export default function AiPanel({ title = 'AI Copilot', subtitle, actionCard, su
             {messages.map((m, i) =>
               m.role === 'user' ? (
                 <div key={i} style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-end', gap: 8 }}>
-                  <div className="user-message-bubble" dangerouslySetInnerHTML={{ __html: m.text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }} />
+                  <div className="user-message-bubble" style={{ whiteSpace: 'pre-wrap' }}>{m.text}</div>
                   <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'var(--color-surface-highest)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 700, flexShrink: 0, color: 'var(--color-on-surface-variant)' }}>JD</div>
                 </div>
               ) : (
@@ -82,7 +84,14 @@ export default function AiPanel({ title = 'AI Copilot', subtitle, actionCard, su
                   <div className="ai-panel-avatar" style={{ flexShrink: 0 }}>
                     <Bot size={14} color="var(--color-primary-container)" />
                   </div>
-                  <div className="ai-message-bubble" dangerouslySetInnerHTML={{ __html: m.text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\[(.*?)\]/g, '<span style="color:var(--color-primary-container);font-weight:500">[$1]</span>') }} />
+                  <div className="ai-message-bubble" style={{ whiteSpace: 'pre-wrap' }}>
+                    {m.text}
+                    {m.sources?.length > 0 && (
+                      <div style={{ marginTop: 8, fontSize: 11, color: 'var(--color-primary-container)' }}>
+                        Sources: {m.sources.map((source) => `${source.title}${source.page ? `, p. ${source.page}` : ''}`).join(' · ')}
+                      </div>
+                    )}
+                  </div>
                 </div>
               )
             )}
@@ -117,12 +126,13 @@ export default function AiPanel({ title = 'AI Copilot', subtitle, actionCard, su
       <div className="ai-input-area">
         <div className="ai-input-row">
           <input
+            aria-label="Ask the grounded RealDoor assistant"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask Copilot anything..."
             onKeyDown={(e) => e.key === 'Enter' && handleSend()}
           />
-          <button className="ai-send-btn" onClick={() => handleSend()} disabled={loading}>
+          <button className="ai-send-btn" aria-label="Send question" onClick={() => handleSend()} disabled={loading}>
             <Send size={14} />
           </button>
         </div>

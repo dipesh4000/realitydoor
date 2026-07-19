@@ -1,8 +1,24 @@
-import { NavLink, useNavigate } from 'react-router-dom';
-import { LayoutGrid, CheckSquare, FileText, BookOpen, Sparkles } from 'lucide-react';
+import { useState } from 'react';
+import { NavLink } from 'react-router-dom';
+import { LayoutGrid, CheckSquare, FileText, BookOpen, LogOut, PackageCheck, X } from 'lucide-react';
 
-export default function Sidebar() {
-  const navigate = useNavigate();
+export default function Sidebar({ onTerminate }) {
+  const [confirming, setConfirming] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
+
+  const terminate = async () => {
+    setBusy(true);
+    setError('');
+    try {
+      await onTerminate();
+      setConfirming(false);
+    } catch {
+      setError('Could not terminate the session. Please try again.');
+    } finally {
+      setBusy(false);
+    }
+  };
 
   return (
     <aside className="sidebar">
@@ -55,14 +71,28 @@ export default function Sidebar() {
           <BookOpen size={16} />
           Rules
         </NavLink>
+
+        <NavLink to="/packet" className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}>
+          <PackageCheck size={16} /> Packet
+        </NavLink>
       </nav>
 
-      {/* Ask AI button */}
       <div className="sidebar-footer">
-        <button className="ask-ai-btn" onClick={() => navigate('/readiness')}>
-          <Sparkles size={15} />
-          Ask AI
-        </button>
+        {confirming ? (
+          <div className="terminate-confirm" role="alert">
+            <p>Delete this session, chat, documents, and packets?</p>
+            <div>
+              <button className="btn btn-ghost btn-sm" onClick={() => setConfirming(false)} disabled={busy}><X size={13} /> Cancel</button>
+              <button className="btn btn-sm terminate-confirm-button" onClick={terminate} disabled={busy}>{busy ? 'Deleting…' : 'Delete all'}</button>
+            </div>
+            {error && <small>{error}</small>}
+          </div>
+        ) : (
+          <button className="terminate-session-btn" onClick={() => setConfirming(true)}>
+            <LogOut size={15} />
+            Terminate Session
+          </button>
+        )}
       </div>
     </aside>
   );

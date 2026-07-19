@@ -1,19 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Search, ChevronDown, ChevronUp, Sparkles } from 'lucide-react';
-import AiPanel from '../components/layout/AiPanel';
+import { Search, ChevronDown, ChevronUp } from 'lucide-react';
 import { getRules } from '../api/rules';
 
-const RULES_AI_MESSAGES = [
-  {
-    role: 'user',
-    text: 'Can you explain how a projected bonus affects the Maximum Allowable Income calculation for a household?',
-  },
-  {
-    role: 'ai',
-    text: "Certainly. When calculating anticipated gross income, you must include all recurring pay and any expected bonuses, even if they aren't guaranteed. If historical data indicates a bonus is likely, it must be annualized.\n\nHere is a breakdown of how it impacts the **calculateGrossIncome** rule:",
-  },
-];
-
+// eslint-disable-next-line no-unused-vars
 function CalculationCard() {
   return (
     <div style={{ background: 'var(--color-surface-container)', borderRadius: 'var(--radius-lg)', padding: 14, marginTop: 10, fontSize: 13 }}>
@@ -38,11 +27,11 @@ function CalculationCard() {
 }
 
 function RuleCard({ rule }) {
-  const [expanded, setExpanded] = useState(rule.id === 'rule_1');
+  const [expanded, setExpanded] = useState(rule.id === 'RULE-MTSP-DEFINITION-2026');
 
   return (
     <div className="rule-card">
-      <div className="rule-card-header" onClick={() => setExpanded(!expanded)} style={{ cursor: 'pointer' }}>
+      <button type="button" className="rule-card-header" onClick={() => setExpanded(!expanded)} aria-expanded={expanded}>
         <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, flex: 1 }}>
           <div style={{ width: 10, height: 10, borderRadius: '50%', background: expanded ? 'var(--color-primary-container)' : 'var(--color-outline-variant)', marginTop: 6, flexShrink: 0 }} />
           <div>
@@ -54,7 +43,7 @@ function RuleCard({ rule }) {
           </div>
         </div>
         {expanded ? <ChevronUp size={18} color="var(--color-outline)" /> : <ChevronDown size={18} color="var(--color-outline)" />}
-      </div>
+      </button>
 
       {expanded && (
         <div style={{ marginTop: 16 }}>
@@ -71,9 +60,9 @@ function RuleCard({ rule }) {
             Official Citation
           </div>
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 16 }}>
-            {rule.citations.map((c, i) => (
-              <span key={i} className="citation-tag">{c.label}</span>
-            ))}
+            {rule.citations.map((c, i) => c.url ? (
+              <a key={i} className="citation-tag" href={c.url} target="_blank" rel="noreferrer">{c.label}</a>
+            ) : <span key={i} className="citation-tag">{c.label}</span>)}
           </div>
 
           {/* Formula */}
@@ -83,12 +72,6 @@ function RuleCard({ rule }) {
           </div>
           <div className="code-block">{rule.formula}</div>
 
-          {/* Ask AI */}
-          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 12 }}>
-            <button className="btn btn-outline" style={{ gap: 5, fontSize: 13 }}>
-              <Sparkles size={13} /> Ask AI about this rule
-            </button>
-          </div>
         </div>
       )}
     </div>
@@ -113,11 +96,10 @@ export default function RulesPage() {
   );
 
   return (
-    <>
-      <main className="main-content">
+    <main className="main-content">
         <div className="page-header">
           <h1 className="page-title">Rules Library</h1>
-          <p className="page-subtitle">Explore compliance criteria and computational logic.</p>
+          <p className="page-subtitle">Inspect the frozen, cited rules and deterministic formulas used by this demo.</p>
         </div>
 
         {/* Search */}
@@ -142,14 +124,6 @@ export default function RulesPage() {
             <div style={{ textAlign: 'center', padding: '40px 0', color: 'var(--color-outline)' }}>No rules match your search.</div>
           )}
         </div>
-      </main>
-
-      <AiPanel
-        title="AI Assistant"
-        subtitle="Context: Income Calculations"
-        initialMessages={RULES_AI_MESSAGES}
-        suggestedQuestions={['Explain this rule', 'Show official citation', 'Explain this formula']}
-      />
-    </>
+    </main>
   );
 }

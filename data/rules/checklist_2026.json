@@ -1,0 +1,47 @@
+{
+  "id": "CHECKLIST-LIHTC-ALBANY-2026",
+  "title": "RealDoor LIHTC application-readiness checklist",
+  "scope": {
+    "program": "LIHTC",
+    "area": "Albany, GA MSA",
+    "year": 2026
+  },
+  "notice": "This is a configurable document-preparation checklist, not an eligibility standard. The property or housing provider may request different items.",
+  "items": [
+    {
+      "id": "DOC-PAY-STUBS-001",
+      "document_type": "pay_stub",
+      "label": "Recent pay stubs",
+      "minimum_count": 2,
+      "date_field": "pay_date",
+      "max_age_days": 60,
+      "citation": "RealDoor demo checklist, DOC-PAY-STUBS-001"
+    },
+    {
+      "id": "DOC-EMPLOYMENT-001",
+      "document_type": "employment_verification",
+      "label": "Employment verification",
+      "minimum_count": 1,
+      "date_field": "issue_date",
+      "max_age_days": 90,
+      "citation": "RealDoor demo checklist, DOC-EMPLOYMENT-001"
+    },
+    {
+      "id": "DOC-BANK-001",
+      "document_type": "bank_statement",
+      "label": "Recent bank statement",
+      "minimum_count": 1,
+      "date_field": "statement_date",
+      "max_age_days": 60,
+      "citation": "RealDoor demo checklist, DOC-BANK-001"
+    },
+    {
+      "id": "DOC-ID-001",
+      "document_type": "government_id",
+      "label": "Unexpired government-issued ID",
+      "minimum_count": 1,
+      "expiry_field": "expiry_date",
+      "citation": "RealDoor demo checklist, DOC-ID-001"
+    }
+  ]
+}

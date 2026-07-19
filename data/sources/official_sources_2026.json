@@ -1,0 +1,26 @@
+{
+  "retrieved_on": "2026-07-19",
+  "scope": "FY 2026 LIHTC / MTSP demonstration for Albany, GA MSA",
+  "sources": [
+    {
+      "id": "HUD_MTSP_HERA_2026",
+      "title": "FY 2026 HERA Income Limits Report",
+      "publisher": "U.S. Department of Housing and Urban Development",
+      "url": "https://www.huduser.gov/portal/datasets/mtsp/mtsp26/HERA-Income-Limits-Report-FY26.pdf",
+      "landing_page": "https://www.huduser.gov/portal/datasets/mtsp.html",
+      "effective_from": "2026-05-01",
+      "local_path": "Dataset/official/HERA-Income-Limits-Report-FY26.pdf",
+      "sha256": "14d83385b414d3d303459b1c5451d0724eebc257ac9037d3574f3cad4cfb9230"
+    },
+    {
+      "id": "HUD_MTSP_BRIEFING_2026",
+      "title": "FY 2026 Multifamily Tax Subsidy Project Income Limits Briefing",
+      "publisher": "U.S. Department of Housing and Urban Development",
+      "url": "https://www.huduser.gov/portal/datasets/mtsp/mtsp26/MTSP-Briefing-26.pdf",
+      "landing_page": "https://www.huduser.gov/portal/datasets/mtsp.html",
+      "effective_from": "2026-05-01",
+      "local_path": "Dataset/official/MTSP-Briefing-26.pdf",
+      "sha256": "b0a9c17134eaf711680f720a035f841ca8b431bea9168c12aa03c52ecc7152ca"
+    }
+  ]
+}

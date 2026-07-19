@@ -1,0 +1,38 @@
+{
+  "source": {
+    "id": "HUD_MTSP_HERA_2026",
+    "title": "FY 2026 HERA Income Limits Report",
+    "publisher": "U.S. Department of Housing and Urban Development",
+    "canonical_url": "https://www.huduser.gov/portal/datasets/mtsp.html",
+    "local_path": "Dataset/official/HERA-Income-Limits-Report-FY26.pdf",
+    "sha256": "14d83385b414d3d303459b1c5451d0724eebc257ac9037d3574f3cad4cfb9230",
+    "page": 43,
+    "effective_from": "2026-05-01"
+  },
+  "program": "LIHTC",
+  "fiscal_year": 2026,
+  "area_name": "Albany, GA MSA",
+  "median_family_income": 71200,
+  "limits": {
+    "50": [
+      26950,
+      30800,
+      34650,
+      38500,
+      41600,
+      44700,
+      47750,
+      50850
+    ],
+    "60": [
+      32340,
+      36960,
+      41580,
+      46200,
+      49920,
+      53640,
+      57300,
+      61020
+    ]
+  }
+}

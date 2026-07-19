@@ -183,7 +183,7 @@ MTSP limits are structured records, not free-text embeddings.
   "income_band": 60,
   "household_size": 3,
   "income_limit": 41580,
-  "effective_from": "2026-04-01",
+  "effective_from": "2026-05-01",
   "source_id": "MTSP_2026_ALBANY"
 }
 ```

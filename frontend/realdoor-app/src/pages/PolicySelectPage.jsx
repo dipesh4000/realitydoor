@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, Lock, CheckCircle2, Sparkles, Building2, Home, Landmark } from 'lucide-react';
+import { selectProgram } from '../api/session';
 
 const POLICIES = [
   {
@@ -11,7 +13,7 @@ const POLICIES = [
     icon: <Building2 size={28} />,
     description:
       'Low-Income Housing Tax Credit — the primary affordable rental housing production program in the U.S. Supports 60% and 50% AMI income limits.',
-    details: ['2026 MTSP income limits', 'HUD 4350.3 REV-1 rules', 'LIHTC §42 compliance'],
+    details: ['FY2026 Albany MTSP table', 'Cited frozen rule set', 'Deterministic income math'],
     available: true,
     gradient: 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)',
   },
@@ -43,15 +45,31 @@ const POLICIES = [
   },
 ];
 
-export default function PolicySelectPage() {
+export default function PolicySelectPage({ onProgramSelected }) {
   const navigate = useNavigate();
+  const [selecting, setSelecting] = useState(false);
+  const [selectionError, setSelectionError] = useState('');
+  const beginLihtc = async () => {
+    if (selecting) return;
+    setSelecting(true);
+    setSelectionError('');
+    try {
+      const session = await selectProgram();
+      if (!session.program_selected) throw new Error('Program selection was not saved');
+      onProgramSelected?.(session);
+      navigate('/profile');
+    } catch {
+      setSelectionError('Program selection could not be saved. Make sure the RealDoor API is running, then try again.');
+    } finally {
+      setSelecting(false);
+    }
+  };
 
   return (
-    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: '100vh', background: 'var(--color-surface)' }}>
+    <main className="policy-page">
       {/* Hero */}
-      <div style={{
+      <div className="policy-hero" style={{
         background: 'linear-gradient(135deg, #001f6b 0%, #003ea8 60%, #2563eb 100%)',
-        padding: '48px 60px 64px',
         position: 'relative',
         overflow: 'hidden',
       }}>
@@ -66,7 +84,7 @@ export default function PolicySelectPage() {
           </span>
         </div>
 
-        <h1 style={{ fontSize: 42, fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', lineHeight: 1.15, maxWidth: 600, marginBottom: 16 }}>
+        <h1 className="policy-title" style={{ fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', lineHeight: 1.15, maxWidth: 600, marginBottom: 16 }}>
           Select Your Housing Program
         </h1>
         <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.72)', lineHeight: 1.7, maxWidth: 520 }}>
@@ -87,7 +105,7 @@ export default function PolicySelectPage() {
       </div>
 
       {/* Policy cards */}
-      <div style={{ flex: 1, padding: '40px 60px', maxWidth: 1200 }}>
+      <div className="policy-content">
         <div style={{ marginBottom: 28 }}>
           <h2 style={{ fontSize: 20, fontWeight: 700, color: 'var(--color-on-surface)', marginBottom: 4 }}>Available Programs</h2>
           <p style={{ fontSize: 14, color: 'var(--color-on-surface-variant)' }}>
@@ -95,9 +113,11 @@ export default function PolicySelectPage() {
           </p>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 20 }}>
+        {selectionError && <div className="selection-error" role="alert">{selectionError}</div>}
+
+        <div className="policy-grid">
           {POLICIES.map((policy) => (
-            <PolicyCard key={policy.id} policy={policy} onSelect={() => navigate('/upload')} />
+            <PolicyCard key={policy.id} policy={policy} onSelect={beginLihtc} selecting={selecting} />
           ))}
         </div>
 
@@ -116,14 +136,14 @@ export default function PolicySelectPage() {
           </span>
         </div>
       </div>
-    </div>
+    </main>
   );
 }
 
-function PolicyCard({ policy, onSelect }) {
+function PolicyCard({ policy, onSelect, selecting }) {
   return (
     <div
-      onClick={policy.available ? onSelect : undefined}
+      aria-disabled={!policy.available}
       style={{
         background: 'var(--color-surface-white)',
         border: '1.5px solid var(--color-outline-variant)',
@@ -181,9 +201,10 @@ function PolicyCard({ policy, onSelect }) {
           <button
             className="btn btn-primary"
             style={{ width: '100%', justifyContent: 'center', gap: 6, fontWeight: 600 }}
-            onClick={(e) => { e.stopPropagation(); onSelect(); }}
+            onClick={onSelect}
+            disabled={selecting}
           >
-            Select Program <ArrowRight size={15} />
+            {selecting ? 'Selecting…' : 'Select Program'} <ArrowRight size={15} />
           </button>
         ) : (
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '9px 14px', background: 'var(--color-surface-container)', borderRadius: 'var(--radius-md)', fontSize: 13, color: 'var(--color-outline)', fontWeight: 500, justifyContent: 'center' }}>

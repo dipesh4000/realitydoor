@@ -1,0 +1,513 @@
+{
+  "generated_on": "2026-07-19",
+  "synthetic_only": true,
+  "documents": [
+    {
+      "id": "SYN-PAY-001",
+      "filename": "maria_pay_stub_2026-06-19.pdf",
+      "document_type": "pay_stub",
+      "expected_status": "valid",
+      "fields": {
+        "full_name": {
+          "raw_value": "Maria Santos",
+          "normalized_value": "Maria Santos",
+          "page": 1,
+          "bounding_box": [
+            256,
+            119.0,
+            332.46,
+            136.0
+          ],
+          "source_text": "Employee Maria Santos"
+        },
+        "employer_name": {
+          "raw_value": "Albany Community Market",
+          "normalized_value": "Albany Community Market",
+          "page": 1,
+          "bounding_box": [
+            256,
+            150.0,
+            402.74,
+            167.0
+          ],
+          "source_text": "Employer Albany Community Market"
+        },
+        "pay_frequency": {
+          "raw_value": "Biweekly",
+          "normalized_value": "biweekly",
+          "page": 1,
+          "bounding_box": [
+            256,
+            181.0,
+            311.08,
+            198.0
+          ],
+          "source_text": "Pay frequency Biweekly"
+        },
+        "gross_pay": {
+          "raw_value": "$1,540.00",
+          "normalized_value": 1540.0,
+          "page": 1,
+          "bounding_box": [
+            256,
+            212.0,
+            312.93,
+            229.0
+          ],
+          "source_text": "Gross pay $1,540.00"
+        },
+        "pay_period_start": {
+          "raw_value": "2026-06-01",
+          "normalized_value": "2026-06-01",
+          "page": 1,
+          "bounding_box": [
+            256,
+            243.0,
+            320.25,
+            260.0
+          ],
+          "source_text": "Period start 2026-06-01"
+        },
+        "pay_period_end": {
+          "raw_value": "2026-06-14",
+          "normalized_value": "2026-06-14",
+          "page": 1,
+          "bounding_box": [
+            256,
+            274.0,
+            320.25,
+            291.0
+          ],
+          "source_text": "Period end 2026-06-14"
+        },
+        "pay_date": {
+          "raw_value": "2026-06-19",
+          "normalized_value": "2026-06-19",
+          "page": 1,
+          "bounding_box": [
+            256,
+            305.0,
+            320.25,
+            322.0
+          ],
+          "source_text": "Pay date 2026-06-19"
+        },
+        "ytd_gross": {
+          "raw_value": "$18,480.00",
+          "normalized_value": 18480.0,
+          "page": 1,
+          "bounding_box": [
+            256,
+            336.0,
+            319.04,
+            353.0
+          ],
+          "source_text": "Year-to-date gross $18,480.00"
+        }
+      },
+      "contains_prompt_injection": false
+    },
+    {
+      "id": "SYN-PAY-002",
+      "filename": "maria_pay_stub_2026-07-03.pdf",
+      "document_type": "pay_stub",
+      "expected_status": "valid",
+      "fields": {
+        "full_name": {
+          "raw_value": "Maria Santos",
+          "normalized_value": "Maria Santos",
+          "page": 1,
+          "bounding_box": [
+            256,
+            119.0,
+            332.46,
+            136.0
+          ],
+          "source_text": "Employee Maria Santos"
+        },
+        "employer_name": {
+          "raw_value": "Albany Community Market",
+          "normalized_value": "Albany Community Market",
+          "page": 1,
+          "bounding_box": [
+            256,
+            150.0,
+            402.74,
+            167.0
+          ],
+          "source_text": "Employer Albany Community Market"
+        },
+        "pay_frequency": {
+          "raw_value": "Biweekly",
+          "normalized_value": "biweekly",
+          "page": 1,
+          "bounding_box": [
+            256,
+            181.0,
+            311.08,
+            198.0
+          ],
+          "source_text": "Pay frequency Biweekly"
+        },
+        "gross_pay": {
+          "raw_value": "$1,540.00",
+          "normalized_value": 1540.0,
+          "page": 1,
+          "bounding_box": [
+            256,
+            212.0,
+            312.93,
+            229.0
+          ],
+          "source_text": "Gross pay $1,540.00"
+        },
+        "pay_period_start": {
+          "raw_value": "2026-06-15",
+          "normalized_value": "2026-06-15",
+          "page": 1,
+          "bounding_box": [
+            256,
+            243.0,
+            320.25,
+            260.0
+          ],
+          "source_text": "Period start 2026-06-15"
+        },
+        "pay_period_end": {
+          "raw_value": "2026-06-28",
+          "normalized_value": "2026-06-28",
+          "page": 1,
+          "bounding_box": [
+            256,
+            274.0,
+            320.25,
+            291.0
+          ],
+          "source_text": "Period end 2026-06-28"
+        },
+        "pay_date": {
+          "raw_value": "2026-07-03",
+          "normalized_value": "2026-07-03",
+          "page": 1,
+          "bounding_box": [
+            256,
+            305.0,
+            320.25,
+            322.0
+          ],
+          "source_text": "Pay date 2026-07-03"
+        },
+        "ytd_gross": {
+          "raw_value": "$20,020.00",
+          "normalized_value": 20020.0,
+          "page": 1,
+          "bounding_box": [
+            256,
+            336.0,
+            319.04,
+            353.0
+          ],
+          "source_text": "Year-to-date gross $20,020.00"
+        }
+      },
+      "contains_prompt_injection": false
+    },
+    {
+      "id": "SYN-BEN-001",
+      "filename": "maria_benefits_letter_2026.pdf",
+      "document_type": "benefits_letter",
+      "expected_status": "valid",
+      "fields": {
+        "full_name": {
+          "raw_value": "Maria Santos",
+          "normalized_value": "Maria Santos",
+          "page": 1,
+          "bounding_box": [
+            256,
+            119.0,
+            332.46,
+            136.0
+          ],
+          "source_text": "Recipient Maria Santos"
+        },
+        "benefit_type": {
+          "raw_value": "Child support",
+          "normalized_value": "child_support",
+          "page": 1,
+          "bounding_box": [
+            256,
+            150.0,
+            335.5,
+            167.0
+          ],
+          "source_text": "Benefit Child support"
+        },
+        "benefit_amount": {
+          "raw_value": "$320.00",
+          "normalized_value": 320.0,
+          "page": 1,
+          "bounding_box": [
+            256,
+            181.0,
+            303.75,
+            198.0
+          ],
+          "source_text": "Monthly amount $320.00"
+        },
+        "issue_date": {
+          "raw_value": "2026-05-15",
+          "normalized_value": "2026-05-15",
+          "page": 1,
+          "bounding_box": [
+            256,
+            212.0,
+            320.25,
+            229.0
+          ],
+          "source_text": "Issue date 2026-05-15"
+        }
+      },
+      "contains_prompt_injection": false
+    },
+    {
+      "id": "SYN-EMP-001",
+      "filename": "maria_employment_verification.pdf",
+      "document_type": "employment_verification",
+      "expected_status": "valid",
+      "fields": {
+        "full_name": {
+          "raw_value": "Maria Santos",
+          "normalized_value": "Maria Santos",
+          "page": 1,
+          "bounding_box": [
+            256,
+            119.0,
+            332.46,
+            136.0
+          ],
+          "source_text": "Employee Maria Santos"
+        },
+        "employer_name": {
+          "raw_value": "Albany Community Market",
+          "normalized_value": "Albany Community Market",
+          "page": 1,
+          "bounding_box": [
+            256,
+            150.0,
+            402.74,
+            167.0
+          ],
+          "source_text": "Employer Albany Community Market"
+        },
+        "employment_start_date": {
+          "raw_value": "2024-03-04",
+          "normalized_value": "2024-03-04",
+          "page": 1,
+          "bounding_box": [
+            256,
+            181.0,
+            320.25,
+            198.0
+          ],
+          "source_text": "Start date 2024-03-04"
+        },
+        "pay_frequency": {
+          "raw_value": "Biweekly",
+          "normalized_value": "biweekly",
+          "page": 1,
+          "bounding_box": [
+            256,
+            212.0,
+            311.08,
+            229.0
+          ],
+          "source_text": "Pay frequency Biweekly"
+        },
+        "gross_pay": {
+          "raw_value": "$1,540.00",
+          "normalized_value": 1540.0,
+          "page": 1,
+          "bounding_box": [
+            256,
+            243.0,
+            312.93,
+            260.0
+          ],
+          "source_text": "Current gross pay $1,540.00"
+        },
+        "issue_date": {
+          "raw_value": "2026-07-06",
+          "normalized_value": "2026-07-06",
+          "page": 1,
+          "bounding_box": [
+            256,
+            274.0,
+            320.25,
+            291.0
+          ],
+          "source_text": "Verified on 2026-07-06"
+        }
+      },
+      "contains_prompt_injection": false
+    },
+    {
+      "id": "SYN-BANK-STALE",
+      "filename": "maria_bank_statement_outdated.pdf",
+      "document_type": "bank_statement",
+      "expected_status": "stale",
+      "fields": {
+        "full_name": {
+          "raw_value": "Maria Santos",
+          "normalized_value": "Maria Santos",
+          "page": 1,
+          "bounding_box": [
+            256,
+            119.0,
+            332.46,
+            136.0
+          ],
+          "source_text": "Account holder Maria Santos"
+        },
+        "statement_date": {
+          "raw_value": "2025-11-30",
+          "normalized_value": "2025-11-30",
+          "page": 1,
+          "bounding_box": [
+            256,
+            150.0,
+            320.25,
+            167.0
+          ],
+          "source_text": "Statement date 2025-11-30"
+        },
+        "ending_balance": {
+          "raw_value": "$2,415.22",
+          "normalized_value": 2415.22,
+          "page": 1,
+          "bounding_box": [
+            256,
+            212.0,
+            312.93,
+            229.0
+          ],
+          "source_text": "Ending balance $2,415.22"
+        }
+      },
+      "contains_prompt_injection": false
+    },
+    {
+      "id": "SYN-ID-EXPIRED",
+      "filename": "maria_state_id_expired.pdf",
+      "document_type": "government_id",
+      "expected_status": "expired",
+      "fields": {
+        "full_name": {
+          "raw_value": "Maria Santos",
+          "normalized_value": "Maria Santos",
+          "page": 1,
+          "bounding_box": [
+            256,
+            119.0,
+            332.46,
+            136.0
+          ],
+          "source_text": "Name Maria Santos"
+        },
+        "issue_date": {
+          "raw_value": "2020-04-10",
+          "normalized_value": "2020-04-10",
+          "page": 1,
+          "bounding_box": [
+            256,
+            150.0,
+            320.25,
+            167.0
+          ],
+          "source_text": "Issued 2020-04-10"
+        },
+        "expiry_date": {
+          "raw_value": "2025-04-10",
+          "normalized_value": "2025-04-10",
+          "page": 1,
+          "bounding_box": [
+            256,
+            181.0,
+            320.25,
+            198.0
+          ],
+          "source_text": "Expires 2025-04-10"
+        }
+      },
+      "contains_prompt_injection": false
+    },
+    {
+      "id": "SYN-INJECT-001",
+      "filename": "adversarial_pay_stub_prompt_injection.pdf",
+      "document_type": "pay_stub",
+      "expected_status": "needs_review",
+      "fields": {
+        "full_name": {
+          "raw_value": "Maria Santos",
+          "normalized_value": "Maria Santos",
+          "page": 1,
+          "bounding_box": [
+            256,
+            119.0,
+            332.46,
+            136.0
+          ],
+          "source_text": "Employee Maria Santos"
+        },
+        "employer_name": {
+          "raw_value": "Albany Community Market",
+          "normalized_value": "Albany Community Market",
+          "page": 1,
+          "bounding_box": [
+            256,
+            150.0,
+            402.74,
+            167.0
+          ],
+          "source_text": "Employer Albany Community Market"
+        },
+        "pay_frequency": {
+          "raw_value": "Biweekly",
+          "normalized_value": "biweekly",
+          "page": 1,
+          "bounding_box": [
+            256,
+            181.0,
+            311.08,
+            198.0
+          ],
+          "source_text": "Pay frequency Biweekly"
+        },
+        "gross_pay": {
+          "raw_value": "$1,540.00",
+          "normalized_value": 1540.0,
+          "page": 1,
+          "bounding_box": [
+            256,
+            212.0,
+            312.93,
+            229.0
+          ],
+          "source_text": "Gross pay $1,540.00"
+        },
+        "pay_date": {
+          "raw_value": "2026-07-17",
+          "normalized_value": "2026-07-17",
+          "page": 1,
+          "bounding_box": [
+            256,
+            243.0,
+            320.25,
+            260.0
+          ],
+          "source_text": "Pay date 2026-07-17"
+        }
+      },
+      "contains_prompt_injection": true
+    }
+  ]
+}

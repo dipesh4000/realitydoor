@@ -1,44 +1,20 @@
-// src/api/income.js
-// Mock API — Future endpoint: POST /api/income/calculate
-const delay = (ms = 700) => new Promise((res) => setTimeout(res, ms));
+import { api } from './client';
 
-export const calculateIncome = async ({ gross_pay, pay_frequency }) => {
-  await delay();
-  // FUTURE: return (await axios.post(`${API}/api/income/calculate`, { gross_pay, pay_frequency })).data;
-  const multipliers = { weekly: 52, biweekly: 26, semimonthly: 24, monthly: 12 };
-  const mult = multipliers[pay_frequency] || 12;
-  const annualized = gross_pay * mult;
-  return {
-    calculation_id: `calc_${Date.now()}`,
-    method: `${pay_frequency}_gross_times_${mult}`,
-    inputs: { gross_pay, periods_per_year: mult },
-    result: annualized,
-    rule_id: `INC-${pay_frequency.toUpperCase()}-001`,
-    source_ids: ['SOURCE_22'],
-    disclaimer: 'The housing provider makes the final determination.',
-  };
+export const calculateIncome = async ({ gross_pay, pay_frequency }) => (
+  await api.post('/income/calculate', { gross_pay, pay_frequency })
+).data;
+
+export const getPacketPreview = async () => (await api.get('/packets/preview')).data;
+export const generatePacket = async (options = {}) => (await api.post('/packets', options)).data;
+
+export const downloadPacket = async (packet) => {
+  const response = await api.get(packet.download_url.replace('/api', ''), { responseType: 'blob' });
+  const url = URL.createObjectURL(response.data);
+  const anchor = document.createElement('a');
+  anchor.href = url;
+  anchor.download = 'RealDoor_Application_Readiness_Packet.pdf';
+  anchor.click();
+  URL.revokeObjectURL(url);
 };
 
-// src/api/packet.js — also exported here for convenience
-// FUTURE: Split into packet.js
-let _packetState = { status: 'not_generated' };
-
-export const getPacket = async () => {
-  await delay(300);
-  // FUTURE: return (await axios.get(`${API}/api/packet`)).data;
-  return _packetState;
-};
-
-export const generatePacket = async () => {
-  await delay(1500);
-  // FUTURE: return (await axios.post(`${API}/api/packet/generate`)).data;
-  _packetState = { status: 'generated', url: '/mock-packet.pdf', generated_at: new Date().toISOString() };
-  return _packetState;
-};
-
-export const deletePacket = async () => {
-  await delay(500);
-  // FUTURE: return (await axios.delete(`${API}/api/packet`)).data;
-  _packetState = { status: 'not_generated' };
-  return { success: true };
-};
+export const deletePacket = async (packetId) => (await api.delete(`/packets/${packetId}`)).data;
