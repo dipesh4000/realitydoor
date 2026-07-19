@@ -38,7 +38,7 @@ python -m pytest
 python scripts/build_rule_corpus.py
 python scripts/generate_examples.py
 
-cd ../frontend/realdoor-app
+cd ../frontend
 npm.cmd run lint
 npm.cmd run build
 ```
